@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": { "model": "koolaidmod:test_block" },
+    "facing=north": { "model": "koolaidmod:test_block" },
+    "facing=south": { "model": "koolaidmod:test_block", "y": 180 },
+    "facing=west":  { "model": "koolaidmod:test_block", "y": 270 },
+    "facing=east":  { "model": "koolaidmod:test_block", "y": 90 }
+  }
+}

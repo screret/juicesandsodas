@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "koolaidmod:blocks/test_block_side",
+    "front": "koolaidmod:blocks/test_block_front",
+    "side": "koolaidmod:blocks/test_block_side"
+  }
+}

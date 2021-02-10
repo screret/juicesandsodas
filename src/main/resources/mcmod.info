@@ -1,0 +1,16 @@
+[
+{
+  "modid": "koolaidmod",
+  "name": "The Kool-Aid Mod",
+  "description": "this is kool",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://screret.github.io",
+  "updateUrl": "",
+  "authorList": ["screret"],
+  "credits": "",
+  "logoFile": "pack.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]

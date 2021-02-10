@@ -1,0 +1,26 @@
+[[mods]]
+modId="juicesandsodas"
+version="1.0.0.0"
+displayName="Juices & Sodas"
+updateJSONURL=""
+displayURL="screret.github.io"
+logoFile="logo.png"
+credits=""
+authors="screret"
+description='''
+      adds some popular (and ...less popular) juices and sodas!
+      '''
+
+[[dependencies.examplemod]]
+modId="forge"
+mandatory=true
+versionRange="[34,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.examplemod]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5]"
+ordering="NONE"
+side="BOTH"
