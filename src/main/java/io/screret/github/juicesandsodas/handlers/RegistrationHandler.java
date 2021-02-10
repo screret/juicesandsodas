@@ -2,6 +2,7 @@ package io.screret.github.juicesandsodas.handlers;
 
 import io.screret.github.juicesandsodas.Base;
 import io.screret.github.juicesandsodas.init.ModBlocks;
+import io.screret.github.juicesandsodas.init.ModItems;
 import io.screret.github.juicesandsodas.items.ItemKoolAid;
 import io.screret.github.juicesandsodas.items.ItemLemonade;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
@@ -15,10 +16,13 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@EventBusSubscriber(modid = Base.MODID)
+@EventBusSubscriber(bus= Mod.EventBusSubscriber.Bus.MOD)
 public class RegistrationHandler {
 
     @SubscribeEvent
@@ -48,6 +52,7 @@ public class RegistrationHandler {
                 new BlockItem(ModBlocks.TEST_BLOCK, new Item.Properties().group(Base.MOD_TAB)).setRegistryName(ModBlocks.TEST_BLOCK.getRegistryName())
 
         };
+
         event.getRegistry().registerAll(items);
         event.getRegistry().registerAll(itemBlocks);
     }
