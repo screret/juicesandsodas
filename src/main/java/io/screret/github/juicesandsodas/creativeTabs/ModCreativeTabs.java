@@ -9,7 +9,7 @@ public class ModCreativeTabs extends ItemGroup
 {
     public ModCreativeTabs()
     {
-        super("Juices & Sodas");
+        super("juicesandsodas");
     }
 
     @Override

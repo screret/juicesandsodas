@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "koolaidmod:items/potion_base",
+    "layer0": "koolaidmod:items/koolaid_base",
     "layer1": "koolaidmod:items/potion_overlay"
   }
 }

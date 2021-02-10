@@ -12,10 +12,14 @@ public class ModItems {
         public static final Item KOOL_AID               = null;
         @ObjectHolder("jello")
         public static final Item JELLO                  = null;
-        @ObjectHolder("empty_bottle")
-        public static final Item EMPTY_BOTTLE           = null;
+        @ObjectHolder("kool_aid_empty")
+        public static final Item KOOL_AID_EMPTY         = null;
         @ObjectHolder("magic_aid")
         public static final Item MAGIC_AID              = null;
+        @ObjectHolder("lemonade")
+        public static final Item LEMONADE               = null;
+        @ObjectHolder("lemonade_empty")
+        public static final Item LEMONADE_EMPTY         = null;
 
         //armor
         @ObjectHolder("juice_helmet")
@@ -26,10 +30,4 @@ public class ModItems {
         public static final Item JUICE_LEGGINGS         = null;
         @ObjectHolder("juice_boots")
         public static final Item JUICE_BOOTS            = null;
-
-        //potions
-        //@ObjectHolder("kool_aid_potion")
-        public static final Item KOOL_AID_POTION        = null;
-        //@ObjectHolder("long_kool_aid_potion")
-        public static final Item LONG_KOOL_AID_POTION   = null;
 }

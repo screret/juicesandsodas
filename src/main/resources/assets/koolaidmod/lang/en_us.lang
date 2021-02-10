@@ -1,20 +1,19 @@
 # Creative Tabs
-itemGroup.kool-aid mod=Kool-Aid mod
+itemGroup.juicesandsodas=Juices & Sodas
 
 #items
-item.koolaidmod.kool_aid.name=Kool-Aid
-item.koolaidmod.juice_helmet.name=Juice Helmet
-item.koolaidmod.juice_chestplate.name=Juice Chestplate
-item.koolaidmod.juice_leggings.name=Juice Leggings
-item.koolaidmod.juice_boots.name=Juice Boots
-item.koolaidmod.jello.name=Jello
-item.koolaidmod.magic_aid.name=Magic-Aid
-item.koolaidmod.empty_bottle.name=Empty Bottle
+item.juicesandsodas.kool_aid.name=Kool-Aid
+item.juicesandsodas.magic_aid.name=Magic-Aid
+item.juicesandsodas.lemonade.name=Lemonade
+item.juicesandsodas.jello.name=Jello
+item.juicesandsodas.kool_aid_empty.name=Empty Bottle of Kool-Aid
+item.juicesandsodas.lemonade_empty.name=Empty Bottle of Lemonade
+
+#armor
+item.juicesandsodas.juice_helmet.name=Juice Helmet
+item.juicesandsodas.juice_chestplate.name=Juice Chestplate
+item.juicesandsodas.juice_leggings.name=Juice Leggings
+item.juicesandsodas.juice_boots.name=Juice Boots
 
 #blocks
-tile.koolaidmod.test_block.name=test block
-
-#potions
-effect.potion_koolaid=kool-aid
-potion.effect.potion_koolaid_item=kool-aid
-potion.effect.potion_long_koolaid_item=l o n g kool-aid
+tile.juicesandsodas.test_block.name=test block

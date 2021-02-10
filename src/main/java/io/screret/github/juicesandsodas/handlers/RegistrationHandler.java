@@ -2,10 +2,12 @@ package io.screret.github.juicesandsodas.handlers;
 
 import io.screret.github.juicesandsodas.Base;
 import io.screret.github.juicesandsodas.init.ModBlocks;
+import io.screret.github.juicesandsodas.items.ItemKoolAid;
+import io.screret.github.juicesandsodas.items.ItemLemonade;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
 import io.screret.github.juicesandsodas.materials.ModMaterials;
 import io.screret.github.juicesandsodas.util.RegistryUtil;
-import io.screret.github.juicesandsodas.items.ItemJuice;
+import io.screret.github.juicesandsodas.items.ItemMagicAid;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,7 +22,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class RegistrationHandler {
 
     @SubscribeEvent
-    public static void registerBlocks(final RegistryEvent.Register<Block> event){
+    public void registerBlocks(RegistryEvent.Register<Block> event){
         final Block[] blocks = {
                 RegistryUtil.setBlockName(new Block(AbstractBlock.Properties.create(Material.ROCK)), "test_block")
         };
@@ -28,13 +30,14 @@ public class RegistrationHandler {
     }
 
     @SubscribeEvent
-    public static void registerItems(final RegistryEvent.Register<Item> event){
+    public void registerItems(RegistryEvent.Register<Item> event){
         final Item[] items = {
-                RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "kool_aid"),
+                RegistryUtil.setItemName(new ItemKoolAid(new Item.Properties().group(Base.MOD_TAB)), "kool_aid"),
+                RegistryUtil.setItemName(new ItemLemonade(new Item.Properties().group(Base.MOD_TAB)), "lemonade"),
                 RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "jello"),
-                RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "empty_bottle"),
-                RegistryUtil.setItemName(new ItemJuice(new Item.Properties().group(Base.MOD_TAB)), "magic_aid"),
-                RegistryUtil.setItemName(new ItemJuice(new Item.Properties().group(Base.MOD_TAB)), "magic_aid"),
+                RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "kool_aid_empty"),
+                RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "lemonade_empty"),
+                RegistryUtil.setItemName(new ItemMagicAid(new Item.Properties().group(Base.MOD_TAB)), "magic_aid"),
 
                 RegistryUtil.setItemName(new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.HEAD, new Item.Properties().group(Base.MOD_TAB)), "jello_helmet"),
                 RegistryUtil.setItemName(new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.CHEST, new Item.Properties().group(Base.MOD_TAB)), "jello_chestplate"),
