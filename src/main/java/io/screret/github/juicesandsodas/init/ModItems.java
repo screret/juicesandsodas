@@ -16,8 +16,8 @@ public class ModItems {
         public static final Item LEMONADE_EMPTY         = null;
 
         //armor
-        public static final Item JUICE_HELMET           = null;
-        public static final Item JUICE_CHESTPLATE       = null;
-        public static final Item JUICE_LEGGINGS         = null;
-        public static final Item JUICE_BOOTS            = null;
+        public static final Item JELLO_HELMET           = null;
+        public static final Item JELLO_CHESTPLATE       = null;
+        public static final Item JELLO_LEGGINGS         = null;
+        public static final Item JELLO_BOOTS            = null;
 }
