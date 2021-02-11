@@ -1,21 +1,24 @@
 package io.screret.github.juicesandsodas.plants;
 
-import io.screret.github.juicesandsodas.init.ModBlocks;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.trees.Tree;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import io.screret.github.juicesandsodas.plants.features.Features;
+import io.screret.github.juicesandsodas.plants.features.TreeDefaultConfig;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class LemonTree extends Tree {
+public class LemonTree extends TreeDefaultConfig {
 
-        
+
    @Override
    protected Feature<? extends BaseTreeFeatureConfig> getFeature(Random random)
    {
       return Features.LEMON_TREE;
+   }
+
+   @Nullable
+   @Override
+   protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean largeHive) {
+      return null;
    }
 }

@@ -1,5 +1,7 @@
-package io.screret.github.juicesandsodas.plants;
+package io.screret.github.juicesandsodas.plants.features;
 
+import io.screret.github.juicesandsodas.blocks.IBlockPosQuery;
+import io.screret.github.juicesandsodas.util.BlockUtil;
 import net.minecraft.block.*;
 import net.minecraft.state.Property;
 import net.minecraft.tags.BlockTags;
@@ -33,13 +35,13 @@ public abstract class TreeFeatureBase extends TreeFeature
         public BuilderBase()
         {
             this.placeOn = (world, pos) -> world.getBlockState(pos).canSustainPlant(world, pos, Direction.UP, (SaplingBlock)Blocks.OAK_SAPLING);
-            this.replace = (world, pos) -> world.getBlockState(pos).canBeReplacedByLeaves(world, pos) || world.getBlockState(pos).getBlock().is(BlockTags.SAPLINGS) || world.getBlockState(pos).getBlock() == Blocks.VINE || world.getBlockState(pos).getBlock() == BOPBlocks.willow_vine || world.getBlockState(pos).getBlock() == BOPBlocks.dead_branch || world.getBlockState(pos).getBlock() instanceof BushBlock;
-            this.log = Blocks.OAK_LOG.defaultBlockState();
-            this.leaves = Blocks.OAK_LEAVES.defaultBlockState();
-            this.vine = Blocks.AIR.defaultBlockState();
-            this.hanging = Blocks.AIR.defaultBlockState();
-            this.trunkFruit = Blocks.AIR.defaultBlockState();
-            this.altLeaves = Blocks.AIR.defaultBlockState();
+            this.replace = (world, pos) -> world.getBlockState(pos).canBeReplacedByLeaves(world, pos) || world.getBlockState(pos).getBlock().isIn(BlockTags.SAPLINGS) || world.getBlockState(pos).getBlock() instanceof BushBlock;
+            this.log = Blocks.OAK_LOG.getDefaultState();
+            this.leaves = Blocks.OAK_LEAVES.getDefaultState();
+            this.vine = Blocks.AIR.getDefaultState();
+            this.hanging = Blocks.AIR.getDefaultState();
+            this.trunkFruit = Blocks.AIR.getDefaultState();
+            this.altLeaves = Blocks.AIR.getDefaultState();
         }
 
         public T placeOn(IBlockPosQuery a) {this.placeOn = a; return (T)this;}
@@ -123,46 +125,13 @@ public abstract class TreeFeatureBase extends TreeFeature
 
     public boolean placeLog(IWorld world, BlockPos pos, Direction.Axis axis, Set<BlockPos> changedBlocks, MutableBoundingBox boundingBox)
     {
-        BlockState directedLog = (axis != null && this.logAxisProperty != null) ? this.log.setValue(this.logAxisProperty, axis) : this.log;
+        BlockState directedLog = (axis != null && this.logAxisProperty != null) ? this.log.getBlockState() : this.log;
         if (this.replace.matches(world, pos))
         {
             // Logs must be added to the "changedBlocks" so that the leaves have their distance property updated,
             // preventing incorrect decay
             this.placeBlock(world, pos, directedLog, changedBlocks, boundingBox);
             return true;
-        }
-        return false;
-    }
-
-    public boolean setVine(IWorld world, Random rand, BlockPos pos, Direction side, int length)
-    {
-        BlockState vineState = this.vine.getBlock() instanceof VineBlock ? this.vine.setValue(VineBlock.NORTH, Boolean.valueOf(side == Direction.NORTH)).setValue(VineBlock.EAST, Boolean.valueOf(side == Direction.EAST)).setValue(VineBlock.SOUTH, Boolean.valueOf(side == Direction.SOUTH)).setValue(VineBlock.WEST, Boolean.valueOf(side == Direction.WEST)) : this.vine;
-        boolean setOne = false;
-        while (world.getBlockState(pos).getBlock().isAir(world.getBlockState(pos), world, pos) && length > 0 && rand.nextInt(12) > 0)
-        {
-            setBlock(world, pos, vineState);
-            setOne = true;
-            length--;
-            pos = pos.below();
-        }
-        return setOne;
-    }
-
-    public boolean setHanging(IWorld world, BlockPos pos)
-    {
-        if (this.replace.matches(world, pos))
-        {
-            setBlock(world, pos, this.hanging);
-        }
-        return false;
-    }
-
-    public boolean setTrunkFruit(IWorld world, BlockPos pos)
-    {
-        if (this.trunkFruit == null) {return false;}
-        if (this.replace.matches(world, pos))
-        {
-            setBlock(world, pos, this.trunkFruit);
         }
         return false;
     }
@@ -177,8 +146,7 @@ public abstract class TreeFeatureBase extends TreeFeature
         return false;
     }
 
-    @Override
-    public boolean doPlace(IWorldGenerationReader reader, Random random, BlockPos pos, Set<BlockPos> changedLogs, Set<BlockPos> changedLeaves, MutableBoundingBox boundingBox, BaseTreeFeatureConfig config)
+    public boolean tryDoPlace(IWorldGenerationReader reader, Random random, BlockPos pos, Set<BlockPos> changedLogs, Set<BlockPos> changedLeaves, MutableBoundingBox boundingBox, BaseTreeFeatureConfig config)
     {
         return place(changedLogs, changedLeaves, (IWorld)reader, random, pos, boundingBox);
     }
@@ -190,21 +158,21 @@ public abstract class TreeFeatureBase extends TreeFeature
 
     protected boolean placeBlock(IWorld world, BlockPos pos, BlockState state, Set<BlockPos> changedBlocks, MutableBoundingBox boundingBox)
     {
-        if (!isFree(world, pos))
+        if (!isAirAt(world, pos))
         {
             return false;
         }
         else
         {
             setBlock(world, pos, state, boundingBox);
-            changedBlocks.add(pos.immutable());
+            changedBlocks.add(pos.toImmutable());
             return true;
         }
     }
 
-    protected static void setBlock(IWorldWriter world, BlockPos pos, BlockState state, MutableBoundingBox boundingBox)
+    protected void setBlock(IWorldWriter world, BlockPos pos, BlockState state, MutableBoundingBox boundingBox)
     {
-        setBlockKnownShape(world, pos, state);
-        boundingBox.expand(new MutableBoundingBox(pos, pos));
+        setBlockState(world, pos, state);
+        boundingBox.expandTo(new MutableBoundingBox(pos, pos));
     }
 }
