@@ -40,11 +40,14 @@ public class ItemMagicAid extends Item implements IItemColor {
     static final int MAX_FOOD_LEVEL = 20;
     static final int FOOD_LEVEL_INCREASE = 4;
 
+    boolean isShaderEnabled = false;
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent("Cheap sugar water"));
         tooltip.add(new StringTextComponent("Kool-Aid (1:00)"));
+        tooltip.add(new StringTextComponent("\u00A78"+"May include game-crashing behaviour if drunk too much."));
     }
 
     @Override
@@ -86,10 +89,17 @@ public class ItemMagicAid extends Item implements IItemColor {
             }
         }
 
-        Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
+        /*//Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
+        if(!isShaderEnabled){
+            Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
+            isShaderEnabled = true;
+        }else{
+            //Minecraft.getInstance().gameRenderer.stopUseShader();
+            //isShaderEnabled = false;
+        }*/
 
-        playerentity.addPotionEffect(new EffectInstance(Effect.get(9)));
-        playerentity.addPotionEffect(new EffectInstance(Effect.get(20)));
+        playerentity.addPotionEffect(new EffectInstance(Effect.get(9), 6000));
+        playerentity.addPotionEffect(new EffectInstance(Effect.get(20), 6000));
 
         return stack;
     }
@@ -112,7 +122,7 @@ public class ItemMagicAid extends Item implements IItemColor {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public int getColor(ItemStack p_getColor_1_, int p_getColor_2_) {
+    public int getColor(ItemStack stack, int color) {
         return 3932107;
     }
 }

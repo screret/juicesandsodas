@@ -1,5 +1,6 @@
 package io.screret.github.juicesandsodas.materials;
 
+import io.screret.github.juicesandsodas.Base;
 import io.screret.github.juicesandsodas.init.ModItems;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
@@ -12,7 +13,7 @@ import java.util.function.Supplier;
 
 public enum ModArmorMaterial implements IArmorMaterial {
 
-    JELLO("jello", 5, new int[]{10, 20, 30, 10}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 10.0F, 10.0F, () -> { return Ingredient.fromItems(ModItems.JELLO); });
+                    JELLO(Base.MODID + ":jello", 50, new int[]{10, 20, 30, 10}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 10.0F, 10.0F, () -> { return Ingredient.fromItems(ModItems.JELLO); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private final String name;
@@ -42,7 +43,7 @@ public enum ModArmorMaterial implements IArmorMaterial {
 
     @Override
     public int getDamageReductionAmount(EquipmentSlotType slotIn) {
-        return 200;
+        return 20;
     }
 
     @Override
@@ -62,7 +63,7 @@ public enum ModArmorMaterial implements IArmorMaterial {
 
     @Override
     public String getName() {
-        return "juice_armor";
+        return Base.MODID + ":jello";
     }
 
     @Override
@@ -72,6 +73,6 @@ public enum ModArmorMaterial implements IArmorMaterial {
 
     @Override
     public float getKnockbackResistance() {
-        return 100;
+        return 10;
     }
 }

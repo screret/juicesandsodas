@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "juicesandsodas:blocks/test_block_side",
+    "front": "juicesandsodas:blocks/test_block_front",
+    "side": "juicesandsodas:blocks/test_block_side"
+  }
+}

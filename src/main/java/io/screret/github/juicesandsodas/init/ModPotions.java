@@ -11,5 +11,5 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(Base.MODID)
 public class ModPotions {
     public ModPotions(){super();}
-    public static final Potion KoolAid = new Potion("potion_koolaid", new EffectInstance[Effect.getId(Effect.get(9))]);
+    public static final Potion KOOLAID = new Potion("potion_koolaid", new EffectInstance(Effect.get(9), 20000));
 }

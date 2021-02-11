@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/leaves",
+  "textures": {
+    "all": "minecraft:block/oak_leaves",
+    "layer1": "juicesandsodas:blocks/lemon_leaves_layer_2"
+  }
+}

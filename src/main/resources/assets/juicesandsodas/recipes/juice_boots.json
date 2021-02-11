@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "# #",
+        "# #"
+    ],
+    "key": {
+        "#": {
+            "item": "koolaidmod:jello"
+        }
+    },
+    "result": {
+        "item": "koolaidmod:juice_boots",
+        "count": 1
+    }
+}

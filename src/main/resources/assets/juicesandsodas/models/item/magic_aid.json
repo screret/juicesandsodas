@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "juicesandsodas:items/koolaid_base",
+    "layer1": "juicesandsodas:items/potion_overlay"
+  }
+}

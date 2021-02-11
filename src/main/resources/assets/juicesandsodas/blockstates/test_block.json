@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": { "model": "juicesandsodas:test_block" },
+    "facing=north": { "model": "juicesandsodas:test_block" },
+    "facing=south": { "model": "juicesandsodas:test_block", "y": 180 },
+    "facing=west":  { "model": "juicesandsodas:test_block", "y": 270 },
+    "facing=east":  { "model": "juicesandsodas:test_block", "y": 90 }
+  }
+}
