@@ -16,6 +16,6 @@ public class LemonTree extends Tree {
    @Override
    protected Feature<? extends BaseTreeFeatureConfig> getFeature(Random random)
    {
-      return (random.nextInt(10) == 0 ? BOPFeatures.BIG_FLOWERING_OAK_TREE : BOPFeatures.FLOWERING_OAK_TREE);
+      return Features.LEMON_TREE;
    }
 }
