@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "minecraft:block/lemon_sapling"
+    "cross": "juicesandsodas:blocks/lemon_sapling"
   }
 }

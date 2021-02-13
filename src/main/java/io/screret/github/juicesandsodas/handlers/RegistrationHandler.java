@@ -10,14 +10,15 @@ import io.screret.github.juicesandsodas.materials.ModMaterials;
 import io.screret.github.juicesandsodas.plants.LemonTree;
 import io.screret.github.juicesandsodas.util.RegistryUtil;
 import io.screret.github.juicesandsodas.items.ItemMagicAid;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.SaplingBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Base.MODID)
 public class RegistrationHandler {
@@ -37,10 +39,11 @@ public class RegistrationHandler {
     public static void registerBlocks(RegistryEvent.Register<Block> event){
         final Block[] blocks = {
                 RegistryUtil.setBlockName(new Block(AbstractBlock.Properties.create(Material.ROCK)), "test_block"),
-                RegistryUtil.setBlockName(new SaplingBlock(new LemonTree(), AbstractBlock.Properties.create(Material.PLANTS)), "lemon_sapling"),
-                RegistryUtil.setBlockName(new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES)), "lemon_leaves"),
+                RegistryUtil.setBlockName(new SaplingBlock(new LemonTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT)), "lemon_sapling"),
+                RegistryUtil.setBlockName(new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid()), "lemon_leaves"),
         };
         event.getRegistry().registerAll(blocks);
+        //Minecraft.getInstance().getBlockColors()
     }
 
     @SubscribeEvent
@@ -49,6 +52,7 @@ public class RegistrationHandler {
                 RegistryUtil.setItemName(new ItemKoolAid(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1)), "kool_aid"),
                 RegistryUtil.setItemName(new ItemLemonade(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1)), "lemonade"),
                 RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "jello"),
+                RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "lemon"),
                 RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "kool_aid_empty"),
                 RegistryUtil.setItemName(new Item(new Item.Properties().group(Base.MOD_TAB)), "lemonade_empty"),
                 RegistryUtil.setItemName(new ItemMagicAid(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1)), "magic_aid"),

@@ -10,6 +10,7 @@ public class ModItems {
         //normies
         public static final Item KOOL_AID               = null;
         public static final Item JELLO                  = null;
+        public static final Item LEMON                  = null;
         public static final Item KOOL_AID_EMPTY         = null;
         public static final Item MAGIC_AID              = null;
         public static final Item LEMONADE               = null;

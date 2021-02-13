@@ -1,18 +1,15 @@
 {
-#Creative Tabs
 "itemGroup.juicesandsodas": "Juices & Sodas",
-#items
 "item.juicesandsodas.kool_aid": "Kool-Aid",
 "item.juicesandsodas.magic_aid": "Magic-Aid",
 "item.juicesandsodas.lemonade": "Lemonade",
 "item.juicesandsodas.jello": "Jello",
 "item.juicesandsodas.kool_aid_empty": "Empty Bottle of Kool-Aid",
 "item.juicesandsodas.lemonade_empty": "Empty Bottle of Lemonade",
-#armor
 "item.juicesandsodas.jello_helmet": "Jello Helmet",
 "item.juicesandsodas.jello_chestplate": "Jello Chestplate",
 "item.juicesandsodas.jello_leggings": "Jello Leggings",
-
-#blocks
-"item.juicesandsodas.test_block": "Test block"
+"block.juicesandsodas.test_block": "Test block",
+"block.juicesandsodas.lemon_leaves": "Lemon Leaves",
+"block.juicesandsodas.lemon_sapling": "Lemon Sapling"
 }

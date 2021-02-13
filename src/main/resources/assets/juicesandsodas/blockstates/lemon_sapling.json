@@ -1,7 +1,5 @@
 {
   "variants": {
-    "": {
-      "model": "juicesandsodas:lemon_sapling"
-    }
+    "": { "model": "juicesandsodas:block/lemon_sapling" }
   }
 }

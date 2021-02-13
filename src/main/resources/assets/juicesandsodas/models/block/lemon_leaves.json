@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/leaves",
   "textures": {
-    "all": "minecraft:block/lemon_leaves"
+    "all": "juicesandsodas:blocks/lemon_leaves"
   }
 }

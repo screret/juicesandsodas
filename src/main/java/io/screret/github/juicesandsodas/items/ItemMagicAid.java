@@ -89,14 +89,14 @@ public class ItemMagicAid extends Item implements IItemColor {
             }
         }
 
-        /*//Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
+        Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
         if(!isShaderEnabled){
             Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
             isShaderEnabled = true;
         }else{
             //Minecraft.getInstance().gameRenderer.stopUseShader();
             //isShaderEnabled = false;
-        }*/
+        }
 
         playerentity.addPotionEffect(new EffectInstance(Effect.get(9), 6000));
         playerentity.addPotionEffect(new EffectInstance(Effect.get(20), 6000));
