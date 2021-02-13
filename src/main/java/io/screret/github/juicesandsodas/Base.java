@@ -3,8 +3,12 @@ package io.screret.github.juicesandsodas;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
 import io.screret.github.juicesandsodas.entities.KoolaidManEntity;
 import io.screret.github.juicesandsodas.init.ModEntities;
+import io.screret.github.juicesandsodas.plants.ModFeatures;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,6 +52,8 @@ public class Base {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+        ModFeatures.TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon",
+                Feature.TREE.withConfiguration(ModFeatures.LEMON.config));
         DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put(ModEntities.KOOLAIDMAN, KoolaidManEntity.CustomEntity.setCustomAttributes().create()); });
     }
 
