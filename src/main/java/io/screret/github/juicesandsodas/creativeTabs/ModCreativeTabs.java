@@ -1,7 +1,6 @@
 package io.screret.github.juicesandsodas.creativeTabs;
 
-import io.screret.github.juicesandsodas.init.ModItems;
-import net.minecraft.client.gui.screen.inventory.CreativeScreen;
+import io.screret.github.juicesandsodas.init.ModStuff;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -14,7 +13,7 @@ public class ModCreativeTabs extends ItemGroup
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModItems.KOOL_AID);
+        return new ItemStack(ModStuff.KOOL_AID.get());
     }
 }
 

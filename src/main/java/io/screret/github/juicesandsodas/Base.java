@@ -1,16 +1,13 @@
 package io.screret.github.juicesandsodas;
 
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
-import io.screret.github.juicesandsodas.entities.KoolaidManEntity;
-import io.screret.github.juicesandsodas.init.ModEntities;
-import io.screret.github.juicesandsodas.plants.ModFeatures;
-import net.minecraft.block.Block;
+import io.screret.github.juicesandsodas.entities.KoolaidMan;
+import io.screret.github.juicesandsodas.init.ModStuff;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
@@ -46,15 +43,12 @@ public class Base {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        ModFeatures.TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon",
-                Feature.TREE.withConfiguration(ModFeatures.LEMON.config));
-        DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put(ModEntities.KOOLAIDMAN, KoolaidManEntity.CustomEntity.setCustomAttributes().create()); });
+        DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

@@ -2,7 +2,7 @@ package io.screret.github.juicesandsodas.plants;
 
 import com.google.common.collect.ImmutableList;
 import io.screret.github.juicesandsodas.Base;
-import io.screret.github.juicesandsodas.init.ModBlocks;
+import io.screret.github.juicesandsodas.init.ModStuff;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -20,18 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Base.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModFeatures {
 
-    public static final ConfiguredFeature<BaseTreeFeatureConfig, ?> LEMON = Feature.TREE.withConfiguration((
-            new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
-                    new SimpleBlockStateProvider(ModBlocks.LEMON_LEAVES.getDefaultState()),
-                    new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3),
-                    new StraightTrunkPlacer(3, 1, 0),
-                    new TwoLayerFeature(1, 0, 1))
-                    .setIgnoreVines()
-                    .setDecorators(ImmutableList.of(new BeehiveTreeDecorator(0.05F))))
-            .build());
 
 
-    public static ConfiguredFeature<?, ?> TREE_LEMON_CONFIG;
+    public static ConfiguredFeature<?, ?> TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon", Feature.TREE.withConfiguration(ModStuff.LEMON_TREE.config));
 
     @SubscribeEvent
     public void onBiomeLoading(final BiomeLoadingEvent biome) {

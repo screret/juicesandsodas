@@ -1,8 +1,7 @@
 package io.screret.github.juicesandsodas.items;
 
-import io.screret.github.juicesandsodas.init.ModItems;
+import io.screret.github.juicesandsodas.init.ModStuff;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -67,11 +66,11 @@ public class ItemKoolAid extends Item {
 
         if (playerentity == null || !playerentity.abilities.isCreativeMode) {
             if (stack.isEmpty()) {
-                return new ItemStack(ModItems.KOOL_AID_EMPTY);
+                return new ItemStack(ModStuff.KOOL_AID_EMPTY.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(ModItems.KOOL_AID_EMPTY));
+                playerentity.inventory.addItemStackToInventory(new ItemStack(ModStuff.KOOL_AID_EMPTY.get()));
             }
         }
 

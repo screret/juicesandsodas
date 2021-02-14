@@ -1,13 +1,10 @@
 package io.screret.github.juicesandsodas.items;
 
-import io.screret.github.juicesandsodas.Base;
-import io.screret.github.juicesandsodas.init.ModItems;
-import io.screret.github.juicesandsodas.init.ModPotions;
+import io.screret.github.juicesandsodas.init.ModStuff;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -17,19 +14,14 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-import static java.lang.Integer.min;
 import static java.util.Objects.requireNonNull;
 
 public class ItemMagicAid extends Item implements IItemColor {
@@ -81,21 +73,18 @@ public class ItemMagicAid extends Item implements IItemColor {
 
         if (playerentity == null || !playerentity.abilities.isCreativeMode) {
             if (stack.isEmpty()) {
-                return new ItemStack(ModItems.KOOL_AID_EMPTY);
+                return new ItemStack(ModStuff.KOOL_AID_EMPTY.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(ModItems.KOOL_AID_EMPTY));
+                playerentity.inventory.addItemStackToInventory(new ItemStack(ModStuff.KOOL_AID_EMPTY.get()));
             }
         }
 
-        Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
+        //Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
         if(!isShaderEnabled){
             Minecraft.getInstance().gameRenderer.loadShader(new ResourceLocation("minecraft:shaders/post/wobble.json"));
             isShaderEnabled = true;
-        }else{
-            //Minecraft.getInstance().gameRenderer.stopUseShader();
-            //isShaderEnabled = false;
         }
 
         playerentity.addPotionEffect(new EffectInstance(Effect.get(9), 6000));
