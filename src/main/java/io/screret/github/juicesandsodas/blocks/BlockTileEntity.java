@@ -63,3 +63,4 @@ public abstract class BlockTileEntity extends Block{
 			return NO_SHAPE_CUBE;
 		}
 	}
+}
