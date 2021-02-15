@@ -12,7 +12,7 @@ public class LemonTree extends Tree {
    @Nullable
    @Override
    public ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean largeHive) {
-      return ModStuff.LEMON_TREE;
+      return ModFeatures.LEMON_TREE;
    }
 
 }

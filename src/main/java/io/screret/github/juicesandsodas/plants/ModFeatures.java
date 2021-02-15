@@ -17,12 +17,13 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Base.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Base.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModFeatures {
 
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> LEMON_TREE;
 
 
-    public static ConfiguredFeature<?, ?> TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon", Feature.TREE.withConfiguration(ModStuff.LEMON_TREE.config));
+    public static ConfiguredFeature<?, ?> TREE_LEMON_CONFIG;
 
     @SubscribeEvent
     public void onBiomeLoading(final BiomeLoadingEvent biome) {

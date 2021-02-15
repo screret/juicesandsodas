@@ -1,0 +1,55 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.fruit_blender_active": {
+			"loop": true,
+			"animation_length": 1.12,
+			"override_previous_animation": true,
+			"bones": {
+				"rod": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 45, 0]
+						},
+						"0.16": {
+							"vector": [0, 77.5, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						},
+						"0.32": {
+							"vector": [0, 100, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						},
+						"0.48": {
+							"vector": [0, 122.5, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						},
+						"0.64": {
+							"vector": [0, 145, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						},
+						"0.8": {
+							"vector": [0, 177.5, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						},
+						"0.96": {
+							"vector": [0, 200, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						},
+						"1.12": {
+							"vector": [0, 222.5, 0],
+							"easing": "step",
+							"easingArgs": [1]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

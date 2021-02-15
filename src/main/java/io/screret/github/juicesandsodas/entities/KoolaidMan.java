@@ -1,25 +1,28 @@
-
 package io.screret.github.juicesandsodas.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import io.screret.github.juicesandsodas.Base;
+import io.screret.github.juicesandsodas.init.ModStuff;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.IronGolemEntity;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
@@ -30,23 +33,13 @@ import java.util.Random;
 
 public class KoolaidMan extends MobEntity {
 
-    public KoolaidMan(EntityType<?> entityTypeIn, World worldIn) {
-        super((EntityType<? extends MobEntity>) entityTypeIn, worldIn);
-    }
-
-    @Override
-    protected void registerData() {
-
-    }
-
-    @Override
-    public void readAdditional(CompoundNBT compound) {
-
-    }
-
-    @Override
-    public void writeAdditional(CompoundNBT compound) {
-
+    public KoolaidMan(EntityType<? extends MobEntity> entityTypeIn, World worldIn) {
+        super(entityTypeIn, worldIn);
+        this.experienceValue = 150;
+        this.setHealth(150.0f);
+        this.setAIMoveSpeed(0.4f);
+        this.hurtResistantTime = 2;
+        this.setCustomName(new StringTextComponent("The Kool-Aid Man"));
     }
 
     @Override
@@ -60,6 +53,7 @@ public class KoolaidMan extends MobEntity {
         this.goalSelector.addGoal(1, new MeleeAttackGoal((CreatureEntity) this.getEntity(), 1.2, true));
         this.goalSelector.addGoal(2, new RandomWalkingGoal((CreatureEntity) this.getEntity(), 1));
         this.targetSelector.addGoal(3, new HurtByTargetGoal((CreatureEntity) this.getEntity()));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 32.0F));
         this.goalSelector.addGoal(4, new BreakDoorGoal(this, e -> true));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
     }
@@ -89,8 +83,8 @@ public class KoolaidMan extends MobEntity {
         return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.glass.break"));
     }
 
-    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
-        return MobEntity.func_233666_p_()
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return AttributeModifierMap.createMutableAttribute()
                 .createMutableAttribute(Attributes.MAX_HEALTH, 150.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.5D)
@@ -146,7 +140,7 @@ public class KoolaidMan extends MobEntity {
     // Made with Blockbench 3.7.5
     // Exported for Minecraft version 1.15
     // Paste this class into your mod and generate all required imports
-    public static class Model extends EntityModel<Entity> {
+    public static class Model extends EntityModel<KoolaidMan> {
         private final ModelRenderer body;
         private final ModelRenderer cube_r1;
         private final ModelRenderer rightleg;
@@ -186,19 +180,17 @@ public class KoolaidMan extends MobEntity {
             lefthand.setTextureOffset(0, 28).addBox(-5.3937F, -17.8862F, -2.0F, 4.0F, 13.0F, 5.0F, 0.0F, false);
         }
 
-        public Model(ModelRenderer body, ModelRenderer cube_r1, ModelRenderer rightleg, ModelRenderer leftleg, ModelRenderer righthand, ModelRenderer lefthand) {
-            this.body = body;
-            this.cube_r1 = cube_r1;
-            this.rightleg = rightleg;
-            this.leftleg = leftleg;
-            this.righthand = righthand;
-            this.lefthand = lefthand;
+        @Override
+        public void setRotationAngles(KoolaidMan entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+            this.lefthand.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
+            this.rightleg.rotateAngleX = MathHelper.cos(limbSwing * 1.0F) * 1.0F * limbSwingAmount;
+            this.leftleg.rotateAngleX = MathHelper.cos(limbSwing * 1.0F) * -1.0F * limbSwingAmount;
+            this.righthand.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmount;
         }
 
         @Override
-        public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue,
-                           float alpha) {
-            body.render(matrixStack, buffer, packedLight, packedOverlay);
+        public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+            body.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         }
 
         public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
@@ -206,12 +198,19 @@ public class KoolaidMan extends MobEntity {
             modelRenderer.rotateAngleY = y;
             modelRenderer.rotateAngleZ = z;
         }
+    }
 
-        public void setRotationAngles(Entity e, float f, float f1, float f2, float f3, float f4) {
-            this.lefthand.rotateAngleX = MathHelper.cos(f * 0.6662F) * f1;
-            this.rightleg.rotateAngleX = MathHelper.cos(f * 1.0F) * 1.0F * f1;
-            this.leftleg.rotateAngleX = MathHelper.cos(f * 1.0F) * -1.0F * f1;
-            this.righthand.rotateAngleX = MathHelper.cos(f * 0.6662F + (float) Math.PI) * f1;
+    static class Renderer extends MobRenderer<KoolaidMan, KoolaidMan.Model> {
+
+        private static final ResourceLocation TEXTURE = new ResourceLocation(Base.MODID, "textures/entity/koolaidman/koolaidman.png");
+
+        public Renderer(EntityRendererManager renderManagerIn) {
+            super(renderManagerIn, new Model(), 0.8f);
+        }
+
+        @Override
+        public ResourceLocation getEntityTexture(KoolaidMan entity) {
+            return TEXTURE;
         }
     }
 }

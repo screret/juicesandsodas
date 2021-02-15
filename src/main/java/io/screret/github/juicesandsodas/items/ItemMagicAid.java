@@ -24,13 +24,14 @@ import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
-public class ItemMagicAid extends Item implements IItemColor {
+public class ItemMagicAid extends ItemDrink implements IItemColor {
 
     public ItemMagicAid(Item.Properties properties){
         super(properties);
     }
     static final int MAX_FOOD_LEVEL = 20;
     static final int FOOD_LEVEL_INCREASE = 4;
+    static int COLOR;
 
     boolean isShaderEnabled = false;
 
@@ -91,22 +92,6 @@ public class ItemMagicAid extends Item implements IItemColor {
         playerentity.addPotionEffect(new EffectInstance(Effect.get(20), 6000));
 
         return stack;
-    }
-
-    @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.DRINK;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack stack) {
-        return 32;
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
-        return false;
     }
 
     @Override

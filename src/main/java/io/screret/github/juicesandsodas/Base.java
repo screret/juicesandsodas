@@ -1,15 +1,23 @@
 package io.screret.github.juicesandsodas;
 
+import com.google.common.collect.ImmutableList;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
-import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.ModStuff;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import io.screret.github.juicesandsodas.plants.ModFeatures;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.FeatureSpread;
+import net.minecraft.world.gen.feature.TwoLayerFeature;
+import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
+import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
+import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -45,10 +53,25 @@ public class Base {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModStuff.BLOCKS.register(modEventBus);
+        ModStuff.ITEMS.register(modEventBus);
+        ModStuff.ENTITIES.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
+        ModFeatures.LEMON_TREE = Feature.TREE.withConfiguration((
+                new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
+                        new SimpleBlockStateProvider(ModStuff.LEMON_LEAVES.get().getDefaultState()),
+                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3),
+                        new StraightTrunkPlacer(3, 1, 0),
+                        new TwoLayerFeature(1, 0, 1))
+                        .setIgnoreVines()
+                        .setDecorators(ImmutableList.of(new BeehiveTreeDecorator(0.05F))))
+                .build());
+        ModFeatures.TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon", Feature.TREE.withConfiguration(ModFeatures.LEMON_TREE.config));
+        //DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
