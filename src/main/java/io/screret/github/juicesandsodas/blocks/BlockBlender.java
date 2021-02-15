@@ -63,7 +63,7 @@ public class BlockBlender extends BlockTileEntity {
 		public int cranks;
 		
 		public TESimpleFluidMixer(final TileEntityType<?> tileEntityTypeIn) {
-			super(tileEntityTypeIn, 2, new TranslationTextComponent(Registry.getBlock("simple_fluid_mixer").getTranslationKey()), Registry.getContainerId("simple_fluid_mixer"), ContainerSimpleFluidMixer.class);
+			super(tileEntityTypeIn, 2, new TranslationTextComponent(ModStuff.BLENDER.get().getTranslationKey()), ModStuff.BLENDER_CONTAINER.get(), ContainerBlender.class);
 		}
 		
 		public TESimpleFluidMixer() {
@@ -225,7 +225,7 @@ public class BlockBlender extends BlockTileEntity {
 		private static final Pair<Integer, Integer> PLAYER_INV_POS = new Pair<>(8, 84);
 		private static final Pair<Integer, Integer> PLAYER_HOTBAR_POS = new Pair<>(8, 142);
 		
-		public ContainerBlender(final int windowId, final PlayerInventory playerInventory, final TESimpleFluidMixer tileEntity) {
+		public ContainerBlender(final int windowId, final PlayerInventory playerInventory, final TEBlender tileEntity) {
 			super(Registry.getContainerType("simple_fluid_mixer"), windowId, tileEntity, playerInventory, PLAYER_INV_POS, PLAYER_HOTBAR_POS, 0);
 			
 			this.addSlot(new Slot(this.tileEntity, 0, INPUT_A_POS.getFirst(), INPUT_A_POS.getSecond()));
