@@ -1,3 +1,5 @@
+package io.screret.github.juicesandsodas.blocks;
+
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerInventory;
