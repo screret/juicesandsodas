@@ -5,19 +5,18 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
 
-public class CustomLiquidStorage extends FluidStorage implements INBTSerializable<CompoundNBT> {
+public class CustomLiquidStorage extends FluidTank implements INBTSerializable<CompoundNBT> {
 
-    public CustomEnergyStorage(int capacity, int maxTransfer) {
-        super(capacity, maxTransfer);
+    public CustomLiquidStorage(int capacity, int maxTransfer, TileEntity tile) {
+        super(capacity, maxTransfer, tile);
     }
 
-    protected void onEnergyChanged() {
 
-    }
 
-    public void setEnergy(int energy) {
-        this.energy = energy;
-        onEnergyChanged();
+
+
+    public void setFluid(int fluid) {
+        this.fluid = fluid;
     }
 
     public void addEnergy(int energy) {
@@ -25,26 +24,20 @@ public class CustomLiquidStorage extends FluidStorage implements INBTSerializabl
         if (this.energy > getMaxEnergyStored()) {
             this.energy = getEnergyStored();
         }
-        onEnergyChanged();
+
     }
 
-    public void consumeEnergy(int energy) {
-        this.energy -= energy;
-        if (this.energy < 0) {
-            this.energy = 0;
-        }
-        onEnergyChanged();
-    }
 
+    
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
-        tag.putInt("energy", getEnergyStored());
+        tag.putInt("fluid", getFluidStored());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        setEnergy(nbt.getInt("energy"));
+        setFluid(nbt.getInt("energy"));
     }
 }
