@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler
-public class BlockBlender extends Block {
+public class BlockBlender extends BlockTileEntity {
 	
 
 	public BlockBlender() {
