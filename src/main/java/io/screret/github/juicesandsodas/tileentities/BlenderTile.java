@@ -1,4 +1,4 @@
-package io.screret.github.juicesandsodas.blocks;
+package io.screret.github.juicesandsodas.tileentities;
 
 
 import io.screret.github.juicesandsodas.init.ModStuff;
@@ -17,11 +17,6 @@ public class BlenderTile extends TileEntity implements IFluidHandler, ITickableT
     public FluidTank tank = new FluidTank(10000);
     private boolean needsUpdate = true;
     private int updateTimer = 0;
-
-
-    public BlenderTile(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
-    }
 
     public BlenderTile() {
         super(ModStuff.BLENDER_TILE.get());

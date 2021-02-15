@@ -2,7 +2,8 @@ package io.screret.github.juicesandsodas.init;
 
 import io.screret.github.juicesandsodas.Base;
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
-import io.screret.github.juicesandsodas.blocks.BlenderTile;
+import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
+import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.items.ItemKoolAid;
 import io.screret.github.juicesandsodas.items.ItemLemonade;
@@ -19,6 +20,9 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
@@ -48,7 +52,7 @@ public class ModStuff {
     //blocks
     public static final RegistryObject<Block> LEMON_LEAVES = BLOCKS.register("lemon_leaves", () -> new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid()));
     public static final RegistryObject<Block> LEMON_SAPLING = BLOCKS.register("lemon_sapling", () -> new SaplingBlock(new LemonTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT)));
-    public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", () -> new BlenderBlock(AbstractBlock.Properties.create(Material.IRON)));
+    public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", () -> new BlenderBlock());
 
     //tile entities
     public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(BlenderTile::new, BLENDER.get()).build(null));
@@ -83,5 +87,10 @@ public class ModStuff {
 
 
     //containers
-
+    public static final RegistryObject<ContainerType<BlenderBlockContainer>> BLENDER_CONT = CONTAINERS.register("blender", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new BlenderBlockContainer(windowId, world, pos, inv, inv.player);
+    }));
+)
 }
