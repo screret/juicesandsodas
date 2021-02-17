@@ -4,8 +4,9 @@ package io.screret.github.juicesandsodas.blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class CustomLiquidStorage extends FluidStorage implements INBTSerializable<CompoundNBT> {
+public class CustomLiquidStorage extends FluidTank implements INBTSerializable<CompoundNBT> {
 
     public CustomEnergyStorage(int capacity, int maxTransfer) {
         super(capacity, maxTransfer);
