@@ -1,7 +1,7 @@
 package io.screret.github.juicesandsodas.materials;
 
 import io.screret.github.juicesandsodas.Base;
-import io.screret.github.juicesandsodas.init.ModStuff;
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.crafting.Ingredient;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public enum ModArmorMaterial implements IArmorMaterial {
 
-                    JELLO(Base.MODID + ":jello", 50, new int[]{10, 20, 30, 10}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 10.0F, 10.0F, () -> { return Ingredient.fromItems(ModStuff.JELLO.get()); });
+                    JELLO(Base.MODID + ":jello", 50, new int[]{10, 20, 30, 10}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 10.0F, 10.0F, () -> { return Ingredient.fromItems(Registry.JELLO.get()); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private final String name;
@@ -58,7 +58,7 @@ public enum ModArmorMaterial implements IArmorMaterial {
 
     @Override
     public Ingredient getRepairMaterial() {
-        return Ingredient.fromItems(ModStuff.JELLO.get());
+        return Ingredient.fromItems(Registry.JELLO.get());
     }
 
     @Override

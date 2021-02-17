@@ -1,20 +1,16 @@
 package io.screret.github.juicesandsodas;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
-import io.screret.github.juicesandsodas.init.ModStuff;
-import io.screret.github.juicesandsodas.plants.ModFeatures;
+import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.block.ComposterBlock;
+import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureSpread;
-import net.minecraft.world.gen.feature.TwoLayerFeature;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
-import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,6 +25,8 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -55,39 +53,37 @@ public class Base {
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        ModStuff.BLOCKS.register(modEventBus);
-        ModStuff.ITEMS.register(modEventBus);
-        ModStuff.ENTITIES.register(modEventBus);
+        Registry.BLOCKS.register(modEventBus);
+        Registry.ITEMS.register(modEventBus);
+        Registry.ENTITIES.register(modEventBus);
+        Registry.TILES.register(modEventBus);
+        Registry.CONTAINERS.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        ModFeatures.LEMON_TREE = Feature.TREE.withConfiguration((
-                new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
-                        new SimpleBlockStateProvider(ModStuff.LEMON_LEAVES.get().getDefaultState()),
-                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3),
-                        new StraightTrunkPlacer(3, 1, 0),
-                        new TwoLayerFeature(1, 0, 1))
-                        .setIgnoreVines()
-                        .setDecorators(ImmutableList.of(new BeehiveTreeDecorator(0.05F))))
-                .build());
-        ModFeatures.TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon", Feature.TREE.withConfiguration(ModFeatures.LEMON_TREE.config));
-        types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
+        Registry.ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(
+                Registry.MANDARIN_LEAVES.get(),
+                Registry.LIME_LEAVES.get(),
+                Registry.CITRON_LEAVES.get(),
+                Registry.POMELO_LEAVES.get(),
+                Registry.ORANGE_LEAVES.get(),
+                Registry.LEMON_LEAVES.get(),
+                Registry.GRAPEFRUIT_LEAVES.get(),
+                Registry.APPLE_LEAVES.get()
+        )));
+        List<FruitType> types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
         try {
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
-            pot.addPlant(MANDARIN_SAPLING.getRegistryName(), () -> POTTED_MANDARIN);
-            pot.addPlant(LIME_SAPLING.getRegistryName(), () -> POTTED_LIME);
-            pot.addPlant(CITRON_SAPLING.getRegistryName(), () -> POTTED_CITRON);
-            pot.addPlant(POMELO_SAPLING.getRegistryName(), () -> POTTED_POMELO);
-            pot.addPlant(ORANGE_SAPLING.getRegistryName(), () -> POTTED_ORANGE);
-            pot.addPlant(LEMON_SAPLING.getRegistryName(), () -> POTTED_LEMON);
-            pot.addPlant(GRAPEFRUIT_SAPLING.getRegistryName(), () -> POTTED_GRAPEFRUIT);
-            pot.addPlant(APPLE_SAPLING.getRegistryName(), () -> POTTED_APPLE);
+            pot.addPlant(Registry.MANDARIN_SAPLING.get().getRegistryName(), () -> Registry.POTTED_MANDARIN.get());
+            pot.addPlant(Registry.LIME_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LIME.get());
+            pot.addPlant(Registry.CITRON_SAPLING.get().getRegistryName(), () -> Registry.POTTED_CITRON.get());
+            pot.addPlant(Registry.POMELO_SAPLING.get().getRegistryName(), () -> Registry.POTTED_POMELO.get());
+            pot.addPlant(Registry.ORANGE_SAPLING.get().getRegistryName(), () -> Registry.POTTED_ORANGE.get());
+            pot.addPlant(Registry.LEMON_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LEMON.get());
+            pot.addPlant(Registry.GRAPEFRUIT_SAPLING.get().getRegistryName(), () -> Registry.POTTED_GRAPEFRUIT.get());
+            pot.addPlant(Registry.APPLE_SAPLING.get().getRegistryName(), () -> Registry.POTTED_APPLE.get());
+            pot.addPlant(Registry.CHERRY_SAPLING.get().getRegistryName(), () -> Registry.POTTED_CHERRY.get());
 
-            if (AxeItem.BLOCK_STRIPPING_MAP instanceof ImmutableMap) {
-                AxeItem.BLOCK_STRIPPING_MAP = Collections.synchronizedMap(Maps.newHashMap(AxeItem.BLOCK_STRIPPING_MAP));
-            }
-            AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
-            AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
 
             for (FruitType type : FruitType.values()) {
                 ComposterBlock.CHANCES.put(type.fruit, 0.5f);
@@ -100,22 +96,21 @@ public class Base {
 
         ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
         for (FruitType type : types) {
-            Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
+            Supplier<ConfiguredFeature<?, ?>> cf = () -> Registry.buildTreeFeature(type, true, null);
             builder.add(cf);
         }
-        trees = builder.build();
+
+        Registry.trees = builder.build();
         if (FruitTypeExtension.CHERRY != null) {
-            cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
-            allFeatures = new ConfiguredFeature[5];
+            Registry.allFeatures = new ConfiguredFeature[5];
         } else {
-            allFeatures = new ConfiguredFeature[3];
+            Registry.allFeatures = new ConfiguredFeature[3];
         }
-        makeFeature("002", 0, .002f, 0);
-        makeFeature("005", 0, .005f, 1);
-        makeFeature("1", 1, 0, 2);
-        trees = null;
-        cherry = null;
-        
+        Registry.makeFeature("002", 0, .002f, 0);
+        Registry.makeFeature("005", 0, .005f, 1);
+        Registry.makeFeature("1", 1, 0, 2);
+        Registry.trees = null;
+        Registry.cherry = null;
         //DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
     }
 

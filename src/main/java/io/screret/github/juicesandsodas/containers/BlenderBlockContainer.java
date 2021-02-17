@@ -1,6 +1,7 @@
 package io.screret.github.juicesandsodas.containers;
 
-import io.screret.github.juicesandsodas.init.ModStuff;
+import io.screret.github.juicesandsodas.blocks.CustomLiquidStorage;
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -12,7 +13,6 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,7 +27,7 @@ public class BlenderBlockContainer extends Container {
     private IItemHandler playerInventory;
 
     public BlenderBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
-        super(ModStuff.BLENDER_CONT.get(), windowId);
+        super(Registry.BLENDER_CONT.get(), windowId);
         tileEntity = world.getTileEntity(pos);
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
@@ -54,8 +54,8 @@ public class BlenderBlockContainer extends Container {
             @Override
             public void set(int value) {
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(h -> {
-                    int energyStored = h.getTanks() & 0xffff0000;
-                    ((CapabilityFluidHandler) h).setEnergy(energyStored + (value & 0xffff));
+                    int fluidStored = h.getTanks() & 0xffff0000;
+                    ((CustomLiquidStorage) h).setFluid(fluidStored + (value & 0xffff));
                 });
             }
         });
@@ -69,7 +69,7 @@ public class BlenderBlockContainer extends Container {
             public void set(int value) {
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(h -> {
                     int energyStored = h.getTanks() & 0x0000ffff;
-                    ((CustomEnergyStorage) h).setEnergy(energyStored | (value << 16));
+                    ((CustomLiquidStorage) h).setFluid(energyStored | (value << 16));
                 });
             }
         });
@@ -81,7 +81,7 @@ public class BlenderBlockContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, ModStuff.BLENDER.get());
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, Registry.BLENDER.get());
     }
 
     @Override

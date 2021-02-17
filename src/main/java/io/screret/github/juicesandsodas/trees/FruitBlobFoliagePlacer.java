@@ -1,11 +1,8 @@
-package snownee.fruits.world.gen.foliageplacer;
-
-import java.util.Random;
-import java.util.Set;
+package io.screret.github.juicesandsodas.trees;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.util.math.BlockPos;
@@ -16,8 +13,9 @@ import net.minecraft.world.gen.feature.FeatureSpread;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
-import snownee.fruits.CoreModule;
-import snownee.fruits.block.FruitLeavesBlock;
+
+import java.util.Random;
+import java.util.Set;
 
 public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
     public static final Codec<FruitBlobFoliagePlacer> CODEC = RecordCodecBuilder.create(instance -> {
@@ -30,7 +28,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 
     @Override
     protected FoliagePlacerType<?> func_230371_a_() {
-        return CoreModule.BLOB_PLACER;
+        return Registry.BLOB_PLACER;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package snownee.fruits.world.gen.treedecorator;
+package io.screret.github.juicesandsodas.trees;
 
 import java.util.List;
 import java.util.Random;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.mojang.serialization.Codec;
 
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,10 +18,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
-import snownee.fruits.CoreModule;
 
 public class CarpetTreeDecorator extends TreeDecorator {
-    public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.field_236796_a_.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
+    public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.CODEC.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
         return decorator.carpetProvider;
     }).codec();
     private final BlockStateProvider carpetProvider;
@@ -31,7 +31,7 @@ public class CarpetTreeDecorator extends TreeDecorator {
 
     @Override
     protected TreeDecoratorType<?> func_230380_a_() {
-        return CoreModule.CARPET_DECORATOR;
+        return Registry.CARPET_DECORATOR;
     }
 
     @Override

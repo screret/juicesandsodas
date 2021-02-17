@@ -1,12 +1,9 @@
 package io.screret.github.juicesandsodas.tileentities;
 
 
-import io.screret.github.juicesandsodas.init.ModStuff;
-import net.minecraft.fluid.Fluid;
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -19,7 +16,7 @@ public class BlenderTile extends TileEntity implements IFluidHandler, ITickableT
     private int updateTimer = 0;
 
     public BlenderTile() {
-        super(ModStuff.BLENDER_TILE.get());
+        super(Registry.BLENDER_TILE.get());
     }
 
     @Override

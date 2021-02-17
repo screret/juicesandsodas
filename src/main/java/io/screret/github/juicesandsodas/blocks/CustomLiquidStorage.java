@@ -2,28 +2,26 @@ package io.screret.github.juicesandsodas.blocks;
 
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class CustomLiquidStorage extends FluidTank implements INBTSerializable<CompoundNBT> {
 
-    public CustomLiquidStorage(int capacity, int maxTransfer, TileEntity tile) {
-        super(capacity, maxTransfer, tile);
+    public CustomLiquidStorage(int capacity, TileEntity tile) {
+        super(capacity);
     }
-
-
-
 
 
     public void setFluid(int fluid) {
-        this.fluid = fluid;
+        this.fluid.setAmount(fluid);
     }
 
-    public void addEnergy(int energy) {
-        this.energy += energy;
-        if (this.energy > getMaxEnergyStored()) {
-            this.energy = getEnergyStored();
+    public void addFluid(int amount) {
+        this.fluid.setAmount(this.fluid.getAmount() + amount);
+        if (this.fluid.getAmount() > this.getCapacity()) {
+            this.fluid.setAmount(this.getFluidAmount());
         }
 
     }
@@ -33,12 +31,12 @@ public class CustomLiquidStorage extends FluidTank implements INBTSerializable<C
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
-        tag.putInt("fluid", getFluidStored());
+        tag.putInt("fluid", this.getCapacity());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        setFluid(nbt.getInt("energy"));
+        setFluid(nbt.getInt("fluid"));
     }
 }

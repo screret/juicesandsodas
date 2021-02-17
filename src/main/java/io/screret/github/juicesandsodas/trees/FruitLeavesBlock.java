@@ -1,10 +1,8 @@
-package snownee.fruits.block;
+package io.screret.github.juicesandsodas.trees;
 
-import java.util.Random;
-import java.util.function.Supplier;
-
-import javax.annotation.Nullable;
-
+import io.screret.github.juicesandsodas.FruitType;
+import io.screret.github.juicesandsodas.FruitsConfig;
+import io.screret.github.juicesandsodas.tileentities.FruitTreeTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
@@ -39,17 +37,18 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.ItemHandlerHelper;
-import snownee.fruits.FruitType;
-import snownee.fruits.FruitsConfig;
-import snownee.fruits.cherry.block.CherryLeavesBlock;
-import snownee.fruits.tile.FruitTreeTile;
-import snownee.fruits.world.gen.treedecorator.CarpetTreeDecorator;
+import org.jetbrains.annotations.Range;
+
+import javax.annotation.Nullable;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
 
     public final Supplier<FruitType> type;
+
 
     public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
         super(properties);
@@ -163,7 +162,6 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-        state = updateDistance(state, world, pos);
         if (state.get(PERSISTENT) && state.get(DISTANCE) != 1) {
             state = state.with(PERSISTENT, false);
         }
@@ -199,9 +197,6 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         Entity entity = context.getEntity();
-        if (entity instanceof ItemEntity || entity instanceof IFlyingAnimal || entity == null && state.getBlock().getClass() == CherryLeavesBlock.class) {
-            return VoxelShapes.empty();
-        }
         return VoxelShapes.fullCube();
     }
 
@@ -214,9 +209,6 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 if (state.getBlock() instanceof FruitLeavesBlock) {
                     if (state.get(AGE) == 3) {
                         ((FruitLeavesBlock) state.getBlock()).grow((ServerWorld) worldIn, worldIn.rand, pos2, state);
-                    }
-                    if (state.getBlock() instanceof CherryLeavesBlock) {
-                        CarpetTreeDecorator.placeCarpet(worldIn, pos2, ((CherryLeavesBlock) state.getBlock()).getCarpet().getDefaultState(), 3);
                     }
                 }
             }

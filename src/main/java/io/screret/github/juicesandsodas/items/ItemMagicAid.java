@@ -1,6 +1,6 @@
 package io.screret.github.juicesandsodas.items;
 
-import io.screret.github.juicesandsodas.init.ModStuff;
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -74,11 +74,11 @@ public class ItemMagicAid extends ItemDrink implements IItemColor {
 
         if (playerentity == null || !playerentity.abilities.isCreativeMode) {
             if (stack.isEmpty()) {
-                return new ItemStack(ModStuff.KOOL_AID_EMPTY.get());
+                return new ItemStack(Registry.KOOL_AID_EMPTY.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(ModStuff.KOOL_AID_EMPTY.get()));
+                playerentity.inventory.addItemStackToInventory(new ItemStack(Registry.KOOL_AID_EMPTY.get()));
             }
         }
 

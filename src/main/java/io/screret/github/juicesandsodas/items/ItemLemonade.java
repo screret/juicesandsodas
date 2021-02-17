@@ -1,15 +1,12 @@
 package io.screret.github.juicesandsodas.items;
 
-import io.screret.github.juicesandsodas.init.ModStuff;
+import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.GlassBottleItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.UseAction;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.stats.Stats;
@@ -67,11 +64,11 @@ public class ItemLemonade extends ItemDrink {
 
         if (playerentity == null || !playerentity.abilities.isCreativeMode) {
             if (stack.isEmpty()) {
-                return new ItemStack(ModStuff.LEMONADE_EMPTY.get());
+                return new ItemStack(Registry.LEMONADE_EMPTY.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(ModStuff.LEMONADE_EMPTY.get()));
+                playerentity.inventory.addItemStackToInventory(new ItemStack(Registry.LEMONADE_EMPTY.get()));
             }
         }
 
