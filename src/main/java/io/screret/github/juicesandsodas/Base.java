@@ -71,6 +71,52 @@ public class Base {
                         .setDecorators(ImmutableList.of(new BeehiveTreeDecorator(0.05F))))
                 .build());
         ModFeatures.TREE_LEMON_CONFIG = Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "tree_lemon", Feature.TREE.withConfiguration(ModFeatures.LEMON_TREE.config));
+        types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
+        try {
+            FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
+            pot.addPlant(MANDARIN_SAPLING.getRegistryName(), () -> POTTED_MANDARIN);
+            pot.addPlant(LIME_SAPLING.getRegistryName(), () -> POTTED_LIME);
+            pot.addPlant(CITRON_SAPLING.getRegistryName(), () -> POTTED_CITRON);
+            pot.addPlant(POMELO_SAPLING.getRegistryName(), () -> POTTED_POMELO);
+            pot.addPlant(ORANGE_SAPLING.getRegistryName(), () -> POTTED_ORANGE);
+            pot.addPlant(LEMON_SAPLING.getRegistryName(), () -> POTTED_LEMON);
+            pot.addPlant(GRAPEFRUIT_SAPLING.getRegistryName(), () -> POTTED_GRAPEFRUIT);
+            pot.addPlant(APPLE_SAPLING.getRegistryName(), () -> POTTED_APPLE);
+
+            if (AxeItem.BLOCK_STRIPPING_MAP instanceof ImmutableMap) {
+                AxeItem.BLOCK_STRIPPING_MAP = Collections.synchronizedMap(Maps.newHashMap(AxeItem.BLOCK_STRIPPING_MAP));
+            }
+            AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_LOG, STRIPPED_CITRUS_LOG);
+            AxeItem.BLOCK_STRIPPING_MAP.put(CITRUS_WOOD, STRIPPED_CITRUS_WOOD);
+
+            for (FruitType type : FruitType.values()) {
+                ComposterBlock.CHANCES.put(type.fruit, 0.5f);
+                ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
+                ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
+            }
+        } catch (Exception e) {
+            FruitsMod.logger.catching(e);
+        }
+
+        if (FruitsConfig.worldGen) {
+            ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
+            for (FruitType type : types) {
+                Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
+                builder.add(cf);
+            }
+            trees = builder.build();
+            if (FruitTypeExtension.CHERRY != null) {
+                cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
+                allFeatures = new ConfiguredFeature[5];
+            } else {
+                allFeatures = new ConfiguredFeature[3];
+            }
+            makeFeature("002", 0, .002f, 0);
+            makeFeature("005", 0, .005f, 1);
+            makeFeature("1", 1, 0, 2);
+            trees = null;
+            cherry = null;
+        }
         //DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
     }
 
