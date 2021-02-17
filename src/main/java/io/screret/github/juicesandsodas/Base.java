@@ -95,28 +95,27 @@ public class Base {
                 ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
             }
         } catch (Exception e) {
-            FruitsMod.logger.catching(e);
+            LOGGER.catching(e);
         }
 
-        if (FruitsConfig.worldGen) {
-            ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
-            for (FruitType type : types) {
-                Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
-                builder.add(cf);
-            }
-            trees = builder.build();
-            if (FruitTypeExtension.CHERRY != null) {
-                cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
-                allFeatures = new ConfiguredFeature[5];
-            } else {
-                allFeatures = new ConfiguredFeature[3];
-            }
-            makeFeature("002", 0, .002f, 0);
-            makeFeature("005", 0, .005f, 1);
-            makeFeature("1", 1, 0, 2);
-            trees = null;
-            cherry = null;
+        ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
+        for (FruitType type : types) {
+            Supplier<ConfiguredFeature<?, ?>> cf = () -> buildTreeFeature(type, true, null);
+            builder.add(cf);
         }
+        trees = builder.build();
+        if (FruitTypeExtension.CHERRY != null) {
+            cherry = buildTreeFeature(FruitTypeExtension.CHERRY, true, new SimpleBlockStateProvider(CherryModule.CHERRY_CARPET.getDefaultState()));
+            allFeatures = new ConfiguredFeature[5];
+        } else {
+            allFeatures = new ConfiguredFeature[3];
+        }
+        makeFeature("002", 0, .002f, 0);
+        makeFeature("005", 0, .005f, 1);
+        makeFeature("1", 1, 0, 2);
+        trees = null;
+        cherry = null;
+        
         //DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
     }
 
