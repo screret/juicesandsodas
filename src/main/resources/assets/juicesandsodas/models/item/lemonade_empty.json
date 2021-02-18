@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "juicesandsodas:items/lemonade_empty"
+    "layer0": "juicesandsodas:item/lemonade_empty"
   }
 }

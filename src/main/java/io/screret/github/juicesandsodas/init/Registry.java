@@ -1,19 +1,18 @@
 package io.screret.github.juicesandsodas.init;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 import io.screret.github.juicesandsodas.Base;
 import io.screret.github.juicesandsodas.FruitTree;
 import io.screret.github.juicesandsodas.FruitType;
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
-import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.items.ItemKoolAid;
 import io.screret.github.juicesandsodas.items.ItemLemonade;
 import io.screret.github.juicesandsodas.items.ItemMagicAid;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
 import io.screret.github.juicesandsodas.materials.ModMaterials;
+import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import io.screret.github.juicesandsodas.tileentities.FruitTreeTile;
 import io.screret.github.juicesandsodas.trees.CarpetTreeDecorator;
 import io.screret.github.juicesandsodas.trees.FruitBlobFoliagePlacer;
@@ -23,18 +22,18 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.*;
-import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
@@ -58,8 +57,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -116,15 +113,13 @@ public class Registry {
     public static final RegistryObject<Block> POTTED_APPLE = BLOCKS.register("potted_apple", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CHERRY_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
     public static final RegistryObject<Block> POTTED_CHERRY = BLOCKS.register("potted_cherry", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, APPLE_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
 
-    public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", BlenderBlock::new);
-    public static final RegistryObject<Block> CITRUS_LOG = BLOCKS.register("citrus_log", () -> new Block(AbstractBlock.Properties.create(Material.WOOD)));
-    public static final RegistryObject<Block> CITRUS_WOOD = BLOCKS.register("citrus_wood", () -> new Block(AbstractBlock.Properties.create(Material.WOOD)));
+    public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", () -> new BlenderBlock(AbstractBlock.Properties.create(Material.WOOD).notSolid()));
 
     public static Set<Block> ALL_LEAVES;
 
 
     //tile entities
-    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(BlenderTile::new, BLENDER.get()).build(null));
+    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(() -> new BlenderTile(), BLENDER.get()).build(null));
     public static final RegistryObject<TileEntityType<FruitTreeTile>> FRUIT_TREE = TILES.register("fruit_tree", () -> new TileEntityType<>(FruitTreeTile::new, ALL_LEAVES, null));
 
 
@@ -155,8 +150,25 @@ public class Registry {
     public static final RegistryObject<Item> JELLO_LEGGINGS = ITEMS.register("jello_leggings", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.LEGS, new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> JELLO_BOOTS = ITEMS.register("jello_boots", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.FEET, new Item.Properties().group(Base.MOD_TAB)));
     //BlockItems
+    //leaves
     public static final RegistryObject<Item> LEMON_LEAVES_ITEM = ITEMS.register("lemon_leaves", () -> new BlockItem(Registry.LEMON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CITRON_LEAVES_ITEM = ITEMS.register("citron_leaves", () -> new BlockItem(Registry.CITRON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CHERRY_LEAVES_ITEM = ITEMS.register("cherry_leaves", () -> new BlockItem(Registry.CHERRY_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> POMELO_LEAVES_ITEM = ITEMS.register("pomelo_leaves", () -> new BlockItem(Registry.POMELO_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> ORANGE_LEAVES_ITEM = ITEMS.register("orange_leaves", () -> new BlockItem(Registry.ORANGE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> GRAPEFRUIT_LEAVES_ITEM = ITEMS.register("grapefruit_leaves", () -> new BlockItem(Registry.GRAPEFRUIT_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> APPLE_LEAVES_ITEM = ITEMS.register("apple_leaves", () -> new BlockItem(Registry.APPLE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ITEMS.register("mandarin_leaves", () -> new BlockItem(Registry.MANDARIN_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    //saplings
     public static final RegistryObject<Item> LEMON_SAPLING_ITEM = ITEMS.register("lemon_sapling", () -> new BlockItem(Registry.LEMON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CITRON_SAPLING_ITEM = ITEMS.register("citron_sapling", () -> new BlockItem(Registry.CITRON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> MANDARIN_SAPLING_ITEM = ITEMS.register("mandarin_sapling", () -> new BlockItem(Registry.MANDARIN_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> LIME_SAPLING_ITEM = ITEMS.register("lime_sapling", () -> new BlockItem(Registry.LIME_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> POMELO_SAPLING_ITEM = ITEMS.register("pomelo_sapling", () -> new BlockItem(Registry.POMELO_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> ORANGE_SAPLING_ITEM = ITEMS.register("orange_sapling", () -> new BlockItem(Registry.ORANGE_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> GRAPEFRUIT_SAPLING_ITEM = ITEMS.register("grapefruit_sapling", () -> new BlockItem(Registry.GRAPEFRUIT_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CHERRY_SAPLING_ITEM = ITEMS.register("cherry_sapling", () -> new BlockItem(Registry.CHERRY_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    //others
     public static final RegistryObject<Item> BLENDER_ITEM = ITEMS.register("blender", () -> new BlockItem(Registry.BLENDER.get(), new Item.Properties().group(Base.MOD_TAB)));
 
 
@@ -169,7 +181,7 @@ public class Registry {
     public static final RegistryObject<ContainerType<BlenderBlockContainer>> BLENDER_CONT = CONTAINERS.register("blender", () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
-        return new BlenderBlockContainer(windowId, world, pos, inv, inv.player);
+        return BlenderBlockContainer.createContainerClientSide(windowId, inv, data);
     }));
 
 

@@ -1,15 +1,62 @@
 {
 "itemGroup.juicesandsodas": "Juices & Sodas",
+
 "item.juicesandsodas.kool_aid": "Kool-Aid",
 "item.juicesandsodas.magic_aid": "Magic-Aid",
 "item.juicesandsodas.lemonade": "Lemonade",
+
 "item.juicesandsodas.jello": "Jello",
+
 "item.juicesandsodas.kool_aid_empty": "Empty Bottle of Kool-Aid",
 "item.juicesandsodas.lemonade_empty": "Empty Bottle of Lemonade",
+
 "item.juicesandsodas.jello_helmet": "Jello Helmet",
 "item.juicesandsodas.jello_chestplate": "Jello Chestplate",
 "item.juicesandsodas.jello_leggings": "Jello Leggings",
-"block.juicesandsodas.test_block": "Test block",
+"item.juicesandsodas.jello_boots": "Jello Boots",
+
+"item.juicesandsodas.mandarin": "Mandarin",
+"item.juicesandsodas.lime": "Lime",
+"item.juicesandsodas.citron": "Citron",
+"item.juicesandsodas.pomelo": "Pomelo",
+"item.juicesandsodas.orange": "Orange",
+"item.juicesandsodas.lemon": "Lemon",
+"item.juicesandsodas.grapefruit": "Grapefruit",
+"item.juicesandsodas.empowered_citron": "Empowered Citron",
+"item.juicesandsodas.cherry": "Cherry",
+"item.juicesandsodas.redlove": "Redlove Fruit",
+
+"block.juicesandsodas.mandarin_sapling": "Mandarin Sapling",
+"block.juicesandsodas.lime_sapling": "Lime Sapling",
+"block.juicesandsodas.citron_sapling": "Citron Sapling",
+"block.juicesandsodas.pomelo_sapling": "Pomelo Sapling",
+"block.juicesandsodas.orange_sapling": "Orange Sapling",
+"block.juicesandsodas.lemon_sapling": "Lemon Sapling",
+"block.juicesandsodas.grapefruit_sapling": "Grapefruit Sapling",
+"block.juicesandsodas.apple_sapling": "Apple Oak Sapling",
+"block.juicesandsodas.cherry_sapling": "Cherry Sapling",
+"block.juicesandsodas.redlove_sapling": "Redlove Sapling",
+
+"block.juicesandsodas.potted_mandarin": "Potted Mandarin Sapling",
+"block.juicesandsodas.potted_lime": "Potted Lime Sapling",
+"block.juicesandsodas.potted_citron": "Potted Citron Sapling",
+"block.juicesandsodas.potted_pomelo": "Potted Pomelo Sapling",
+"block.juicesandsodas.potted_orange": "Potted Orange Sapling",
+"block.juicesandsodas.potted_lemon": "Potted Lemon Sapling",
+"block.juicesandsodas.potted_grapefruit": "Potted Grapefruit Sapling",
+"block.juicesandsodas.potted_apple": "Potted Apple Oak Sapling",
+"block.juicesandsodas.potted_cherry": "Potted Cherry Sapling",
+"block.juicesandsodas.potted_redlove": "Potted Redlove Sapling",
+
+"block.juicesandsodas.mandarin_leaves": "Mandarin Leaves",
+"block.juicesandsodas.lime_leaves": "Lime Leaves",
+"block.juicesandsodas.citron_leaves": "Citron Leaves",
+"block.juicesandsodas.pomelo_leaves": "Pomelo Leaves",
+"block.juicesandsodas.orange_leaves": "Orange Leaves",
 "block.juicesandsodas.lemon_leaves": "Lemon Leaves",
-"block.juicesandsodas.lemon_sapling": "Lemon Sapling"
+"block.juicesandsodas.grapefruit_leaves": "Grapefruit Leaves",
+"block.juicesandsodas.apple_leaves": "Apple Oak Leaves",
+"block.juicesandsodas.cherry_leaves": "Cherry Leaves",
+
+"block.juicesandsodas.test_block": "Test block"
 }

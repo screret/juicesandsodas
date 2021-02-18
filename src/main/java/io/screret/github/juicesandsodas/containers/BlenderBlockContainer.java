@@ -1,26 +1,27 @@
 package io.screret.github.juicesandsodas.containers;
 
-import io.screret.github.juicesandsodas.blocks.CustomLiquidStorage;
 import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntReferenceHolder;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 
-public class BlenderBlockContainer extends Container {
+import java.util.function.Predicate;
+
+public class BlenderBlockContainer extends Container implements IInventory {
 
     private TileEntity tileEntity;
     private PlayerEntity playerEntity;
@@ -34,85 +35,71 @@ public class BlenderBlockContainer extends Container {
 
 	private static final int VANILLA_FIRST_SLOT_INDEX = 0;
 	private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-	private static final int TE_INVENTORY_SLOT_COUNT = TileEntityInventoryBasic.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+	private static final int TE_INVENTORY_SLOT_COUNT = BlenderTile.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
     public static final int TILE_INVENTORY_YPOS = 20;  // the ContainerScreenBasic needs to know these so it can tell where to draw the Titles
     public static final int PLAYER_INVENTORY_YPOS = 51;
 
-    public BlenderBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
-        super(Registry.BLENDER_CONT.get(), windowId);
-        tileEntity = world.getTileEntity(pos);
-        this.playerEntity = player;
-        this.playerInventory = new InvWrapper(playerInventory);
+    public static int WINDOWID;
+    public static IInventory INV;
 
+
+    public static BlenderBlockContainer createContainerServerSide(int windowID, PlayerInventory playerInventory, IInventory contents) {
+        return new BlenderBlockContainer(windowID, playerInventory, contents);
+    }
+
+    public static BlenderBlockContainer createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
+        //  don't need extraData for this example; if you want you can use it to provide extra information from the server, that you can use
+        //  when creating the client container
+        //  eg String detailedDescription = extraData.readString(128);
+        IInventory inventory = (IInventory) new ItemStackHandler(BlenderTile.NUMBER_OF_SLOTS);
+
+        // on the client side there is no parent TileEntity to communicate with, so we:
+        // 1) use a dummy inventory
+        // 2) use "do nothing" lambda functions for canPlayerAccessInventory and markDirty
+        return new BlenderBlockContainer(windowID, playerInventory, inventory);
+    }
+
+    public BlenderBlockContainer(int windowId, PlayerInventory playerInventory, IInventory cont) {
+        super(Registry.BLENDER_CONT.get(), windowId);
+        this.WINDOWID = windowId;
+        this.INV = cont;
+        this.playerInventory = new InvWrapper(playerInventory);
+        PlayerInvWrapper playerInventoryForge = new PlayerInvWrapper(playerInventory);
+
+        final int SLOT_X_SPACING = 18;
+        final int SLOT_Y_SPACING = 18;
+        final int HOTBAR_XPOS = 8;
+        final int HOTBAR_YPOS = 109;
         if (tileEntity != null) {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new Slot(cont, 1, 2 + SLOT_X_SPACING * x, 0));
-                addSlot(new Slot(cont, 1, 2 + SLOT_X_SPACING * x, 1));
-                addSlot(new Slot(cont, 2, 2 + SLOT_X_SPACING * x, 2));
-                addSlot(new Slot(cont, 3, 5 + SLOT_X_SPACING * x, 1));
-                addSlot(new Slot(cont, 3, 6 + SLOT_X_SPACING * x, 1));
-                addSlot(new Slot(cont, 3, 7 + SLOT_X_SPACING * x, 1));
-		}
+                addSlot(new Slot(cont, 1, 2 + SLOT_X_SPACING * 1, 0));
+                addSlot(new Slot(cont, 1, 2 + SLOT_X_SPACING * 2, 1));
+                addSlot(new Slot(cont, 2, 2 + SLOT_X_SPACING * 3, 2));
+                addSlot(new Slot(cont, 3, 5 + SLOT_X_SPACING * 4, 2));
+                addSlot(new Slot(cont, 3, 6 + SLOT_X_SPACING * 5, 2));
+                addSlot(new Slot(cont, 3, 7 + SLOT_X_SPACING * 6, 2));
             });
         }
-        Container cont = this.Container;
-		final int PLAYER_INVENTORY_XPOS = 8;
-		// Add the rest of the player's inventory to the gui
-		for (int y = 0; y < PLAYER_INVENTORY_ROW_COUNT; y++) {
-			for (int x = 0; x < PLAYER_INVENTORY_COLUMN_COUNT; x++) {
-				int slotNumber = HOTBAR_SLOT_COUNT + y * PLAYER_INVENTORY_COLUMN_COUNT + x;
-				int xpos = PLAYER_INVENTORY_XPOS + x * SLOT_X_SPACING;
-				int ypos = PLAYER_INVENTORY_YPOS + y * SLOT_Y_SPACING;
-				addSlot(new SlotItemHandler(playerInventoryForge, slotNumber,  xpos, ypos));
-			}
-        layoutPlayerInventorySlots(10, 70);
-        trackPower();
+
+        final int PLAYER_INVENTORY_XPOS = 8;
+        // Add the rest of the player's inventory to the gui
+        for (int y = 0; y < PLAYER_INVENTORY_ROW_COUNT; y++) {
+            for (int x = 0; x < PLAYER_INVENTORY_COLUMN_COUNT; x++) {
+                int slotNumber = HOTBAR_SLOT_COUNT + y * PLAYER_INVENTORY_COLUMN_COUNT + x;
+                int xpos = PLAYER_INVENTORY_XPOS + x * SLOT_X_SPACING;
+                int ypos = PLAYER_INVENTORY_YPOS + y * SLOT_Y_SPACING;
+                addSlot(new SlotItemHandler(playerInventoryForge, slotNumber, xpos, ypos));
+            }
+            layoutPlayerInventorySlots(10, 70);
         }
-        
-
-    // Setup syncing of power from server to client so that the GUI can show the amount of power in the block
-    private void trackAmount() {
-        // Unfortunatelly on a dedicated server ints are actually truncated to short so we need
-        // to split our integer here (split our 32 bit integer into two 16 bit integers)
-        trackInt(new IntReferenceHolder() {
-            @Override
-            public int get() {
-                return getLiquid() & 0xffff;
-            }
-
-            @Override
-            public void set(int value) {
-                tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(h -> {
-                    int fluidStored = h.getTanks() & 0xffff0000;
-                    ((CustomLiquidStorage) h).setFluid(fluidStored + (value & 0xffff));
-                });
-            }
-        });
-        trackInt(new IntReferenceHolder() {
-            @Override
-            public int get() {
-                return (getLiquid() >> 16) & 0xffff;
-            }
-
-            @Override
-            public void set(int value) {
-                tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(h -> {
-                    int fluidStored = h.getTanks() & 0x0000ffff;
-                    ((CustomLiquidStorage) h).setFluid(fluidStored | (value << 16));
-                });
-            }
-        });
     }
 
-    public int getLiquid() {
-        return tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(IFluidHandler::getTanks).orElse(0);
+
+    public int getFluid() {
+        return tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(IFluidHandler::getTanks).orElse(1);
     }
 
-    @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, Registry.BLENDER.get());
-    }
 
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
@@ -156,6 +143,12 @@ public class BlenderBlockContainer extends Container {
         return itemstack;
     }
 
+    @Override
+    public boolean canInteractWith(PlayerEntity playerIn) {
+        Predicate<PlayerEntity> canPlayerAccessInventoryLambda = x-> true;
+        return canPlayerAccessInventoryLambda.test(playerIn);
+    }
+
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
@@ -181,5 +174,50 @@ public class BlenderBlockContainer extends Container {
         // Hotbar
         topRow += 58;
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 6;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        return null;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int count) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+
+    }
+
+    @Override
+    public void markDirty() {
+
+    }
+
+    @Override
+    public boolean isUsableByPlayer(PlayerEntity player) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
     }
 }

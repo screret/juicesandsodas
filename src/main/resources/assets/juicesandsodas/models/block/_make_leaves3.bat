@@ -1,6 +1,6 @@
 @echo off
 
-set modid=fruittrees
+set modid=juicesandsodas
 
 setlocal enabledelayedexpansion
 

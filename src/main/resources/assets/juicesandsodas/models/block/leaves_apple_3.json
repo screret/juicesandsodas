@@ -1,0 +1,15 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "block/oak_leaves"
+  },
+  "parts": {
+    "0": {
+      "parent": "block/oak_leaves"
+    },
+    "1": {
+      "parent": "juicesandsodas:block/fruit_md",
+      "parent": "juicesandsodas:block/fruit_md"
+    }
+  }
+}

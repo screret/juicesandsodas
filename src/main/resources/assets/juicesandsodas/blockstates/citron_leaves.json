@@ -1,12 +1,12 @@
 {
   "variants": {
-    "age=0": { "model": "fruittrees:block/leaves_citron" },
-    "age=1": { "model": "fruittrees:block/leaves_citron" },
-    "age=2": { "model": "fruittrees:block/leaves_citron_2" },
+    "age=0": { "model": "juicesandsodas:block/leaves_citron" },
+    "age=1": { "model": "juicesandsodas:block/leaves_citron" },
+    "age=2": { "model": "juicesandsodas:block/leaves_citron_2" },
     "age=3": [
-      { "model": "fruittrees:block/leaves_citron_3" },
-      { "model": "fruittrees:block/leaves_citron_3", "y": 90 },
-      { "model": "fruittrees:block/leaves_citron_3", "y": 180 }
+      { "model": "juicesandsodas:block/leaves_citron_3" },
+      { "model": "juicesandsodas:block/leaves_citron_3", "y": 90 },
+      { "model": "juicesandsodas:block/leaves_citron_3", "y": 180 }
     ]
   }
 }

@@ -27,7 +27,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class BlenderBlock extends Block {
-    public BlenderBlock() {
+    public BlenderBlock(Properties properties) {
         super(AbstractBlock.Properties.create(Material.IRON).notSolid());
     }
 
@@ -45,7 +45,7 @@ public class BlenderBlock extends Block {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return getDefaultState().with(BlockStateProperties.HORIZONTAL_FACING, context.getNearestLookingDirection().getOpposite());
+        return getDefaultState();//.with(BlockStateProperties.HORIZONTAL_FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @SuppressWarnings("deprecation")
@@ -57,12 +57,12 @@ public class BlenderBlock extends Block {
                 INamedContainerProvider containerProvider = new INamedContainerProvider() {
                     @Override
                     public ITextComponent getDisplayName() {
-                        return new TranslationTextComponent("screen.mytutorial.firstblock");
+                        return new TranslationTextComponent("screen.juicesandsodas.blender");
                     }
 
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return new BlenderBlockContainer(i, world, pos, playerInventory, playerEntity);
+                        return new BlenderBlockContainer(i, playerInventory, playerInventory.player.inventory);
                     }
                 };
                 NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());

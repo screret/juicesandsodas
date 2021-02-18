@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "juicesandsodas:items/jello_chestplate"
+    "layer0": "juicesandsodas:item/jello_chestplate"
   }
 }

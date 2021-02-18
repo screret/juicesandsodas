@@ -1,0 +1,17 @@
+{
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "juicesandsodas:block/leaves_orange"
+  },
+  "parts": {
+    "0": {
+      "parent": "juicesandsodas:block/leaves_orange"
+    },
+    "1": {
+      "parent": "juicesandsodas:block/flowers",
+      "textures": {
+        "0": "block/juicesandsodas/flowers_orange"
+      }
+    }
+  }
+}

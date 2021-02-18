@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "fruittrees:block/potted_lemon" }
+    "": { "model": "juicesandsodas:block/potted_lemon" }
   }
 }

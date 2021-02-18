@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "juicesandsodas:block/leaves_cherry2"
+  }
+}

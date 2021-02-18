@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "juicesandsodas:items/kool_aid"
+    "layer0": "juicesandsodas:item/kool_aid"
   }
 }

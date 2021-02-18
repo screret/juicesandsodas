@@ -9,7 +9,7 @@
 :: _make (item name 1) (item name 2) (item name x)
 ::
 :: Change this to your mod's ID
-set modid=fruittrees
+set modid=juicesandsodas
 
 setlocal enabledelayedexpansion
 
