@@ -26,7 +26,7 @@ public class BlenderBlockContainer extends Container {
     private PlayerEntity playerEntity;
     private IItemHandler playerInventory;
   
-    private static final int HOTBAR_SLOT_COUNT = 9;
+        private static final int HOTBAR_SLOT_COUNT = 9;
 	private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
 	private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
 	private static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
@@ -36,8 +36,8 @@ public class BlenderBlockContainer extends Container {
 	private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 	private static final int TE_INVENTORY_SLOT_COUNT = TileEntityInventoryBasic.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
 
-  public static final int TILE_INVENTORY_YPOS = 20;  // the ContainerScreenBasic needs to know these so it can tell where to draw the Titles
-  public static final int PLAYER_INVENTORY_YPOS = 51;
+    public static final int TILE_INVENTORY_YPOS = 20;  // the ContainerScreenBasic needs to know these so it can tell where to draw the Titles
+    public static final int PLAYER_INVENTORY_YPOS = 51;
 
     public BlenderBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(Registry.BLENDER_CONT.get(), windowId);
