@@ -32,15 +32,15 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
     }
 
     @Override
-    protected void /*generate*/ func_230372_a_(IWorldGenerationReader world, Random random, BaseTreeFeatureConfig config, int trunkHeight, FoliagePlacer.Foliage treeNode, int foliageHeight, int radius, Set<BlockPos> leaves, int i, MutableBoundingBox blockBox) {
-        for (int j = i; j >= i - foliageHeight; --j) {
-            int k = Math.max(radius + treeNode./*getFoliageRadius*/func_236764_b_() - 1 - j / 2, 0);
-            this./*generate*/func_236753_a_(world, random, config, treeNode./*getCenter*/func_236763_a_(), k, leaves, j, treeNode./*isGiantTrunk*/func_236765_c_(), blockBox);
-            BlockState core = config.leavesProvider.getBlockState(random, treeNode./*getCenter*/func_236763_a_());
+    protected void generate(IWorldGenerationReader world, Random random, BaseTreeFeatureConfig config, int trunkHeight, FoliagePlacer.Foliage treeNode, int foliageHeight, int radius, Set<BlockPos> leaves, int i, MutableBoundingBox blockBox) {
+        for (int j = i; j >= i --foliageHeight; --j) {
+            int k = Math.max(radius + treeNode.getFoliageRadius() - 1 - j / 2, 0);
+            this.generate(world, random, config, treeNode.getCenter(), k, leaves, j, treeNode.isGiantTrunk(), blockBox);
+            BlockState core = config.leavesProvider.getBlockState(random, treeNode.getCenter());
             if (core.getBlock() instanceof FruitLeavesBlock) {
                 core = core.with(LeavesBlock.DISTANCE, 1).with(LeavesBlock.PERSISTENT, true);
             }
-            world.setBlockState(treeNode./*getCenter*/func_236763_a_(), core, 19);
+            world.setBlockState(treeNode.getCenter(), core, 19);
         }
     }
 }
