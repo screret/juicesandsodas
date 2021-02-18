@@ -25,6 +25,19 @@ public class BlenderBlockContainer extends Container {
     private TileEntity tileEntity;
     private PlayerEntity playerEntity;
     private IItemHandler playerInventory;
+  
+    private static final int HOTBAR_SLOT_COUNT = 9;
+	private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
+	private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
+	private static final int PLAYER_INVENTORY_SLOT_COUNT = PLAYER_INVENTORY_COLUMN_COUNT * PLAYER_INVENTORY_ROW_COUNT;
+	private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
+
+	private static final int VANILLA_FIRST_SLOT_INDEX = 0;
+	private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
+	private static final int TE_INVENTORY_SLOT_COUNT = TileEntityInventoryBasic.NUMBER_OF_SLOTS;  // must match TileEntityInventoryBasic.NUMBER_OF_SLOTS
+
+  public static final int TILE_INVENTORY_YPOS = 20;  // the ContainerScreenBasic needs to know these so it can tell where to draw the Titles
+  public static final int PLAYER_INVENTORY_YPOS = 51;
 
     public BlenderBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(Registry.BLENDER_CONT.get(), windowId);
@@ -34,15 +47,32 @@ public class BlenderBlockContainer extends Container {
 
         if (tileEntity != null) {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new SlotItemHandler(h, 0, 64, 24));
+                addSlot(new Slot(cont, 1, 2 + SLOT_X_SPACING * x, 0));
+                addSlot(new Slot(cont, 1, 2 + SLOT_X_SPACING * x, 1));
+                addSlot(new Slot(cont, 2, 2 + SLOT_X_SPACING * x, 2));
+                addSlot(new Slot(cont, 3, 5 + SLOT_X_SPACING * x, 1));
+                addSlot(new Slot(cont, 3, 6 + SLOT_X_SPACING * x, 1));
+                addSlot(new Slot(cont, 3, 7 + SLOT_X_SPACING * x, 1));
+		}
             });
         }
+        Container cont = this.Container;
+		final int PLAYER_INVENTORY_XPOS = 8;
+		// Add the rest of the player's inventory to the gui
+		for (int y = 0; y < PLAYER_INVENTORY_ROW_COUNT; y++) {
+			for (int x = 0; x < PLAYER_INVENTORY_COLUMN_COUNT; x++) {
+				int slotNumber = HOTBAR_SLOT_COUNT + y * PLAYER_INVENTORY_COLUMN_COUNT + x;
+				int xpos = PLAYER_INVENTORY_XPOS + x * SLOT_X_SPACING;
+				int ypos = PLAYER_INVENTORY_YPOS + y * SLOT_Y_SPACING;
+				addSlot(new SlotItemHandler(playerInventoryForge, slotNumber,  xpos, ypos));
+			}
         layoutPlayerInventorySlots(10, 70);
         trackPower();
-    }
+        }
+        
 
     // Setup syncing of power from server to client so that the GUI can show the amount of power in the block
-    private void trackPower() {
+    private void trackAmount() {
         // Unfortunatelly on a dedicated server ints are actually truncated to short so we need
         // to split our integer here (split our 32 bit integer into two 16 bit integers)
         trackInt(new IntReferenceHolder() {
@@ -68,8 +98,8 @@ public class BlenderBlockContainer extends Container {
             @Override
             public void set(int value) {
                 tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(h -> {
-                    int energyStored = h.getTanks() & 0x0000ffff;
-                    ((CustomLiquidStorage) h).setFluid(energyStored | (value << 16));
+                    int fluidStored = h.getTanks() & 0x0000ffff;
+                    ((CustomLiquidStorage) h).setFluid(fluidStored | (value << 16));
                 });
             }
         });
