@@ -73,12 +73,12 @@ public class BlenderBlockContainer extends Container implements IInventory {
         final int HOTBAR_YPOS = 109;
         if (tileEntity != null) {
             tileEntity.getCapability(CabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-                addSlot(new Slot(cont, 88, 1 + SLOT_X_SPACING * 1, 0));
-                addSlot(new Slot(cont, 92, 1 + SLOT_X_SPACING * 2, 1));
-                addSlot(new Slot(cont, 96, 1 + SLOT_X_SPACING * 3, 2));
-                addSlot(new Slot(cont, 92, 1 + SLOT_X_SPACING * 4, 2));
-                addSlot(new Slot(cont, 92, 1 + SLOT_X_SPACING * 5, 2));
-                addSlot(new Slot(cont, 92, 1 + SLOT_X_SPACING * 6, 2));
+                addSlot(new Slot(cont, 36, 8 + SLOT_X_SPACING * 1, 88));
+                addSlot(new Slot(cont, 37, 8 + SLOT_X_SPACING * 2, 92));
+                addSlot(new Slot(cont, 38, 8 + SLOT_X_SPACING * 3, 96));
+                addSlot(new Slot(cont, 39, 11 + SLOT_X_SPACING * 4, 92));
+                addSlot(new Slot(cont, 40, 11 + SLOT_X_SPACING * 5, 92));
+                addSlot(new Slot(cont, 41, 11 + SLOT_X_SPACING * 6, 92));
             });
         }
 
