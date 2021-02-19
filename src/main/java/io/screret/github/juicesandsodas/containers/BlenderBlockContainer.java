@@ -91,7 +91,7 @@ public class BlenderBlockContainer extends Container implements IInventory {
                 int ypos = PLAYER_INVENTORY_YPOS + y * SLOT_Y_SPACING;
                 addSlot(new SlotItemHandler(playerInventoryForge, slotNumber, xpos, ypos));
             }
-            layoutPlayerInventorySlots(10, 70);
+            layoutPlayerInventorySlots(10, 76);
         }
     }
 
