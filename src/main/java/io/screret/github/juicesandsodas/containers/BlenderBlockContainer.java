@@ -211,7 +211,7 @@ public class BlenderBlockContainer extends Container implements IInventory {
     }
 
     @Override
-    public void clea{
+    public void clear{
 
     }
 }
