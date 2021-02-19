@@ -29,11 +29,14 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        
+		xSize = 176;
+		ySize = 133;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        drawString(matrixStack, Minecraft.getInstance().fontRenderer, "Energy: " + container.getFluid(), 10, 10, 0xffffff);
+        //drawString(matrixStack, Minecraft.getInstance().fontRenderer, "Energy: " + container.getFluid(), 10, 10, 0xffffff);
     }
 
     @Override
