@@ -95,12 +95,6 @@ public class BlenderBlockContainer extends Container implements IInventory {
         }
     }
 
-
-    public int getFluid() {
-        return tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(IFluidHandler::getTanks).orElse(1);
-    }
-
-
     @Override
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
