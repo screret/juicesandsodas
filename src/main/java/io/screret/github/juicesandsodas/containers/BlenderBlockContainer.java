@@ -52,12 +52,11 @@ public class BlenderBlockContainer extends Container implements IInventory {
         //  don't need extraData for this example; if you want you can use it to provide extra information from the server, that you can use
         //  when creating the client container
         //  eg String detailedDescription = extraData.readString(128);
-        IInventory inventory = (IInventory) new ItemStackHandler(BlenderTile.NUMBER_OF_SLOTS);
-
+	    
         // on the client side there is no parent TileEntity to communicate with, so we:
         // 1) use a dummy inventory
         // 2) use "do nothing" lambda functions for canPlayerAccessInventory and markDirty
-        return new BlenderBlockContainer(windowID, playerInventory, inventory);
+        return new BlenderBlockContainer(windowID, playerInventory, INV);
     }
 
     public BlenderBlockContainer(int windowId, PlayerInventory playerInventory, IInventory cont) {
@@ -84,15 +83,7 @@ public class BlenderBlockContainer extends Container implements IInventory {
 
         final int PLAYER_INVENTORY_XPOS = 8;
         // Add the rest of the player's inventory to the gui
-        for (int y = 0; y < PLAYER_INVENTORY_ROW_COUNT; y++) {
-            for (int x = 0; x < PLAYER_INVENTORY_COLUMN_COUNT; x++) {
-                int slotNumber = HOTBAR_SLOT_COUNT + y * PLAYER_INVENTORY_COLUMN_COUNT + x;
-                int xpos = PLAYER_INVENTORY_XPOS + x * SLOT_X_SPACING;
-                int ypos = PLAYER_INVENTORY_YPOS + y * SLOT_Y_SPACING;
-                addSlot(new SlotItemHandler(playerInventoryForge, slotNumber, xpos, ypos));
-            }
-            layoutPlayerInventorySlots(10, 76);
-        }
+        layoutPlayerInventorySlots(10, 76);
     }
 
     @Override
