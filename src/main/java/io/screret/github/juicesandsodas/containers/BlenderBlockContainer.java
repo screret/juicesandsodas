@@ -207,11 +207,11 @@ public class BlenderBlockContainer extends Container implements IInventory {
 
     @Override
     public boolean isUsableByPlayer(PlayerEntity player) {
-        return false;
+        return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()), playerEntity, Registry.BLENDER.get());
     }
 
     @Override
-    public void clear() {
+    public void clea{
 
     }
 }
