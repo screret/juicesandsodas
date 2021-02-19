@@ -1,7 +1,5 @@
 package io.screret.github.juicesandsodas;
 
-import java.util.function.Supplier;
-
 import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -9,13 +7,13 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SaplingBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraftforge.common.IExtensibleEnum;
 import net.minecraftforge.common.IPlantable;
+
+import java.util.function.Supplier;
 
 public enum FruitType {
     MANDARIN(Blocks.OAK_LOG, Registry.MANDARIN_LEAVES.get(), () -> (SaplingBlock) Registry.MANDARIN_SAPLING.get(), Registry.MANDARIN.get()),
     LIME(Blocks.OAK_LOG, Registry.LIME_LEAVES.get(), () -> (SaplingBlock) Registry.LIME_SAPLING.get(), Registry.LIME.get()),
-    CITRON(Blocks.OAK_LOG, Registry.CITRON_LEAVES.get(), () -> (SaplingBlock) Registry.CITRON_SAPLING.get(), Registry.CITRON.get()),
     POMELO(Blocks.OAK_LOG, Registry.POMELO_LEAVES.get(), () -> (SaplingBlock) Registry.POMELO_SAPLING.get(), Registry.POMELO.get()),
     ORANGE(Blocks.OAK_LOG, Registry.ORANGE_LEAVES.get(), () -> (SaplingBlock) Registry.ORANGE_SAPLING.get(), Registry.ORANGE.get()),
     LEMON(Blocks.OAK_LOG, Registry.LEMON_LEAVES.get(), () -> (SaplingBlock) Registry.LEMON_SAPLING.get(), Registry.LEMON.get()),
@@ -42,7 +40,7 @@ public enum FruitType {
         try {
             return valueOf(name);
         } catch (Exception e) {
-            return CITRON;
+            return LEMON;
         }
     }
 }

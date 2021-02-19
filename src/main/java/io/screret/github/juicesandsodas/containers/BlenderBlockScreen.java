@@ -1,20 +1,25 @@
 package io.screret.github.juicesandsodas.containers;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.screret.github.juicesandsodas.Base;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
 
-    private ResourceLocation GUI = new ResourceLocation(Base.MODID, "textures/gui/gui.png");
+    public static final int PLAYER_INVENTORY_YPOS = 125;
+
+    private ResourceLocation GUI = new ResourceLocation(Base.MODID, "textures/gui/blender_gui.png");
 
     public BlenderBlockScreen(BlenderBlockContainer container, PlayerInventory inv, ITextComponent name) {
         super(container, inv, name);
+        this.width = 174;
+        this.height = 164;
     }
 
     final static int COOK_BAR_XPOS = 49;
@@ -29,14 +34,18 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
-        
-		xSize = 176;
-		ySize = 133;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        //drawString(matrixStack, Minecraft.getInstance().fontRenderer, "Energy: " + container.getFluid(), 10, 10, 0xffffff);
+        // draw the label for the top of the screen
+        final int LABEL_XPOS = 5;
+        final int LABEL_YPOS = 5;
+        this.font.func_243248_b(matrixStack, this.title, LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());     ///    this.font.drawString
+
+        // draw the label for the player inventory slots
+        this.font.func_243248_b(matrixStack, this.playerInventory.getDisplayName(),                  ///    this.font.drawString
+                4, 197, Color.darkGray.getRGB());
     }
 
     @Override
@@ -44,7 +53,7 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
         /*double cookProgress = super.container.();
         this.blit(matrixStack, guiLeft + COOK_BAR_XPOS, guiTop + COOK_BAR_YPOS, COOK_BAR_ICON_U, COOK_BAR_ICON_V,
                 (int) (cookProgress * COOK_BAR_WIDTH), COOK_BAR_HEIGHT);*/
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1, 1, 1, 1);
         this.minecraft.getTextureManager().bindTexture(GUI);
         int relX = (this.width - this.xSize) / 2;
         int relY = (this.height - this.ySize) / 2;

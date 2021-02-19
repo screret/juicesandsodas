@@ -2,19 +2,23 @@ package io.screret.github.juicesandsodas;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
+import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.Registry;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,7 +29,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -64,19 +70,16 @@ public class Base {
         Registry.ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(
                 Registry.MANDARIN_LEAVES.get(),
                 Registry.LIME_LEAVES.get(),
-                Registry.CITRON_LEAVES.get(),
                 Registry.POMELO_LEAVES.get(),
                 Registry.ORANGE_LEAVES.get(),
                 Registry.LEMON_LEAVES.get(),
                 Registry.GRAPEFRUIT_LEAVES.get(),
                 Registry.APPLE_LEAVES.get()
         )));
-        List<FruitType> types = Arrays.asList(FruitType.CITRON, FruitType.LIME, FruitType.MANDARIN);
-        try {
+        List<FruitType> types = Arrays.asList(FruitType.LIME, FruitType.MANDARIN);
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
             pot.addPlant(Registry.MANDARIN_SAPLING.get().getRegistryName(), () -> Registry.POTTED_MANDARIN.get());
             pot.addPlant(Registry.LIME_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LIME.get());
-            pot.addPlant(Registry.CITRON_SAPLING.get().getRegistryName(), () -> Registry.POTTED_CITRON.get());
             pot.addPlant(Registry.POMELO_SAPLING.get().getRegistryName(), () -> Registry.POTTED_POMELO.get());
             pot.addPlant(Registry.ORANGE_SAPLING.get().getRegistryName(), () -> Registry.POTTED_ORANGE.get());
             pot.addPlant(Registry.LEMON_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LEMON.get());
@@ -90,9 +93,6 @@ public class Base {
                 ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
                 ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
             }
-        } catch (Exception e) {
-            LOGGER.catching(e);
-        }
 
         ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
         for (FruitType type : types) {
@@ -111,16 +111,18 @@ public class Base {
         Registry.makeFeature("1", 1, 0, 2);
         Registry.trees = null;
         Registry.cherry = null;
-        //DeferredWorkQueue.runLater(() -> { GlobalEntityTypeAttributes.put((EntityType<? extends LivingEntity>) ModStuff.KOOLAIDMAN.get(), KoolaidMan.setCustomAttributes().create()); });
+        DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registry.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
+        DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registry.BLENDER_CONT.get(), BlenderBlockScreen::new));
+        LOGGER.info("Screens Registered");
+        RenderingRegistry.registerEntityRenderingHandler(Registry.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("juicesandsodas", "helloworld", () -> { LOGGER.info("Hello world from Juices 6 Sodas"); return "Hello world";});
+        InterModComms.sendTo("juicesandsodas", "helloworld", () -> { LOGGER.info("Hello world from Juices & Sodas"); return "Hello world";});
     }
 
     private void processIMC(final InterModProcessEvent event) {

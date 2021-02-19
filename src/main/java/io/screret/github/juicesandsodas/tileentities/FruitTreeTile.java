@@ -10,7 +10,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class FruitTreeTile extends BaseTile {
 
-    public FruitType type = FruitType.CITRON;
+    public FruitType type = FruitType.LEMON;
     private int deathRate = 0;
     private ItemEntity onlyItem;
 
@@ -42,7 +42,7 @@ public class FruitTreeTile extends BaseTile {
         if (id != null) {
             type = FruitType.parse(id);
             if (type == null) {
-                type = FruitType.CITRON;
+                type = FruitType.LEMON;
             }
         } else {
             FruitType[] types = FruitType.values();

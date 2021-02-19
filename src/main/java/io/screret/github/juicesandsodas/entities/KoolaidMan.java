@@ -29,9 +29,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Random;
 
-public class KoolaidMan extends MobEntity {
+public class KoolaidMan extends CreatureEntity {
 
-    public KoolaidMan(EntityType<? extends MobEntity> entityTypeIn, World worldIn) {
+    public KoolaidMan(EntityType<? extends CreatureEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
         this.experienceValue = 150;
         this.setHealth(150.0f);
@@ -50,7 +50,6 @@ public class KoolaidMan extends MobEntity {
         super.registerGoals();
         this.goalSelector.addGoal(1, new MeleeAttackGoal((CreatureEntity) this.getEntity(), 1.2, true));
         this.goalSelector.addGoal(2, new RandomWalkingGoal((CreatureEntity) this.getEntity(), 1));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal((CreatureEntity) this.getEntity()));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 32.0F));
         this.goalSelector.addGoal(4, new BreakDoorGoal(this, e -> true));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
@@ -83,6 +82,7 @@ public class KoolaidMan extends MobEntity {
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
         return AttributeModifierMap.createMutableAttribute()
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
                 .createMutableAttribute(Attributes.MAX_HEALTH, 150.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.5D)
@@ -94,6 +94,7 @@ public class KoolaidMan extends MobEntity {
     public boolean isNonBoss() {
         return false;
     }
+
     private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
     @Override
     public void addTrackingPlayer(ServerPlayerEntity player) {
@@ -114,7 +115,7 @@ public class KoolaidMan extends MobEntity {
     }
 
     public void livingTick() {
-        super.livingTick();
+        //super.livingTick();
         double x = this.getPosX();
         double y = this.getPosY();
         double z = this.getPosZ();
@@ -198,7 +199,7 @@ public class KoolaidMan extends MobEntity {
         }
     }
 
-    static class Renderer extends MobRenderer<KoolaidMan, KoolaidMan.Model> {
+    public static class Renderer extends MobRenderer<KoolaidMan, KoolaidMan.Model> {
 
         private static final ResourceLocation TEXTURE = new ResourceLocation(Base.MODID, "textures/entity/koolaidman/koolaidman.png");
 

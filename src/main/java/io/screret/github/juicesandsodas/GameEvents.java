@@ -38,7 +38,7 @@ public final class GameEvents {
         BlockPos pos = entityIn.getPosition();
         for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
             BlockState state2 = world.getBlockState(pos2);
-            if (state2.getBlock() == Registry.CITRON_LEAVES.get() && state2.get(FruitLeavesBlock.AGE) == 3) {
+            if (state2.getBlock() == Registry.APPLE_LEAVES.get() && state2.get(FruitLeavesBlock.AGE) == 3) {
                 world.setBlockState(pos2, state2.with(FruitLeavesBlock.AGE, 1));
             }
         }

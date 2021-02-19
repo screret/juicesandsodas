@@ -28,9 +28,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
@@ -82,7 +80,6 @@ public class Registry {
 
     //blocks
     //leaves
-    public static final RegistryObject<Block> CITRON_LEAVES = BLOCKS.register("citron_leaves", () -> new FruitLeavesBlock(() -> FruitType.CITRON, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> LIME_LEAVES = BLOCKS.register("lime_leaves", () -> new FruitLeavesBlock(() -> FruitType.LIME, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> POMELO_LEAVES = BLOCKS.register("pomelo_leaves", () -> new FruitLeavesBlock(() -> FruitType.POMELO, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> ORANGE_LEAVES = BLOCKS.register("orange_leaves", () -> new FruitLeavesBlock(() -> FruitType.ORANGE, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
@@ -94,7 +91,6 @@ public class Registry {
     //saplings
     public static final RegistryObject<Block> MANDARIN_SAPLING = BLOCKS.register("mandarin_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.MANDARIN), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
     public static final RegistryObject<Block> LIME_SAPLING = BLOCKS.register("lime_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.LIME), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> CITRON_SAPLING = BLOCKS.register("citron_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.CITRON), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
     public static final RegistryObject<Block> POMELO_SAPLING = BLOCKS.register("pomelo_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.POMELO), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
     public static final RegistryObject<Block> ORANGE_SAPLING = BLOCKS.register("orange_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.ORANGE), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
     public static final RegistryObject<Block> LEMON_SAPLING = BLOCKS.register("lemon_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.LEMON), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
@@ -105,7 +101,6 @@ public class Registry {
     //potted plants
     public static final RegistryObject<Block> POTTED_MANDARIN = BLOCKS.register("potted_mandarin", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, MANDARIN_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
     public static final RegistryObject<Block> POTTED_LIME = BLOCKS.register("potted_lime", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LIME_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_CITRON = BLOCKS.register("potted_citron", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CITRON_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
     public static final RegistryObject<Block> POTTED_POMELO = BLOCKS.register("potted_pomelo", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, POMELO_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
     public static final RegistryObject<Block> POTTED_ORANGE = BLOCKS.register("potted_orange", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, ORANGE_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
     public static final RegistryObject<Block> POTTED_LEMON = BLOCKS.register("potted_lemon", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LEMON_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
@@ -136,7 +131,6 @@ public class Registry {
 
     //fruits
     public static final RegistryObject<Item> LEMON = ITEMS.register("lemon", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.LEMON)));
-    public static final RegistryObject<Item> CITRON = ITEMS.register("citron", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.CITRON)));
     public static final RegistryObject<Item> MANDARIN = ITEMS.register("mandarin", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.MANDARIN)));
     public static final RegistryObject<Item> LIME = ITEMS.register("lime", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.LIME)));
     public static final RegistryObject<Item> POMELO = ITEMS.register("pomelo", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.POMELO)));
@@ -152,7 +146,6 @@ public class Registry {
     //BlockItems
     //leaves
     public static final RegistryObject<Item> LEMON_LEAVES_ITEM = ITEMS.register("lemon_leaves", () -> new BlockItem(Registry.LEMON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> CITRON_LEAVES_ITEM = ITEMS.register("citron_leaves", () -> new BlockItem(Registry.CITRON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> CHERRY_LEAVES_ITEM = ITEMS.register("cherry_leaves", () -> new BlockItem(Registry.CHERRY_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> POMELO_LEAVES_ITEM = ITEMS.register("pomelo_leaves", () -> new BlockItem(Registry.POMELO_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> ORANGE_LEAVES_ITEM = ITEMS.register("orange_leaves", () -> new BlockItem(Registry.ORANGE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
@@ -161,7 +154,6 @@ public class Registry {
     public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ITEMS.register("mandarin_leaves", () -> new BlockItem(Registry.MANDARIN_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
     //saplings
     public static final RegistryObject<Item> LEMON_SAPLING_ITEM = ITEMS.register("lemon_sapling", () -> new BlockItem(Registry.LEMON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> CITRON_SAPLING_ITEM = ITEMS.register("citron_sapling", () -> new BlockItem(Registry.CITRON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> MANDARIN_SAPLING_ITEM = ITEMS.register("mandarin_sapling", () -> new BlockItem(Registry.MANDARIN_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> LIME_SAPLING_ITEM = ITEMS.register("lime_sapling", () -> new BlockItem(Registry.LIME_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> POMELO_SAPLING_ITEM = ITEMS.register("pomelo_sapling", () -> new BlockItem(Registry.POMELO_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
@@ -179,8 +171,6 @@ public class Registry {
 
     //containers
     public static final RegistryObject<ContainerType<BlenderBlockContainer>> BLENDER_CONT = CONTAINERS.register("blender", () -> IForgeContainerType.create((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        World world = inv.player.getEntityWorld();
         return BlenderBlockContainer.createContainerClientSide(windowId, inv, data);
     }));
 
@@ -189,7 +179,6 @@ public class Registry {
     public static final class Foods {
         public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();
         public static final Food LIME = new Food.Builder().hunger(3).saturation(0.3f).build();
-        public static final Food CITRON = new Food.Builder().hunger(3).saturation(0.3f).build();
         public static final Food POMELO = new Food.Builder().hunger(4).saturation(0.3f).build();
         public static final Food ORANGE = new Food.Builder().hunger(3).saturation(0.5f).build();
         public static final Food LEMON = new Food.Builder().hunger(2).saturation(1f).fastToEat().build();
@@ -274,8 +263,6 @@ public class Registry {
             }
             if (i == 1) {
                 Block block = state.getBlock();
-                if (block == CITRON_LEAVES.get())
-                    return 0xDDCC58;
                 if (block == GRAPEFRUIT_LEAVES.get())
                     return 0xF4502B;
                 if (block == LEMON_LEAVES.get())
@@ -292,7 +279,7 @@ public class Registry {
                     return 0xFC1C2A;
             }
             return -1;
-        }, MANDARIN_LEAVES.get(), LIME_LEAVES.get(), CITRON_LEAVES.get(), POMELO_LEAVES.get(), ORANGE_LEAVES.get(), LEMON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), APPLE_LEAVES.get());
+        }, MANDARIN_LEAVES.get(), LIME_LEAVES.get(), POMELO_LEAVES.get(), ORANGE_LEAVES.get(), LEMON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), APPLE_LEAVES.get());
     }
 
     @SubscribeEvent
@@ -300,6 +287,6 @@ public class Registry {
     public void handleItemColor(ColorHandlerEvent.Item event) {
         ItemStack oakLeaves = new ItemStack(Items.OAK_LEAVES);
         ItemColors itemColors = event.getItemColors();
-        itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES.get(), LIME_LEAVES.get(), CITRON_LEAVES.get(), POMELO_LEAVES.get(), ORANGE_LEAVES.get(), LEMON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), APPLE_LEAVES.get());
+        itemColors.register((stack, i) -> itemColors.getColor(oakLeaves, i), MANDARIN_LEAVES.get(), LIME_LEAVES.get(), POMELO_LEAVES.get(), ORANGE_LEAVES.get(), LEMON_LEAVES.get(), GRAPEFRUIT_LEAVES.get(), APPLE_LEAVES.get());
     }
 }
