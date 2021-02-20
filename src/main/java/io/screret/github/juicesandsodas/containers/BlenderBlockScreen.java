@@ -45,7 +45,7 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
 
         // draw the label for the player inventory slots
         this.font.func_243248_b(matrixStack, this.playerInventory.getDisplayName(),                  ///    this.font.drawString
-                4, 197, Color.darkGray.getRGB());
+                4, 74, Color.darkGray.getRGB());
     }
 
     @Override

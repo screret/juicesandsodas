@@ -63,33 +63,11 @@ public class BlenderBlockContainer extends Container {
         final int SLOT_X_SPACING = 18;
         final int SLOT_Y_SPACING = 18;
         final int INPUT_SLOTS_XPOS = 24;
-        final int INPUT_SLOTS_YPOS = 17;
+        final int INPUT_SLOTS_YPOS = 16;
         final int OUTPUT_SLOTS_XPOS = 78;
-        final int OUTPUT_SLOTS_YPOS = 35;
-        //this.addSlot(new Slot(cont, 37, 25, 17));
-        this.addSlot(new Slot(cont, TE_INVENTORY_FIRST_SLOT_INDEX + 0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
-        this.addSlot(new Slot(cont, TE_INVENTORY_FIRST_SLOT_INDEX + 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
-        this.addSlot(new Slot(cont, TE_INVENTORY_FIRST_SLOT_INDEX + 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 3));
-        this.addSlot(new Slot(cont, TE_INVENTORY_FIRST_SLOT_INDEX + 3, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS) {
-                @Override
-                public boolean isItemValid(ItemStack stack) {
-                        return false;
-                    }
-        });
-        this.addSlot(new Slot(cont, TE_INVENTORY_FIRST_SLOT_INDEX + 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS) {
-                @Override
-                public boolean isItemValid(ItemStack stack) {
-                        return false;
-                    }
-                });
-        this.addSlot(new Slot(cont, TE_INVENTORY_FIRST_SLOT_INDEX + 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 3, OUTPUT_SLOTS_YPOS) {
-                @Override
-                public boolean isItemValid(ItemStack stack) {
-                        return false;
-                    }
-        });
+        final int OUTPUT_SLOTS_YPOS = 34;
         final int HOTBAR_XPOS = 8;
-        final int HOTBAR_YPOS = 183;
+        final int HOTBAR_YPOS = 142;
         // Add the players hotbar to the gui - the [xpos, ypos] location of each item
         for (int x = 0; x < HOTBAR_SLOT_COUNT; x++) {
             int slotNumber = x;
@@ -105,6 +83,28 @@ public class BlenderBlockContainer extends Container {
                 addSlot(new Slot(playerInventory, slotNumber,  xpos, ypos));
             }
         }
+        //this.addSlot(new Slot(cont, 37, 25, 17));
+        this.addSlot(new Slot(cont,  0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));
+        this.addSlot(new Slot(cont, 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
+        this.addSlot(new Slot(cont, 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
+        this.addSlot(new Slot(cont, 3, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS) {
+                @Override
+                public boolean isItemValid(ItemStack stack) {
+                        return false;
+                    }
+        });
+        this.addSlot(new Slot(cont, 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS) {
+                @Override
+                public boolean isItemValid(ItemStack stack) {
+                        return false;
+                    }
+                });
+        this.addSlot(new Slot(cont, 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS) {
+                @Override
+                public boolean isItemValid(ItemStack stack) {
+                        return false;
+                    }
+        });
     }
 
 
