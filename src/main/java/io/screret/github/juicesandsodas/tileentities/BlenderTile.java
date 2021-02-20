@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -111,5 +112,9 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
                 return null;
             }
         };
+    }
+
+    public ItemStack getStackInSlot(){
+        return ItemStack.EMPTY;
     }
 }
