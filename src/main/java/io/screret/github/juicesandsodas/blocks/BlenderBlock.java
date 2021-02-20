@@ -31,12 +31,6 @@ public class BlenderBlock extends ContainerBlock {
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return createNewTileEntity(world);
-    }
-
-    @Nullable
-    @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return getDefaultState();//.with(BlockStateProperties.HORIZONTAL_FACING, context.getNearestLookingDirection().getOpposite());
     }
@@ -61,7 +55,7 @@ public class BlenderBlock extends ContainerBlock {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
+        builder.add(BlockStateProperties.POWERED);
     }
 
 
