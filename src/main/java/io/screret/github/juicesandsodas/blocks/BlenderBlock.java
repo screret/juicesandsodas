@@ -38,17 +38,16 @@ public class BlenderBlock extends ContainerBlock {
     @SuppressWarnings("deprecation")
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(pos);
-            if (tileEntity instanceof BlenderTile) {
-                INamedContainerProvider containerProvider = this.getContainer(state, world, pos);
-                if (containerProvider != null) {
-                    if (!(player instanceof ServerPlayerEntity)) return ActionResultType.FAIL;  // should always be true, but just in case...
-                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, (packetBuffer)->{});
-                }
-            } else {
-                throw new IllegalStateException("Our named container provider is missing!");
+        if (world.isRemote) return ActionResultType.SUCCESS; // on client side, don't do anything
+        TileEntity tileEntity = world.getTileEntity(pos);
+        if (tileEntity instanceof BlenderTile) {
+            INamedContainerProvider containerProvider = this.getContainer(state, world, pos);
+            if (containerProvider != null) {
+                if (!(player instanceof ServerPlayerEntity)) return ActionResultType.FAIL;  // should always be true, but just in case...
+            NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, (packetBuffer)->{});
             }
+        } else {
+            throw new IllegalStateException("Our named container provider is missing!");
         }
         return ActionResultType.SUCCESS;
     }
