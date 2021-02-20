@@ -99,13 +99,13 @@ public class Registry {
     public static final RegistryObject<Block> CHERRY_SAPLING = BLOCKS.register("cherry_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitTypeExtension.CHERRY), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
 
     //potted plants
-    public static final RegistryObject<Block> POTTED_MANDARIN = BLOCKS.register("potted_mandarin", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, MANDARIN_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_LIME = BLOCKS.register("potted_lime", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LIME_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_ORANGE = BLOCKS.register("potted_orange", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, ORANGE_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_LEMON = BLOCKS.register("potted_lemon", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LEMON_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_GRAPEFRUIT = BLOCKS.register("potted_grapefruit", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GRAPEFRUIT_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_APPLE = BLOCKS.register("potted_apple", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CHERRY_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_CHERRY = BLOCKS.register("potted_cherry", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, APPLE_SAPLING::get, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_MANDARIN = BLOCKS.register("potted_mandarin", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, MANDARIN_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_LIME = BLOCKS.register("potted_lime", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LIME_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_ORANGE = BLOCKS.register("potted_orange", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, ORANGE_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_LEMON = BLOCKS.register("potted_lemon", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LEMON_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_GRAPEFRUIT = BLOCKS.register("potted_grapefruit", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GRAPEFRUIT_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_APPLE = BLOCKS.register("potted_apple", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CHERRY_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_CHERRY = BLOCKS.register("potted_cherry", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, APPLE_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
 
     public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", () -> new BlenderBlock(AbstractBlock.Properties.create(Material.WOOD).notSolid()));
 

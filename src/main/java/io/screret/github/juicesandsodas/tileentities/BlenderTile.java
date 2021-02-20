@@ -1,7 +1,6 @@
 package io.screret.github.juicesandsodas.tileentities;
 
 
-import io.screret.github.juicesandsodas.blocks.BlenderZoneContents;
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.block.BlockState;
@@ -26,19 +25,18 @@ import javax.annotation.Nonnull;
 
 public class BlenderTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    private ItemStackHandler itemHandler = createHandler();
+    public ItemStackHandler itemHandler = createHandler();
 
 
     private static final String CONTENTS_INVENTORY_TAG = "contents";
 
     public static final int NUMBER_OF_SLOTS = 6;
 
-    private BlenderZoneContents contents;
 
     public BlenderTile() {
         super(Registry.BLENDER_TILE.get());
-        contents = BlenderZoneContents.createForTileEntity(NUMBER_OF_SLOTS, this::canPlayerAccessInventory, this::markDirty);
     }
+
     public boolean canPlayerAccessInventory(PlayerEntity player) {
         if (this.world.getTileEntity(this.pos) != this) return false;
         final double X_CENTRE_OFFSET = 0.5;
@@ -63,15 +61,12 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
     {
         super.read(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
         parentNBTTagCompound.get(CONTENTS_INVENTORY_TAG);
-        if (this.contents.getSizeInventory() != NUMBER_OF_SLOTS) {
-            throw new IllegalArgumentException("Corrupted NBT: Number of inventory slots did not match expected.");
-        }
     }
 
     @Nullable
     @Override
     public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return BlenderBlockContainer.createContainerServerSide(windowID, playerEntity.world, this.pos, playerInventory);
+        return new BlenderBlockContainer(windowID, playerEntity.world, this.pos, playerInventory, playerEntity);
     }
 
     @Override
@@ -118,7 +113,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
     }
 
     private ItemStackHandler createHandler() {
-        return new ItemStackHandler(1) {
+        return new ItemStackHandler(6) {
 
             @Override
             protected void onContentsChanged(int slot) {

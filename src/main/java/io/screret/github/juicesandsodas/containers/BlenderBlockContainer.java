@@ -15,6 +15,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.function.Predicate;
 
@@ -38,10 +40,10 @@ public class BlenderBlockContainer extends Container {
     public static final int PLAYER_INVENTORY_YPOS = 84;
     public static final int PLAYER_INVENTORY_XPOS = 8;
 
+    public static final int INV_SIZE = 6;
 
-    public static BlenderBlockContainer createContainerServerSide(int windowID, World world, BlockPos pos, PlayerInventory playerInventory) {
-        return new BlenderBlockContainer(windowID, world, pos, playerInventory, playerInventory.player);
-    }
+    private static final Logger LOGGER = LogManager.getLogger();
+
 
     public BlenderBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(Registry.BLENDER_CONT.get(), windowId);
@@ -72,6 +74,7 @@ public class BlenderBlockContainer extends Container {
         }
         if (tileEntity != null) {
             tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> {
+                //LOGGER.info(itemHandler.getSlots());
                 final int INPUT_SLOTS_XPOS = 24;
                 final int INPUT_SLOTS_YPOS = 16;
                 this.addSlot(new SlotItemHandler(itemHandler, 0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));

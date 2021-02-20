@@ -18,8 +18,7 @@ logoFile= "pack.png"
 credits=""
 authors="screret"
 description='''
-      adds some popular (and ...less popular) juices and sodas!
-      '''
+      adds some popular (and ...less popular) juices and sodas!'''
 
 [[dependencies.juicesandsodas]]
 modId="forge"
