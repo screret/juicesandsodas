@@ -1,7 +1,7 @@
 package io.screret.github.juicesandsodas.tileentities;
 
 import io.screret.github.juicesandsodas.FruitType;
-import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.util.NBTHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -15,7 +15,7 @@ public class FruitTreeTile extends BaseTile {
     private ItemEntity onlyItem;
 
     public FruitTreeTile() {
-        super(Registry.FRUIT_TREE.get());
+        super(Registration.FRUIT_TREE.get());
     }
 
     public FruitTreeTile(FruitType type) {

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.mojang.serialization.Codec;
 
-import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,7 +31,7 @@ public class CarpetTreeDecorator extends TreeDecorator {
 
     @Override
     protected TreeDecoratorType<?> func_230380_a_() {
-        return Registry.CARPET_DECORATOR;
+        return Registration.CARPET_DECORATOR;
     }
 
     @Override

@@ -2,7 +2,7 @@ package io.screret.github.juicesandsodas.trees;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +26,7 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 
     @Override
     protected FoliagePlacerType<?> func_230371_a_() {
-        return Registry.BLOB_PLACER;
+        return Registration.BLOB_PLACER;
     }
 
     @Override

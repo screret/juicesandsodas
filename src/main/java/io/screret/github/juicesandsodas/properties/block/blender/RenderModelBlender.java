@@ -1,8 +1,10 @@
-package io.screret.github.juicesandsodas.tileentities;
+package io.screret.github.juicesandsodas.properties.block.blender;
 
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import io.screret.github.juicesandsodas.tileentities.AnimationTickCounter;
+import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;

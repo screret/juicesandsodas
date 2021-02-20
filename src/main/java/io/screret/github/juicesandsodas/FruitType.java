@@ -1,6 +1,6 @@
 package io.screret.github.juicesandsodas;
 
-import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LeavesBlock;
@@ -12,12 +12,12 @@ import net.minecraftforge.common.IPlantable;
 import java.util.function.Supplier;
 
 public enum FruitType {
-    MANDARIN(Blocks.OAK_LOG, Registry.MANDARIN_LEAVES.get(), () -> (SaplingBlock) Registry.MANDARIN_SAPLING.get(), Registry.MANDARIN.get()),
-    LIME(Blocks.OAK_LOG, Registry.LIME_LEAVES.get(), () -> (SaplingBlock) Registry.LIME_SAPLING.get(), Registry.LIME.get()),
-    ORANGE(Blocks.OAK_LOG, Registry.ORANGE_LEAVES.get(), () -> (SaplingBlock) Registry.ORANGE_SAPLING.get(), Registry.ORANGE.get()),
-    LEMON(Blocks.OAK_LOG, Registry.LEMON_LEAVES.get(), () -> (SaplingBlock) Registry.LEMON_SAPLING.get(), Registry.LEMON.get()),
-    GRAPEFRUIT(Blocks.OAK_LOG, Registry.GRAPEFRUIT_LEAVES.get(), () -> (SaplingBlock) Registry.GRAPEFRUIT_SAPLING.get(), Registry.GRAPEFRUIT.get()),
-    APPLE(Blocks.OAK_LOG, Registry.APPLE_LEAVES.get(), () -> (SaplingBlock) Registry.APPLE_SAPLING.get(), Items.APPLE);
+    MANDARIN(Blocks.OAK_LOG, Registration.MANDARIN_LEAVES.get(), () -> (SaplingBlock) Registration.MANDARIN_SAPLING.get(), Registration.MANDARIN.get()),
+    LIME(Blocks.OAK_LOG, Registration.LIME_LEAVES.get(), () -> (SaplingBlock) Registration.LIME_SAPLING.get(), Registration.LIME.get()),
+    ORANGE(Blocks.OAK_LOG, Registration.ORANGE_LEAVES.get(), () -> (SaplingBlock) Registration.ORANGE_SAPLING.get(), Registration.ORANGE.get()),
+    LEMON(Blocks.OAK_LOG, Registration.LEMON_LEAVES.get(), () -> (SaplingBlock) Registration.LEMON_SAPLING.get(), Registration.LEMON.get()),
+    GRAPEFRUIT(Blocks.OAK_LOG, Registration.GRAPEFRUIT_LEAVES.get(), () -> (SaplingBlock) Registration.GRAPEFRUIT_SAPLING.get(), Registration.GRAPEFRUIT.get()),
+    APPLE(Blocks.OAK_LOG, Registration.APPLE_LEAVES.get(), () -> (SaplingBlock) Registration.APPLE_SAPLING.get(), Items.APPLE);
 
     public final Block log;
     public final LeavesBlock leaves;

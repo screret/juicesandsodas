@@ -1,10 +1,17 @@
 package io.screret.github.juicesandsodas.items;
 
-import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.GlassBottleItem;
@@ -16,28 +23,54 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DrinkHelper;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemDrink extends GlassBottleItem implements IItemColor {
 
-    public ItemDrink(Properties properties){
+    public ItemDrink(Properties properties, int color, @Nullable EffectInstance[] effects, @Nullable ResourceLocation shader){
         super(properties);
+        EFFECTS = effects;
+        SHADER = shader;
+        COLOR = color;
+        if(shader != null){
+            if(shader.toString().equals("minecraft:shaders/post/invert.json")){
+                SHADER_ENTITY = new EndermanEntity(EntityType.ENDERMAN, Minecraft.getInstance().world);
+            } else if(shader.toString().equals("minecraft:shaders/post/spider.json")){
+                SHADER_ENTITY = new SpiderEntity(EntityType.SPIDER, Minecraft.getInstance().world);
+            } else if(shader.toString().equals("minecraft:shaders/post/creeper.json")){
+                SHADER_ENTITY = new CreeperEntity(EntityType.CREEPER, Minecraft.getInstance().world);
+            }
+        }
     }
     static final int MAX_FOOD_LEVEL = 20;
     static final int FOOD_LEVEL_INCREASE = 4;
-    static int COLOR;
+    protected static int COLOR;
 
-    boolean isShaderEnabled = false;
+    protected static EffectInstance[] EFFECTS;
+    protected static Entity SHADER_ENTITY;
+    protected static ResourceLocation SHADER;
+
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 
+    }
+
+    public EffectInstance effects(){
+        if (EFFECTS != null){
+            for(int i = 0; i < EFFECTS.length; i++){
+                return EFFECTS[i];
+            }
+        }
+        return null;
     }
 
     @Override
@@ -71,13 +104,15 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
 
         if (playerentity == null || !playerentity.abilities.isCreativeMode) {
             if (stack.isEmpty()) {
-                return new ItemStack(Registry.KOOL_AID_EMPTY.get());
+                return new ItemStack(Registration.KOOL_AID_EMPTY.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(Registry.KOOL_AID_EMPTY.get()));
+                playerentity.inventory.addItemStackToInventory(new ItemStack(Registration.KOOL_AID_EMPTY.get()));
             }
         }
+
+        loadCustomShader();
 
         return stack;
     }
@@ -102,5 +137,16 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
     @OnlyIn(Dist.CLIENT)
     public int getColor(ItemStack stack, int color) {
         return COLOR;
+    }
+
+    public void loadCustomShader(){
+        GameRenderer renderer = Minecraft.getInstance().gameRenderer;
+        if(SHADER_ENTITY != null){
+            renderer.loadEntityShader(SHADER_ENTITY);
+        }else if (SHADER != null){
+            renderer.loadShader(SHADER);
+        }else {
+            return;
+        }
     }
 }

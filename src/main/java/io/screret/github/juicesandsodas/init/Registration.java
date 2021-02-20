@@ -7,9 +7,7 @@ import io.screret.github.juicesandsodas.FruitType;
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
-import io.screret.github.juicesandsodas.items.ItemKoolAid;
-import io.screret.github.juicesandsodas.items.ItemLemonade;
-import io.screret.github.juicesandsodas.items.ItemMagicAid;
+import io.screret.github.juicesandsodas.items.ItemDrink;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
 import io.screret.github.juicesandsodas.materials.ModMaterials;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
@@ -18,6 +16,7 @@ import io.screret.github.juicesandsodas.trees.CarpetTreeDecorator;
 import io.screret.github.juicesandsodas.trees.FruitBlobFoliagePlacer;
 import io.screret.github.juicesandsodas.trees.FruitLeavesBlock;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
+import io.screret.github.juicesandsodas.util.BlenderRecipes;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.color.BlockColors;
@@ -27,7 +26,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
@@ -54,6 +56,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -62,15 +65,15 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Base.MODID)
-public class Registry {
+public class Registration {
 
     public static void init() {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        Registry.BLOCKS.register(modEventBus);
-        Registry.ITEMS.register(modEventBus);
-        Registry.ENTITIES.register(modEventBus);
-        Registry.TILES.register(modEventBus);
-        Registry.CONTAINERS.register(modEventBus);
+        Registration.BLOCKS.register(modEventBus);
+        Registration.ITEMS.register(modEventBus);
+        Registration.ENTITIES.register(modEventBus);
+        Registration.TILES.register(modEventBus);
+        Registration.CONTAINERS.register(modEventBus);
     }
 
     //registries
@@ -119,9 +122,11 @@ public class Registry {
 
     //Items
     //drinks
-    public static final RegistryObject<Item> KOOL_AID = ITEMS.register("kool_aid", () -> new ItemKoolAid(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1)));
-    public static final RegistryObject<Item> MAGIC_AID = ITEMS.register("magic_aid", () -> new ItemMagicAid(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1)));
-    public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemLemonade(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1)));
+    public static final RegistryObject<Item> KOOL_AID = ITEMS.register("kool_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 41391, null, null));
+    public static final RegistryObject<Item> MAGIC_AID = ITEMS.register("magic_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 3932107, new EffectInstance[]{new EffectInstance(Effect.get(9)), new EffectInstance(Effect.get(20))}, new ResourceLocation("minecraft:shaders/post/wobble.json")));
+    public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
+    public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
+    public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
     //empty bottles
     public static final RegistryObject<Item> KOOL_AID_EMPTY = ITEMS.register("kool_aid_empty", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> LEMONADE_EMPTY = ITEMS.register("lemonade_empty", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
@@ -143,21 +148,21 @@ public class Registry {
     public static final RegistryObject<Item> JELLO_BOOTS = ITEMS.register("jello_boots", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.FEET, new Item.Properties().group(Base.MOD_TAB)));
     //BlockItems
     //leaves
-    public static final RegistryObject<Item> LEMON_LEAVES_ITEM = ITEMS.register("lemon_leaves", () -> new BlockItem(Registry.LEMON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> CHERRY_LEAVES_ITEM = ITEMS.register("cherry_leaves", () -> new BlockItem(Registry.CHERRY_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> ORANGE_LEAVES_ITEM = ITEMS.register("orange_leaves", () -> new BlockItem(Registry.ORANGE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> GRAPEFRUIT_LEAVES_ITEM = ITEMS.register("grapefruit_leaves", () -> new BlockItem(Registry.GRAPEFRUIT_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> APPLE_LEAVES_ITEM = ITEMS.register("apple_leaves", () -> new BlockItem(Registry.APPLE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ITEMS.register("mandarin_leaves", () -> new BlockItem(Registry.MANDARIN_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> LEMON_LEAVES_ITEM = ITEMS.register("lemon_leaves", () -> new BlockItem(Registration.LEMON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CHERRY_LEAVES_ITEM = ITEMS.register("cherry_leaves", () -> new BlockItem(Registration.CHERRY_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> ORANGE_LEAVES_ITEM = ITEMS.register("orange_leaves", () -> new BlockItem(Registration.ORANGE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> GRAPEFRUIT_LEAVES_ITEM = ITEMS.register("grapefruit_leaves", () -> new BlockItem(Registration.GRAPEFRUIT_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> APPLE_LEAVES_ITEM = ITEMS.register("apple_leaves", () -> new BlockItem(Registration.APPLE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ITEMS.register("mandarin_leaves", () -> new BlockItem(Registration.MANDARIN_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
     //saplings
-    public static final RegistryObject<Item> LEMON_SAPLING_ITEM = ITEMS.register("lemon_sapling", () -> new BlockItem(Registry.LEMON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> MANDARIN_SAPLING_ITEM = ITEMS.register("mandarin_sapling", () -> new BlockItem(Registry.MANDARIN_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> LIME_SAPLING_ITEM = ITEMS.register("lime_sapling", () -> new BlockItem(Registry.LIME_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> ORANGE_SAPLING_ITEM = ITEMS.register("orange_sapling", () -> new BlockItem(Registry.ORANGE_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> GRAPEFRUIT_SAPLING_ITEM = ITEMS.register("grapefruit_sapling", () -> new BlockItem(Registry.GRAPEFRUIT_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> CHERRY_SAPLING_ITEM = ITEMS.register("cherry_sapling", () -> new BlockItem(Registry.CHERRY_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> LEMON_SAPLING_ITEM = ITEMS.register("lemon_sapling", () -> new BlockItem(Registration.LEMON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> MANDARIN_SAPLING_ITEM = ITEMS.register("mandarin_sapling", () -> new BlockItem(Registration.MANDARIN_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> LIME_SAPLING_ITEM = ITEMS.register("lime_sapling", () -> new BlockItem(Registration.LIME_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> ORANGE_SAPLING_ITEM = ITEMS.register("orange_sapling", () -> new BlockItem(Registration.ORANGE_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> GRAPEFRUIT_SAPLING_ITEM = ITEMS.register("grapefruit_sapling", () -> new BlockItem(Registration.GRAPEFRUIT_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CHERRY_SAPLING_ITEM = ITEMS.register("cherry_sapling", () -> new BlockItem(Registration.CHERRY_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
     //others
-    public static final RegistryObject<Item> BLENDER_ITEM = ITEMS.register("blender", () -> new BlockItem(Registry.BLENDER.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> BLENDER_ITEM = ITEMS.register("blender", () -> new BlockItem(Registration.BLENDER.get(), new Item.Properties().group(Base.MOD_TAB)));
 
 
     //entities
@@ -169,8 +174,18 @@ public class Registry {
     public static final RegistryObject<ContainerType<BlenderBlockContainer>> BLENDER_CONT = CONTAINERS.register("blender", () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
-        return new BlenderBlockContainer(windowId, world, pos, inv.player.inventory, inv.player);
+        BlenderTile tile = (BlenderTile) world.getTileEntity(pos);
+        return new BlenderBlockContainer(windowId, inv, new CombinedInvWrapper(tile.inputSlot, tile.outputSlotWrapper), tile);
     }));
+
+
+    //blender recipes
+    public static void AddRecipes(){
+        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(LEMON.get()), new ItemStack(LEMON.get()), new ItemStack(LEMON.get())}, new ItemStack(LEMONADE.get()));
+        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(LIME.get()), new ItemStack(LIME.get()), new ItemStack(LIME.get())}, new ItemStack(LIME_SODA.get()));
+        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(GRAPEFRUIT.get()), new ItemStack(GRAPEFRUIT.get()), new ItemStack(GRAPEFRUIT.get())}, new ItemStack(GRAPE_JUICE.get()));
+        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(Items.SUGAR, 3), new ItemStack(Items.SUGAR, 3), new ItemStack(Items.SUGAR, 3)}, new ItemStack(KOOL_AID.get()));
+    }
 
 
     //foods

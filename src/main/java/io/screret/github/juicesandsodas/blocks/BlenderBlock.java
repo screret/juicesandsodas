@@ -1,6 +1,7 @@
 package io.screret.github.juicesandsodas.blocks;
 
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
+import io.screret.github.juicesandsodas.properties.block.BlockProperties;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -27,6 +28,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public class BlenderBlock extends Block {
@@ -66,7 +68,8 @@ public class BlenderBlock extends Block {
 
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return new BlenderBlockContainer(i, world, pos, playerInventory, playerEntity);
+                        BlenderTile tile = (BlenderTile) tileEntity;
+                        return new BlenderBlockContainer(i, playerInventory, new CombinedInvWrapper(tile.inputSlot, tile.outputSlotWrapper), tile);
                     }
                 };
                 NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
@@ -79,7 +82,7 @@ public class BlenderBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.POWERED);
+        builder.add(BlockStateProperties.POWERED, BlockProperties.ROD_ORIENTATION);
     }
 
 

@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
-import io.screret.github.juicesandsodas.init.Registry;
+import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
@@ -59,31 +59,31 @@ public class Base {
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        Registry.BLOCKS.register(modEventBus);
-        Registry.ITEMS.register(modEventBus);
-        Registry.ENTITIES.register(modEventBus);
-        Registry.TILES.register(modEventBus);
-        Registry.CONTAINERS.register(modEventBus);
+        Registration.BLOCKS.register(modEventBus);
+        Registration.ITEMS.register(modEventBus);
+        Registration.ENTITIES.register(modEventBus);
+        Registration.TILES.register(modEventBus);
+        Registration.CONTAINERS.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        Registry.ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(
-                Registry.MANDARIN_LEAVES.get(),
-                Registry.LIME_LEAVES.get(),
-                Registry.ORANGE_LEAVES.get(),
-                Registry.LEMON_LEAVES.get(),
-                Registry.GRAPEFRUIT_LEAVES.get(),
-                Registry.APPLE_LEAVES.get()
+        Registration.ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(
+                Registration.MANDARIN_LEAVES.get(),
+                Registration.LIME_LEAVES.get(),
+                Registration.ORANGE_LEAVES.get(),
+                Registration.LEMON_LEAVES.get(),
+                Registration.GRAPEFRUIT_LEAVES.get(),
+                Registration.APPLE_LEAVES.get()
         )));
         List<FruitType> types = Arrays.asList(FruitType.LIME, FruitType.MANDARIN);
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
-            pot.addPlant(Registry.MANDARIN_SAPLING.get().getRegistryName(), () -> Registry.POTTED_MANDARIN.get());
-            pot.addPlant(Registry.LIME_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LIME.get());
-            pot.addPlant(Registry.ORANGE_SAPLING.get().getRegistryName(), () -> Registry.POTTED_ORANGE.get());
-            pot.addPlant(Registry.LEMON_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LEMON.get());
-            pot.addPlant(Registry.GRAPEFRUIT_SAPLING.get().getRegistryName(), () -> Registry.POTTED_GRAPEFRUIT.get());
-            pot.addPlant(Registry.APPLE_SAPLING.get().getRegistryName(), () -> Registry.POTTED_APPLE.get());
-            pot.addPlant(Registry.CHERRY_SAPLING.get().getRegistryName(), () -> Registry.POTTED_CHERRY.get());
+            pot.addPlant(Registration.MANDARIN_SAPLING.get().getRegistryName(), () -> Registration.POTTED_MANDARIN.get());
+            pot.addPlant(Registration.LIME_SAPLING.get().getRegistryName(), () -> Registration.POTTED_LIME.get());
+            pot.addPlant(Registration.ORANGE_SAPLING.get().getRegistryName(), () -> Registration.POTTED_ORANGE.get());
+            pot.addPlant(Registration.LEMON_SAPLING.get().getRegistryName(), () -> Registration.POTTED_LEMON.get());
+            pot.addPlant(Registration.GRAPEFRUIT_SAPLING.get().getRegistryName(), () -> Registration.POTTED_GRAPEFRUIT.get());
+            pot.addPlant(Registration.APPLE_SAPLING.get().getRegistryName(), () -> Registration.POTTED_APPLE.get());
+            pot.addPlant(Registration.CHERRY_SAPLING.get().getRegistryName(), () -> Registration.POTTED_CHERRY.get());
 
 
             for (FruitType type : FruitType.values()) {
@@ -94,28 +94,31 @@ public class Base {
 
         ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
         for (FruitType type : types) {
-            Supplier<ConfiguredFeature<?, ?>> cf = () -> Registry.buildTreeFeature(type, true, null);
+            Supplier<ConfiguredFeature<?, ?>> cf = () -> Registration.buildTreeFeature(type, true, null);
             builder.add(cf);
         }
 
-        Registry.trees = builder.build();
+        Registration.trees = builder.build();
         if (FruitTypeExtension.CHERRY != null) {
-            Registry.allFeatures = new ConfiguredFeature[5];
+            Registration.allFeatures = new ConfiguredFeature[5];
         } else {
-            Registry.allFeatures = new ConfiguredFeature[3];
+            Registration.allFeatures = new ConfiguredFeature[3];
         }
-        Registry.makeFeature("002", 0, .002f, 0);
-        Registry.makeFeature("005", 0, .005f, 1);
-        Registry.makeFeature("1", 1, 0, 2);
-        Registry.trees = null;
-        Registry.cherry = null;
-        DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registry.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
+        Registration.makeFeature("002", 0, .002f, 0);
+        Registration.makeFeature("005", 0, .005f, 1);
+        Registration.makeFeature("1", 1, 0, 2);
+        Registration.trees = null;
+        Registration.cherry = null;
+
+        Registration.AddRecipes();
+
+        DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registry.BLENDER_CONT.get(), BlenderBlockScreen::new));
+        DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
         LOGGER.info("Screens Registered");
-        RenderingRegistry.registerEntityRenderingHandler(Registry.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
