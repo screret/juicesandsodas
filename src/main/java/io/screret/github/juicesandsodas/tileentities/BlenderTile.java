@@ -7,6 +7,7 @@ import io.screret.github.juicesandsodas.init.Registry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -65,7 +66,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
 
     @Nullable
     @Override
-    public net.minecraft.inventory.container.Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return BlenderBlockContainer.createContainerServerSide(windowID, playerInventory, contents);
     }
 
