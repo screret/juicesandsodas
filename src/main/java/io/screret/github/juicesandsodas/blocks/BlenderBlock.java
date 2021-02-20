@@ -1,10 +1,16 @@
 package io.screret.github.juicesandsodas.blocks;
 
+import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
-import net.minecraft.block.*;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
@@ -14,19 +20,30 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class BlenderBlock extends ContainerBlock {
+public class BlenderBlock extends Block {
     public BlenderBlock(Properties properties) {
         super(AbstractBlock.Properties.create(Material.IRON).notSolid());
     }
 
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 10.0D, 13.0D);
+
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+     return SHAPE;
     }
 
     @Nullable
@@ -38,16 +55,24 @@ public class BlenderBlock extends ContainerBlock {
     @SuppressWarnings("deprecation")
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        if (world.isRemote) return ActionResultType.SUCCESS; // on client side, don't do anything
-        TileEntity tileEntity = world.getTileEntity(pos);
-        if (tileEntity instanceof BlenderTile) {
-            INamedContainerProvider containerProvider = this.getContainer(state, world, pos);
-            if (containerProvider != null) {
-                if (!(player instanceof ServerPlayerEntity)) return ActionResultType.FAIL;  // should always be true, but just in case...
-            NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, (packetBuffer)->{});
+        if (!world.isRemote) {
+            TileEntity tileEntity = world.getTileEntity(pos);
+            if (tileEntity instanceof BlenderTile) {
+                INamedContainerProvider containerProvider = new INamedContainerProvider() {
+                    @Override
+                    public ITextComponent getDisplayName() {
+                        return new TranslationTextComponent("gui.juicesandsodas.blender");
+                    }
+
+                    @Override
+                    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                        return new BlenderBlockContainer(i, world, pos, playerInventory, playerEntity);
+                    }
+                };
+                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+            } else {
+                throw new IllegalStateException("Our named container provider is missing!");
             }
-        } else {
-            throw new IllegalStateException("Our named container provider is missing!");
         }
         return ActionResultType.SUCCESS;
     }
@@ -60,7 +85,7 @@ public class BlenderBlock extends ContainerBlock {
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader worldIn) {
         return new BlenderTile();
     }
 

@@ -4,22 +4,25 @@ import io.screret.github.juicesandsodas.init.Registry;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 import java.util.function.Predicate;
 
 public class BlenderBlockContainer extends Container {
 
-    private TileEntity tileEntity;
-    private PlayerEntity playerEntity;
-    private IItemHandler playerInventory;
+    private final TileEntity tileEntity;
+    private final PlayerEntity playerEntity;
+    private final IItemHandler playerInventory;
   
         private static final int HOTBAR_SLOT_COUNT = 9;
 	private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
@@ -35,37 +38,21 @@ public class BlenderBlockContainer extends Container {
     public static final int PLAYER_INVENTORY_YPOS = 84;
     public static final int PLAYER_INVENTORY_XPOS = 8;
 
-    public static int WINDOWID;
-    public static IInventory INV;
 
-
-    public static BlenderBlockContainer createContainerServerSide(int windowID, PlayerInventory playerInventory, IInventory contents) {
-        return new BlenderBlockContainer(windowID, playerInventory, contents);
+    public static BlenderBlockContainer createContainerServerSide(int windowID, World world, BlockPos pos, PlayerInventory playerInventory) {
+        return new BlenderBlockContainer(windowID, world, pos, playerInventory, playerInventory.player);
     }
 
-    public static BlenderBlockContainer createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
-        //  don't need extraData for this example; if you want you can use it to provide extra information from the server, that you can use
-        //  when creating the client container
-        //  eg String detailedDescription = extraData.readString(128);
-
-        // on the client side there is no parent TileEntity to communicate with, so we:
-        // 1) use a dummy inventory
-        // 2) use "do nothing" lambda functions for canPlayerAccessInventory and markDirty
-        return new BlenderBlockContainer(windowID, playerInventory, BlenderBlockContainer.INV);
-    }
-
-    public BlenderBlockContainer(int windowId, PlayerInventory playerInventory, IInventory cont) {
+    public BlenderBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(Registry.BLENDER_CONT.get(), windowId);
-        this.WINDOWID = windowId;
-        this.INV = cont;
+        tileEntity = world.getTileEntity(pos);
+        this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
+
 
         final int SLOT_X_SPACING = 18;
         final int SLOT_Y_SPACING = 18;
-        final int INPUT_SLOTS_XPOS = 24;
-        final int INPUT_SLOTS_YPOS = 16;
-        final int OUTPUT_SLOTS_XPOS = 78;
-        final int OUTPUT_SLOTS_YPOS = 34;
+
         final int HOTBAR_XPOS = 8;
         final int HOTBAR_YPOS = 142;
         // Add the players hotbar to the gui - the [xpos, ypos] location of each item
@@ -80,31 +67,41 @@ public class BlenderBlockContainer extends Container {
                 int slotNumber = HOTBAR_SLOT_COUNT + y * PLAYER_INVENTORY_COLUMN_COUNT + x;
                 int xpos = PLAYER_INVENTORY_XPOS + x * SLOT_X_SPACING;
                 int ypos = PLAYER_INVENTORY_YPOS + y * SLOT_Y_SPACING;
-                addSlot(new Slot(playerInventory, slotNumber,  xpos, ypos));
+                addSlot(new Slot(playerInventory, slotNumber, xpos, ypos));
             }
         }
-        //this.addSlot(new Slot(cont, 37, 25, 17));
-        this.addSlot(new Slot(cont,  0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));
-        this.addSlot(new Slot(cont, 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
-        this.addSlot(new Slot(cont, 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
-        this.addSlot(new Slot(cont, 3, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS) {
-                @Override
-                public boolean isItemValid(ItemStack stack) {
-                        return false;
-                    }
-        });
-        this.addSlot(new Slot(cont, 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS) {
-                @Override
-                public boolean isItemValid(ItemStack stack) {
+        if (tileEntity != null) {
+            tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> {
+                final int INPUT_SLOTS_XPOS = 24;
+                final int INPUT_SLOTS_YPOS = 16;
+                this.addSlot(new SlotItemHandler(itemHandler, 0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));
+                this.addSlot(new SlotItemHandler(itemHandler, 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
+                this.addSlot(new SlotItemHandler(itemHandler, 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
+
+                final int OUTPUT_SLOTS_XPOS = 78;
+                final int OUTPUT_SLOTS_YPOS = 34;
+                this.addSlot(new SlotItemHandler(itemHandler, 3, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS) {
+                    @Override
+                    public boolean isItemValid(ItemStack stack) {
                         return false;
                     }
                 });
-        this.addSlot(new Slot(cont, 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS) {
-                @Override
-                public boolean isItemValid(ItemStack stack) {
+                this.addSlot(new SlotItemHandler(itemHandler, 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS) {
+                    @Override
+                    public boolean isItemValid(ItemStack stack) {
                         return false;
                     }
-        });
+                });
+                this.addSlot(new SlotItemHandler(itemHandler, 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS) {
+                    @Override
+                    public boolean isItemValid(ItemStack stack) {
+                        return false;
+                    }
+                });
+            });
+        } else {
+            throw new IllegalStateException("TileEntity is null");
+        }
     }
 
 

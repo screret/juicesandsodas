@@ -18,13 +18,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 public class BlenderTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    private boolean needsUpdate = true;
-    private int updateTimer = 0;
+    private ItemStackHandler itemHandler = createHandler();
+
 
     private static final String CONTENTS_INVENTORY_TAG = "contents";
 
@@ -68,7 +71,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
     @Nullable
     @Override
     public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return BlenderBlockContainer.createContainerServerSide(windowID, playerInventory, contents);
+        return BlenderBlockContainer.createContainerServerSide(windowID, playerEntity.world, this.pos, playerInventory);
     }
 
     @Override
@@ -114,7 +117,42 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
         };
     }
 
-    public ItemStack getStackInSlot(){
-        return ItemStack.EMPTY;
+    private ItemStackHandler createHandler() {
+        return new ItemStackHandler(1) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                // To make sure the TE persists when the chunk is saved later we need to
+                // mark it dirty every time the item handler changes
+                markDirty();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                return stack.getItem() == Registry.LIME.get() ||
+                        stack.getItem() == Registry.CHERRY.get() ||
+                        stack.getItem() == Registry.GRAPEFRUIT.get() ||
+                        stack.getItem() == Registry.ORANGE.get() ||
+                        stack.getItem() == Registry.MANDARIN.get() ||
+                        stack.getItem() == Registry.LEMONADE.get() ||
+                        stack.getItem() == Registry.KOOL_AID.get() ||
+                        stack.getItem() == Registry.MAGIC_AID.get();
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+                if (stack.getItem() != Registry.LIME.get() ||
+                        stack.getItem() != Registry.CHERRY.get() ||
+                        stack.getItem() != Registry.GRAPEFRUIT.get() ||
+                        stack.getItem() != Registry.ORANGE.get() ||
+                        stack.getItem() != Registry.MANDARIN.get() ||
+                        stack.getItem() != Registry.LEMONADE.get() ||
+                        stack.getItem() != Registry.KOOL_AID.get() ||
+                        stack.getItem() != Registry.MAGIC_AID.get()) {
+                    return stack;
+                }
+                return super.insertItem(slot, stack, simulate);
+            }
+        };
     }
 }

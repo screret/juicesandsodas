@@ -70,7 +70,6 @@ public class Base {
         Registry.ALL_LEAVES = Collections.synchronizedSet(Sets.newHashSet(Arrays.asList(
                 Registry.MANDARIN_LEAVES.get(),
                 Registry.LIME_LEAVES.get(),
-                Registry.POMELO_LEAVES.get(),
                 Registry.ORANGE_LEAVES.get(),
                 Registry.LEMON_LEAVES.get(),
                 Registry.GRAPEFRUIT_LEAVES.get(),
@@ -80,7 +79,6 @@ public class Base {
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
             pot.addPlant(Registry.MANDARIN_SAPLING.get().getRegistryName(), () -> Registry.POTTED_MANDARIN.get());
             pot.addPlant(Registry.LIME_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LIME.get());
-            pot.addPlant(Registry.POMELO_SAPLING.get().getRegistryName(), () -> Registry.POTTED_POMELO.get());
             pot.addPlant(Registry.ORANGE_SAPLING.get().getRegistryName(), () -> Registry.POTTED_ORANGE.get());
             pot.addPlant(Registry.LEMON_SAPLING.get().getRegistryName(), () -> Registry.POTTED_LEMON.get());
             pot.addPlant(Registry.GRAPEFRUIT_SAPLING.get().getRegistryName(), () -> Registry.POTTED_GRAPEFRUIT.get());

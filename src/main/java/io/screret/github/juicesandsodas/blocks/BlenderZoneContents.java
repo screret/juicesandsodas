@@ -41,10 +41,6 @@ public class BlenderZoneContents implements IInventory {
      * @param size  the max number of ItemStacks in the inventory
      * @return the new ChestContents
      */
-    public static BlenderZoneContents createForClientSideContainer(int size) {
-        return new BlenderZoneContents(size);
-    }
-
     // ----Methods used to load / save the contents to NBT
 
     /**

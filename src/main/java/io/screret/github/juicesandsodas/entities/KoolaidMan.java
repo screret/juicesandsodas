@@ -115,7 +115,7 @@ public class KoolaidMan extends CreatureEntity {
     }
 
     public void livingTick() {
-        //super.livingTick();
+        super.livingTick();
         double x = this.getPosX();
         double y = this.getPosY();
         double z = this.getPosZ();

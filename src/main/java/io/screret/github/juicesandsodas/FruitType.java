@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 public enum FruitType {
     MANDARIN(Blocks.OAK_LOG, Registry.MANDARIN_LEAVES.get(), () -> (SaplingBlock) Registry.MANDARIN_SAPLING.get(), Registry.MANDARIN.get()),
     LIME(Blocks.OAK_LOG, Registry.LIME_LEAVES.get(), () -> (SaplingBlock) Registry.LIME_SAPLING.get(), Registry.LIME.get()),
-    POMELO(Blocks.OAK_LOG, Registry.POMELO_LEAVES.get(), () -> (SaplingBlock) Registry.POMELO_SAPLING.get(), Registry.POMELO.get()),
     ORANGE(Blocks.OAK_LOG, Registry.ORANGE_LEAVES.get(), () -> (SaplingBlock) Registry.ORANGE_SAPLING.get(), Registry.ORANGE.get()),
     LEMON(Blocks.OAK_LOG, Registry.LEMON_LEAVES.get(), () -> (SaplingBlock) Registry.LEMON_SAPLING.get(), Registry.LEMON.get()),
     GRAPEFRUIT(Blocks.OAK_LOG, Registry.GRAPEFRUIT_LEAVES.get(), () -> (SaplingBlock) Registry.GRAPEFRUIT_SAPLING.get(), Registry.GRAPEFRUIT.get()),
