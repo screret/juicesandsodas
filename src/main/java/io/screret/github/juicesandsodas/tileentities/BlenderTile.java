@@ -2,25 +2,24 @@ package io.screret.github.juicesandsodas.tileentities;
 
 
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
-import io.screret.github.juicesandsodas.init.Registration;
-import io.screret.github.juicesandsodas.util.BlenderRecipes;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.items.ItemStackHandler;
@@ -29,13 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Random;
 
-@OnlyIn(
-        value = Dist.CLIENT,
-        _interface = IBlenderRod.class
-)
-public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTileEntity, INamedContainerProvider {
+public class BlenderTile extends FurnaceTileEntity implements ITickableTileEntity, INamedContainerProvider {
 
     public ItemStackHandler inputSlot = createInputHandler(3);
     public ItemStackHandler bottleSlot = createBottleHandler(1);
@@ -45,36 +39,46 @@ public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTil
 
     public static final int NUMBER_OF_SLOTS = 6;
 
-    private float blendTime = 60;
-    private final BlenderRecipes recipes = new BlenderRecipes();
-    /** The current angle of the lid (between 0 and 1) */
-    protected float rodAngle;
-    /** The angle of the lid last tick */
-    protected float prevRodAngle;
+    private int blendTime = 60;
+
+
+    /* FOLLOWING Code helps the copied code below. */
+
+    public static final int COOK_TIME = 2;
+    public static final int COOK_TIME_TOTAL = 3;
+    public static final int RECIPES_USED = 1;
+
+    /* FOLLOWING Code is copied from "Shadows-of-Fire/FastFurnace" mod to enhance performance */
+
+    public static final int INPUT = 0;
+    public static final int OUTPUT = 2;
+
+
+    protected IRecipe<BlenderTile> curRecipe;
 
     public BlenderTile() {
-        super(Registration.BLENDER_TILE.get());
+        super();
 
         outputSlotWrapper = new OutputItemStackHandler(outputSlot);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT parentNBTTagCompound)
-    {
+    public CompoundNBT write(CompoundNBT parentNBTTagCompound) {
         super.write(parentNBTTagCompound); // The super call is required to save and load the tileEntity's location
         parentNBTTagCompound.putFloat("juicesandsodas:blendTime", blendTime);
         parentNBTTagCompound.put("juicesandsodas:inputslot", inputSlot.serializeNBT());
+        parentNBTTagCompound.put("juicesandsodas:bottleslot", bottleSlot.serializeNBT());
         parentNBTTagCompound.put("juicesandsodas:outputSlot", outputSlot.serializeNBT());
         return parentNBTTagCompound;
     }
 
     // This is where you load the data that you saved in write
     @Override
-    public void read(BlockState blockState, CompoundNBT parentNBTTagCompound)
-    {
+    public void read(BlockState blockState, CompoundNBT parentNBTTagCompound) {
         super.read(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
         parentNBTTagCompound.get("juicesandsodas:blendTime");
         inputSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:inputslot"));
+        bottleSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:bottleslot"));
         outputSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:outputSlot"));
     }
 
@@ -91,45 +95,71 @@ public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTil
 
     @Override
     public void tick() {
-        if(world.isRemote) return;
-        if(world.getBlockState(pos).getBlock() != this.getBlockState().getBlock()) return;
-        if (blendTime > 0) {
-            blendTime -= 1;
-            if (inputSlot.getStackInSlot(0).isEmpty()) {
-                blendTime = 0;
-            } else if (blendTime <= 0) {
-                blendItem();
-                this.rodAngle += 0.1F;
-                if (!outputSlot.getStackInSlot(0).isEmpty() && (outputSlot.getStackInSlot(0).getCount() >= 1 || inputSlot.getStackInSlot(0).isEmpty())) {
-                    if (!world.isRemote) {
-                        BlockState s = world.getBlockState(pos.down());
-                        if (s.getBlock().isAir(s, world, pos)) {
-                            Random rand = world.rand;
-                            float rx = rand.nextFloat() * 0.6F + 0.2F;
-                            float ry = rand.nextFloat() * 0.2F + 0.6F - 1;
-                            float rz = rand.nextFloat() * 0.6F + 0.2F;
-                            ItemEntity itemEntity = new ItemEntity(world,
-                                    pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz,
-                                    outputSlot.extractItem(0, 64, false));
-                            world.addEntity(itemEntity);
-                            itemEntity.setMotion(0, -0.2F, 0);
-                        }
-                    }
+        if (world.isRemote) return;
+        if (this.isBlending()) {
+            this.furnaceData.set(blendTime, this.furnaceData.get(blendTime) - 1); //changed because of private variable
+        }
+        IRecipe<BlenderTile> irecipe = getRecipe();
+        boolean valid = this.canSmelt(irecipe);
+        if (this.world != null && !this.world.isRemote) {
+            if (this.isBlending() && !this.items.get(INPUT).isEmpty()) {
+                if (!this.isBlending() && valid) {
+                    this.furnaceData.set(RECIPES_USED, this.furnaceData.get(blendTime)); //changed because of private variable
                 }
             }
-            this.markDirty();
+
+            if (this.isBlending() && valid) {
+                this.furnaceData.set(COOK_TIME, this.furnaceData.get(COOK_TIME) + 1); //changed because of private variable
+                if (this.furnaceData.get(COOK_TIME) == this.furnaceData.get(COOK_TIME_TOTAL)) { //changed because of private variable
+                    this.furnaceData.set(COOK_TIME, 0); //changed because of private variable
+                    this.furnaceData.set(COOK_TIME_TOTAL, this.getCookTime()); //changed because of private variable
+                    this.smeltItem(irecipe);
+                }
+            } else {
+                this.furnaceData.set(COOK_TIME, 0); //changed because of private variable
+            }
+        } else if (!this.isBlending() && this.furnaceData.get(COOK_TIME) > 0) { //changed because of private variable
+            this.furnaceData.set(COOK_TIME, MathHelper.clamp(this.furnaceData.get(COOK_TIME) - 2, 0, this.furnaceData.get(COOK_TIME_TOTAL))); //changed because of private variable
+        }
+    }
+
+    private void smeltItem(@Nullable IRecipe<?> recipe) {
+        if (recipe != null && this.canSmelt(recipe)) {
+            ItemStack itemstack = this.items.get(0);
+            ItemStack itemstack1 = recipe.getRecipeOutput();
+            ItemStack itemstack2 = this.items.get(2);
+            if (itemstack2.isEmpty()) {
+                this.items.set(2, itemstack1.copy());
+            } else if (itemstack2.getItem() == itemstack1.getItem()) {
+                itemstack2.grow(itemstack1.getCount());
+            }
+
+            if (this.world != null && !this.world.isRemote) {
+                this.setRecipeUsed(recipe);
+            }
+
+            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.items.get(1).isEmpty() && this.items.get(1).getItem() == Items.BUCKET) {
+                this.items.set(1, new ItemStack(Items.WATER_BUCKET));
+            }
+
+            itemstack.shrink(1);
         }
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return null;
+        return new AxisAlignedBB(getPos());
     }
 
     @Override
     public void requestModelDataUpdate() {
 
     }
+
+    private boolean isBlending() {
+        return this.furnaceData.get(blendTime) > 0; //changed because of private variable
+    }
+
 
     @NotNull
     @Override
@@ -154,24 +184,18 @@ public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTil
         };
     }
 
-    private void blendItem() {
-
-        ItemStack result = recipes.getBlendResult3(new ItemStack(inputSlot.getStackInSlot(0).getItem()),
-                new ItemStack(inputSlot.getStackInSlot(1).getItem()),
-                new ItemStack(inputSlot.getStackInSlot(2).getItem())).copy();
-
-        outputSlot.insertItem(0, result, false);
-
-        inputSlot.extractItem(0, 1, false);
-        inputSlot.extractItem(1, 1, false);
-        inputSlot.extractItem(2, 1, false);
-        this.markDirty();
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public float getRodAngle(float partialTicks) {
-        return MathHelper.lerp(partialTicks, this.prevRodAngle, this.rodAngle);
+    @Override
+    protected boolean canSmelt(@Nullable IRecipe<?> recipe) {
+        if (!this.items.get(0).isEmpty() && recipe != null) {
+            ItemStack recipeOutput = recipe.getRecipeOutput();
+            if (!recipeOutput.isEmpty()) {
+                ItemStack output = this.items.get(OUTPUT);
+                if (output.isEmpty()) return true;
+                else if (!output.isItemEqual(recipeOutput)) return false;
+                else return output.getCount() + recipeOutput.getCount() <= output.getMaxStackSize();
+            }
+        }
+        return false;
     }
 
     private ItemStackHandler createInputHandler(int size) {
@@ -186,39 +210,12 @@ public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTil
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return true/*stack.getItem() == Registration.LIME.get() ||
-                        stack.getItem() == Registration.LEMON.get() ||
-                        stack.getItem() == Registration.CHERRY.get() ||
-                        stack.getItem() == Registration.GRAPEFRUIT.get() ||
-                        stack.getItem() == Registration.ORANGE.get() ||
-                        stack.getItem() == Registration.MANDARIN.get() ||
-                        stack.getItem() == Registration.LEMONADE.get() ||
-                        stack.getItem() == Registration.KOOL_AID.get() ||
-                        stack.getItem() == Registration.MAGIC_AID.get() ||
-                        stack.getItem() == Registration.LIME_SODA.get() ||
-                        stack.getItem() == Registration.GRAPE_JUICE.get()*/;
-            }
-
-            @Override
-            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                /*if (stack.getItem() != Registration.LIME.get() ||
-                        stack.getItem() != Registration.CHERRY.get() ||
-                        stack.getItem() != Registration.GRAPEFRUIT.get() ||
-                        stack.getItem() != Registration.ORANGE.get() ||
-                        stack.getItem() != Registration.MANDARIN.get() ||
-                        stack.getItem() != Registration.LEMONADE.get() ||
-                        stack.getItem() != Registration.KOOL_AID.get() ||
-                        stack.getItem() != Registration.MAGIC_AID.get() ||
-                        stack.getItem() == Registration.LIME_SODA.get() ||
-                        stack.getItem() == Registration.GRAPE_JUICE.get()) {
-                    return stack;
-                }*/
-                return super.insertItem(slot, stack, simulate);
+                return super.isItemValid(slot, stack);
             }
         };
     }
 
-    public class OutputItemStackHandler extends ItemStackHandler {
+    public static class OutputItemStackHandler extends ItemStackHandler {
         private final ItemStackHandler internalSlot;
 
         public OutputItemStackHandler(ItemStackHandler hidden) {
@@ -269,18 +266,24 @@ public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTil
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return stack.getItem() == Registration.EMPTY_JUICE_BOTTLE.get() ||
-                        stack.getItem() == Registration.EMPTY_BOTTLE.get();
-            }
-
-            @Override
-            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if (stack.getItem() == Registration.EMPTY_JUICE_BOTTLE.get() ||
-                        stack.getItem() == Registration.EMPTY_BOTTLE.get()) {
-                    return stack;
-                }
-                return super.insertItem(slot, stack, simulate);
+                return super.isItemValid(slot, stack);
             }
         };
+    }
+
+    protected IRecipe<BlenderTile> getRecipe() {
+        ItemStack input = this.getStackInSlot(INPUT);
+        if (input.isEmpty() || input == ItemStack.EMPTY) {
+            return null;
+        }
+        if (this.world != null && curRecipe != null && curRecipe.matches(this, world)) {
+            return curRecipe;
+        } else {
+            IRecipe<BlenderTile> rec = null;
+            if (this.world != null) {
+                rec = this.world.getRecipeManager().getRecipe(IRecipeType.register("blending"), this, this.world).orElse(null);
+            }
+            return curRecipe = rec;
+        }
     }
 }

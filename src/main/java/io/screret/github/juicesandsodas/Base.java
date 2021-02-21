@@ -6,9 +6,8 @@ import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.Registration;
-import io.screret.github.juicesandsodas.properties.block.blender.BlenderOnModel;
+import io.screret.github.juicesandsodas.properties.block.blender.BlenderTileRenderer;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
-import io.screret.github.juicesandsodas.util.BlenderRecipes;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -62,6 +61,7 @@ public class Base {
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        MinecraftForge.EVENT_BUS.addListener(Registration::insertFeatures);
         Registration.BLOCKS.register(modEventBus);
         Registration.ITEMS.register(modEventBus);
         Registration.ENTITIES.register(modEventBus);
@@ -113,9 +113,6 @@ public class Base {
         Registration.trees = null;
         Registration.cherry = null;
 
-        Registration.AddRecipes();
-        LOGGER.debug("recipes registered: {}", BlenderRecipes.getBlenderRecipes());
-
         DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
@@ -123,7 +120,8 @@ public class Base {
         DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
         LOGGER.debug("Screens Registered");
         RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
-        ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderOnModel::new);
+        ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderTileRenderer::new);
+        LOGGER.debug("tileEntityRenderers registered: {}", BlenderTileRenderer.class.getName());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {

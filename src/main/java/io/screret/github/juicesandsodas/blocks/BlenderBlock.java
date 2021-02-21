@@ -2,12 +2,9 @@ package io.screret.github.juicesandsodas.blocks;
 
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
-import io.screret.github.juicesandsodas.tileentities.IBlenderRod;
-import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -17,7 +14,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityMerger;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +32,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class BlenderBlock extends Block {
     public BlenderBlock(Properties properties) {
-        super(AbstractBlock.Properties.create(Material.IRON).notSolid());
+        super(properties);
+//        Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/block/oak_planks.png"));
+//        Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/block/glass.png"));
+//        Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/block/iron_block.png"));
     }
 
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 10.0D, 13.0D);
@@ -72,7 +71,7 @@ public class BlenderBlock extends Block {
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
                         BlenderTile tile = (BlenderTile) tileEntity;
-                        return new BlenderBlockContainer(i, playerInventory, new CombinedInvWrapper(tile.inputSlot, tile.outputSlotWrapper), tile);
+                        return new BlenderBlockContainer(i, playerInventory, new CombinedInvWrapper(tile.inputSlot, tile.bottleSlot, tile.outputSlotWrapper), tile);
                     }
                 };
                 NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
@@ -96,22 +95,9 @@ public class BlenderBlock extends Block {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public static TileEntityMerger.ICallback<BlenderTile, Float2FloatFunction> getLidRotationCallback(final IBlenderRod rod) {
-        return new TileEntityMerger.ICallback<BlenderTile, Float2FloatFunction>() {
-
-            @Override
-            public Float2FloatFunction func_225539_a_(BlenderTile p_225539_1_, BlenderTile p_225539_2_) {
-                return p_225539_1_::getRodAngle;
-            }
-
-            @Override
-            public Float2FloatFunction func_225538_a_(BlenderTile p_225538_1_) {
-                return p_225538_1_::getRodAngle;
-            }
-
-            public Float2FloatFunction func_225537_b_() {
-                return rod::getRodAngle;
-            }
-        };
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
+
 }

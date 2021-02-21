@@ -1,55 +1,87 @@
 package io.screret.github.juicesandsodas.util;
 
-import com.google.common.collect.Maps;
+import io.screret.github.juicesandsodas.init.Registration;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.Map.Entry;
+public class BlenderRecipes implements IRecipe<IInventory> {
 
-public class BlenderRecipes {
+    protected final IRecipeType<?> type;
+    protected final ResourceLocation id;
+    public final String group;
+    public final Ingredient ingredient;
+    public final ItemStack result;
+    public final float experience;
+    public final int cookTime;
 
-    private static Map<ItemStack[], ItemStack> blendRecipes = Maps.newHashMap();
-
-    public static void addBlenderRecipe(ItemStack[] input, ItemStack output) {
-        blendRecipes.put(input, output);
+    public BlenderRecipes(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookTimeIn) {
+        this.type = IRecipeType.register("blending");
+        this.id = idIn;
+        this.group = groupIn;
+        this.ingredient = ingredientIn;
+        this.result = resultIn;
+        this.experience = experienceIn;
+        this.cookTime = cookTimeIn;
     }
 
-    @Nonnull
-    public ItemStack getBlendResult(ItemStack stack) {
-        for (Entry<ItemStack[], ItemStack> entry : blendRecipes.entrySet()) {
-            if (this.compareItemStacks(stack, entry.getKey()[0])) {
-                return entry.getValue();
-            }
-        }
-        return ItemStack.EMPTY;
+    @Override
+    public boolean matches(IInventory inv, World worldIn) {
+        return this.ingredient.test(inv.getStackInSlot(0))
+                && this.ingredient.test(inv.getStackInSlot(1))
+                && this.ingredient.test(inv.getStackInSlot(2));
     }
 
-    @Nonnull
-    public ItemStack getBlendResult3(ItemStack stack1, ItemStack stack2, ItemStack stack3) {
-        for (Entry<ItemStack[], ItemStack> entry : blendRecipes.entrySet()) {
-            if (this.compareItemStacks(stack1, entry.getKey()[0])) {
-                if(this.compareItemStacks(stack2, entry.getKey()[1])){
-                    if(this.compareItemStacks(stack3, entry.getKey()[2])){
-                        return entry.getValue();
-                    }
-                }
-            }
-        }
-        return ItemStack.EMPTY;
+    @Override
+    public ItemStack getCraftingResult(IInventory inv) {
+        return this.result.copy();
     }
 
-    private boolean compareItemStacks(ItemStack stack1, ItemStack stack2) {
-        return compareItemStacks(stack1, stack2, false);
+    @Override
+    public boolean canFit(int width, int height) {
+        return true;
     }
 
-
-    private boolean compareItemStacks(ItemStack key, ItemStack entry, boolean keyStackBiggerThanEntry) {
-        return entry.getItem() == key.getItem() && (!keyStackBiggerThanEntry || key.getCount() >= entry.getCount());
+    @Override
+    public ItemStack getRecipeOutput() {
+        return this.result;
+    }
+    /**
+     * Recipes with equal group are combined into one button in the recipe book
+     */
+    public String getGroup() {
+        return this.group;
     }
 
-    public static Map<ItemStack[], ItemStack> getBlenderRecipes(){
-        return blendRecipes;
+    /**
+     * Gets the cook time in ticks
+     */
+    public int getCookTime() {
+        return this.cookTime;
     }
 
+    public ResourceLocation getId() {
+        return this.id;
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return Registration.BLENDER_RECIPE_GRAPE.get().delegate.get();
+    }
+
+    public IRecipeType<?> getType() {
+        return this.type;
+    }
+
+    public NonNullList<Ingredient> getIngredients() {
+        NonNullList<Ingredient> nonnulllist = NonNullList.create();
+        nonnulllist.add(this.ingredient);
+        return nonnulllist;
+    }
 }

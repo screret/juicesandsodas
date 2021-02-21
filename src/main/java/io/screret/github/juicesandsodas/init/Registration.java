@@ -6,6 +6,7 @@ import io.screret.github.juicesandsodas.FruitTree;
 import io.screret.github.juicesandsodas.FruitType;
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
+import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.items.ItemDrink;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
@@ -26,6 +27,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntityType;
@@ -82,6 +84,7 @@ public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Base.MODID);
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Base.MODID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Base.MODID);
+    public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Base.MODID);
 
     //blocks
     //leaves
@@ -180,13 +183,11 @@ public class Registration {
 
 
     //blender recipes
-    public static void AddRecipes(){
-        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(LEMON.get()), new ItemStack(LEMON.get()), new ItemStack(LEMON.get())}, new ItemStack(LEMONADE.get()));
-        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(LIME.get()), new ItemStack(LIME.get()), new ItemStack(LIME.get())}, new ItemStack(LIME_SODA.get()));
-        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(GRAPEFRUIT.get()), new ItemStack(GRAPEFRUIT.get()), new ItemStack(GRAPEFRUIT.get())}, new ItemStack(GRAPE_JUICE.get()));
-        BlenderRecipes.addBlenderRecipe(new ItemStack[]{new ItemStack(Items.SUGAR, 3), new ItemStack(Items.SUGAR, 3), new ItemStack(Items.SUGAR, 3)}, new ItemStack(KOOL_AID.get()));
-    }
-
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_GRAPE = RECIPES.register("grape_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_LEMON = RECIPES.register("lemon_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_LIME = RECIPES.register("lime_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_KOOL_AID = RECIPES.register("kool_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_MAGIC_AID = RECIPES.register("magic_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
 
     //foods
     public static final class Foods {
