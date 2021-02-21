@@ -3,8 +3,6 @@ package io.screret.github.juicesandsodas.tileentities;
 
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.init.Registration;
-import io.screret.github.juicesandsodas.properties.block.BlockProperties;
-import io.screret.github.juicesandsodas.properties.block.blender.BlenderRodOrientation;
 import io.screret.github.juicesandsodas.util.BlenderRecipes;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -18,8 +16,11 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.items.ItemStackHandler;
@@ -30,18 +31,26 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class BlenderTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+@OnlyIn(
+        value = Dist.CLIENT,
+        _interface = IBlenderRod.class
+)
+public class BlenderTile extends TileEntity implements IBlenderRod, ITickableTileEntity, INamedContainerProvider {
 
     public ItemStackHandler inputSlot = createInputHandler(3);
-    public ItemStackHandler outputSlot = createOutputHandler(3);
+    public ItemStackHandler bottleSlot = createBottleHandler(1);
+    public ItemStackHandler outputSlot = new ItemStackHandler();
 
     public ItemStackHandler outputSlotWrapper;
-
 
     public static final int NUMBER_OF_SLOTS = 6;
 
     private float blendTime = 60;
     private final BlenderRecipes recipes = new BlenderRecipes();
+    /** The current angle of the lid (between 0 and 1) */
+    protected float rodAngle;
+    /** The angle of the lid last tick */
+    protected float prevRodAngle;
 
     public BlenderTile() {
         super(Registration.BLENDER_TILE.get());
@@ -72,7 +81,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
     @Nullable
     @Override
     public Container createMenu(int windowID, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new BlenderBlockContainer(windowID, playerInventory, new CombinedInvWrapper(inputSlot, outputSlotWrapper), this);
+        return new BlenderBlockContainer(windowID, playerInventory, new CombinedInvWrapper(inputSlot, bottleSlot, outputSlotWrapper), this);
     }
 
     @Override
@@ -84,34 +93,31 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
     public void tick() {
         if(world.isRemote) return;
         if(world.getBlockState(pos).getBlock() != this.getBlockState().getBlock()) return;
-        BlenderRodOrientation rodOrientation = world.getBlockState(pos).get(BlockProperties.ROD_ORIENTATION);
-        if(rodOrientation == BlenderRodOrientation.CENTER) {
-            if (blendTime > 0) {
-                blendTime -= 1;
-                if (inputSlot.getStackInSlot(0).isEmpty()) {
-                    blendTime = 0;
-                } else if (blendTime <= 0) {
-                    blendItem(rodOrientation);
-
-                    if (!outputSlot.getStackInSlot(0).isEmpty() && (outputSlot.getStackInSlot(0).getCount() >= 8 || inputSlot.getStackInSlot(0).isEmpty())) {
-                        if (!world.isRemote) {
-                            BlockState s = world.getBlockState(pos.down());
-                            if (s.getBlock().isAir(s, world, pos)) {
-                                Random rand = world.rand;
-                                float rx = rand.nextFloat() * 0.6F + 0.2F;
-                                float ry = rand.nextFloat() * 0.2F + 0.6F - 1;
-                                float rz = rand.nextFloat() * 0.6F + 0.2F;
-                                ItemEntity itemEntity = new ItemEntity(world,
-                                        pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz,
-                                        outputSlot.extractItem(0, 64, false));
-                                world.addEntity(itemEntity);
-                                itemEntity.setMotion(0, -0.2F, 0);
-                            }
+        if (blendTime > 0) {
+            blendTime -= 1;
+            if (inputSlot.getStackInSlot(0).isEmpty()) {
+                blendTime = 0;
+            } else if (blendTime <= 0) {
+                blendItem();
+                this.rodAngle += 0.1F;
+                if (!outputSlot.getStackInSlot(0).isEmpty() && (outputSlot.getStackInSlot(0).getCount() >= 1 || inputSlot.getStackInSlot(0).isEmpty())) {
+                    if (!world.isRemote) {
+                        BlockState s = world.getBlockState(pos.down());
+                        if (s.getBlock().isAir(s, world, pos)) {
+                            Random rand = world.rand;
+                            float rx = rand.nextFloat() * 0.6F + 0.2F;
+                            float ry = rand.nextFloat() * 0.2F + 0.6F - 1;
+                            float rz = rand.nextFloat() * 0.6F + 0.2F;
+                            ItemEntity itemEntity = new ItemEntity(world,
+                                    pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz,
+                                    outputSlot.extractItem(0, 64, false));
+                            world.addEntity(itemEntity);
+                            itemEntity.setMotion(0, -0.2F, 0);
                         }
                     }
                 }
-                this.markDirty();
             }
+            this.markDirty();
         }
     }
 
@@ -148,6 +154,26 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
         };
     }
 
+    private void blendItem() {
+
+        ItemStack result = recipes.getBlendResult3(new ItemStack(inputSlot.getStackInSlot(0).getItem()),
+                new ItemStack(inputSlot.getStackInSlot(1).getItem()),
+                new ItemStack(inputSlot.getStackInSlot(2).getItem())).copy();
+
+        outputSlot.insertItem(0, result, false);
+
+        inputSlot.extractItem(0, 1, false);
+        inputSlot.extractItem(1, 1, false);
+        inputSlot.extractItem(2, 1, false);
+        this.markDirty();
+    }
+
+
+    @OnlyIn(Dist.CLIENT)
+    public float getRodAngle(float partialTicks) {
+        return MathHelper.lerp(partialTicks, this.prevRodAngle, this.rodAngle);
+    }
+
     private ItemStackHandler createInputHandler(int size) {
         return new ItemStackHandler(size) {
 
@@ -158,9 +184,9 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
                 markDirty();
             }
 
-            /*@Override
+            @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return stack.getItem() == Registration.LIME.get() ||
+                return true/*stack.getItem() == Registration.LIME.get() ||
                         stack.getItem() == Registration.LEMON.get() ||
                         stack.getItem() == Registration.CHERRY.get() ||
                         stack.getItem() == Registration.GRAPEFRUIT.get() ||
@@ -170,12 +196,12 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
                         stack.getItem() == Registration.KOOL_AID.get() ||
                         stack.getItem() == Registration.MAGIC_AID.get() ||
                         stack.getItem() == Registration.LIME_SODA.get() ||
-                        stack.getItem() == Registration.GRAPE_JUICE.get();
-            }*/
+                        stack.getItem() == Registration.GRAPE_JUICE.get()*/;
+            }
 
             @Override
             public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                if (stack.getItem() != Registration.LIME.get() ||
+                /*if (stack.getItem() != Registration.LIME.get() ||
                         stack.getItem() != Registration.CHERRY.get() ||
                         stack.getItem() != Registration.GRAPEFRUIT.get() ||
                         stack.getItem() != Registration.ORANGE.get() ||
@@ -186,47 +212,12 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
                         stack.getItem() == Registration.LIME_SODA.get() ||
                         stack.getItem() == Registration.GRAPE_JUICE.get()) {
                     return stack;
-                }
+                }*/
                 return super.insertItem(slot, stack, simulate);
             }
         };
     }
 
-    private ItemStackHandler createOutputHandler(int size) {
-        return new ItemStackHandler(size) {
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                // To make sure the TE persists when the chunk is saved later we need to
-                // mark it dirty every time the item handler changes
-                markDirty();
-            }
-
-            @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return false;
-            }
-        };
-    }
-
-    private void blendItem(BlenderRodOrientation millpos) {
-
-        ItemStack result = recipes.getBlendResult(inputSlot.getStackInSlot(0)).copy();
-
-        outputSlot.insertItem(0, result, false);
-
-        inputSlot.extractItem(0, 1, false);
-        inputSlot.extractItem(1, 1, false);
-        inputSlot.extractItem(2, 1, false);
-        this.markDirty();
-    }
-
-    /**
-     * ItemStackHandler wrapper that allows for all the usual inventory item manipulation except
-     * that when exposed externally (GUI, hopper, etc.), items may not be inserted, only extracted.
-     * @author Draco18s
-     *
-     */
     public class OutputItemStackHandler extends ItemStackHandler {
         private final ItemStackHandler internalSlot;
 
@@ -264,5 +255,32 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, INam
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             return internalSlot.extractItem(slot, amount, simulate);
         }
+    }
+
+    private ItemStackHandler createBottleHandler(int size) {
+        return new ItemStackHandler(size) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                // To make sure the TE persists when the chunk is saved later we need to
+                // mark it dirty every time the item handler changes
+                markDirty();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                return stack.getItem() == Registration.EMPTY_JUICE_BOTTLE.get() ||
+                        stack.getItem() == Registration.EMPTY_BOTTLE.get();
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+                if (stack.getItem() == Registration.EMPTY_JUICE_BOTTLE.get() ||
+                        stack.getItem() == Registration.EMPTY_BOTTLE.get()) {
+                    return stack;
+                }
+                return super.insertItem(slot, stack, simulate);
+            }
+        };
     }
 }

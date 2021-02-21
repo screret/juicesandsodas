@@ -40,13 +40,16 @@ public class BlenderRecipes {
     }
 
     private boolean compareItemStacks(ItemStack stack1, ItemStack stack2) {
-        //return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
         return compareItemStacks(stack1, stack2, false);
     }
 
 
     private boolean compareItemStacks(ItemStack key, ItemStack entry, boolean keyStackBiggerThanEntry) {
         return entry.getItem() == key.getItem() && (!keyStackBiggerThanEntry || key.getCount() >= entry.getCount());
+    }
+
+    public static Map<ItemStack[], ItemStack> getBlenderRecipes(){
+        return blendRecipes;
     }
 
 }

@@ -52,15 +52,18 @@ public class BlenderBlockContainer extends Container {
             //tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> {
                 final int INPUT_SLOTS_XPOS = 24;
                 final int INPUT_SLOTS_YPOS = 16;
+                final int BOTTLE_SLOT_XPOS = 59;
+                final int BOTTLE_SLOT_YPOS = 34;
                 this.addSlot(new SlotItemHandler(inven, 0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));
                 this.addSlot(new SlotItemHandler(inven, 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
                 this.addSlot(new SlotItemHandler(inven, 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
+                this.addSlot(new SlotItemHandler(inven, 3, BOTTLE_SLOT_XPOS, BOTTLE_SLOT_YPOS));
 
-                final int OUTPUT_SLOTS_XPOS = 78;
+                final int OUTPUT_SLOTS_XPOS = 113;
                 final int OUTPUT_SLOTS_YPOS = 34;
-                this.addSlot(new SlotOutput(inven, 0, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS));
-                this.addSlot(new SlotOutput(inven, 1, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS));
-                this.addSlot(new SlotOutput(inven, 2, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS));
+                this.addSlot(new SlotOutput(inven, 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS));
+                this.addSlot(new SlotOutput(inven, 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS));
+                this.addSlot(new SlotOutput(inven, 6, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS));
 
             //});
         } else {

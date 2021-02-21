@@ -104,11 +104,11 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
 
         if (playerentity == null || !playerentity.abilities.isCreativeMode) {
             if (stack.isEmpty()) {
-                return new ItemStack(Registration.KOOL_AID_EMPTY.get());
+                return new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(Registration.KOOL_AID_EMPTY.get()));
+                playerentity.inventory.addItemStackToInventory(new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get()));
             }
         }
 

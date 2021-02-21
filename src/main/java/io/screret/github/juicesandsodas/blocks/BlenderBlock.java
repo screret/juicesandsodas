@@ -1,11 +1,11 @@
 package io.screret.github.juicesandsodas.blocks;
 
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
-import io.screret.github.juicesandsodas.properties.block.BlockProperties;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
+import io.screret.github.juicesandsodas.tileentities.IBlenderRod;
+import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +17,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityMerger;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +28,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +85,7 @@ public class BlenderBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.POWERED, BlockProperties.ROD_ORIENTATION);
+        builder.add(BlockStateProperties.POWERED);
     }
 
 
@@ -92,8 +95,23 @@ public class BlenderBlock extends Block {
         return new BlenderTile();
     }
 
-    @Override
-    public BlockRenderType getRenderType(BlockState iBlockState) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    @OnlyIn(Dist.CLIENT)
+    public static TileEntityMerger.ICallback<BlenderTile, Float2FloatFunction> getLidRotationCallback(final IBlenderRod rod) {
+        return new TileEntityMerger.ICallback<BlenderTile, Float2FloatFunction>() {
+
+            @Override
+            public Float2FloatFunction func_225539_a_(BlenderTile p_225539_1_, BlenderTile p_225539_2_) {
+                return p_225539_1_::getRodAngle;
+            }
+
+            @Override
+            public Float2FloatFunction func_225538_a_(BlenderTile p_225538_1_) {
+                return p_225538_1_::getRodAngle;
+            }
+
+            public Float2FloatFunction func_225537_b_() {
+                return rod::getRodAngle;
+            }
+        };
     }
 }

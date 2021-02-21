@@ -6,7 +6,9 @@ import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.Registration;
+import io.screret.github.juicesandsodas.properties.block.blender.BlenderOnModel;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
+import io.screret.github.juicesandsodas.util.BlenderRecipes;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
@@ -18,6 +20,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -111,14 +114,16 @@ public class Base {
         Registration.cherry = null;
 
         Registration.AddRecipes();
+        LOGGER.debug("recipes registered: {}", BlenderRecipes.getBlenderRecipes());
 
         DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
-        LOGGER.info("Screens Registered");
+        LOGGER.debug("Screens Registered");
         RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
+        ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderOnModel::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {

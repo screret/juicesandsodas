@@ -6,11 +6,13 @@
   "item.juicesandsodas.kool_aid": "Kool-Aid",
   "item.juicesandsodas.magic_aid": "Magic-Aid",
   "item.juicesandsodas.lemonade": "Lemonade",
+  "item.juicesandsodas.grape_juice": "Grape Juice",
+  "item.juiicesandsodas.lime_soda": "Lime Soda",
 
   "item.juicesandsodas.jello": "Jello",
 
-  "item.juicesandsodas.kool_aid_empty": "Empty Bottle of Kool-Aid",
-  "item.juicesandsodas.lemonade_empty": "Empty Bottle of Lemonade",
+  "item.juicesandsodas.empty_juice_bottle": "Empty Juice Bottle",
+  "item.juicesandsodas.empty_bottle": "Empty Bottle",
 
   "item.juicesandsodas.jello_helmet": "Jello Helmet",
   "item.juicesandsodas.jello_chestplate": "Jello Chestplate",

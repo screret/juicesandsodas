@@ -128,8 +128,8 @@ public class Registration {
     public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
     public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
     //empty bottles
-    public static final RegistryObject<Item> KOOL_AID_EMPTY = ITEMS.register("kool_aid_empty", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> LEMONADE_EMPTY = ITEMS.register("lemonade_empty", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> EMPTY_JUICE_BOTTLE = ITEMS.register("empty_juice_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> EMPTY_BOTTLE = ITEMS.register("empty_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
     //normies
     public static final RegistryObject<Item> JELLO = ITEMS.register("jello", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
 
