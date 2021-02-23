@@ -155,7 +155,7 @@ public class BlenderBlockContainer extends Container {
 
         @Override
         public boolean isItemValid(@Nullable ItemStack stack) {
-            return BlenderTile.isItemValid(index, stack);
+            return BlenderTile.isItemValidForSlot(index, stack);
         }
     }
 }
