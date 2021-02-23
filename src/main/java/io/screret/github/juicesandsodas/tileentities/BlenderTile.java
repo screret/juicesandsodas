@@ -156,23 +156,19 @@ public class BlenderTile extends TileEntity implements IItemHandler, ITickableTi
         this.markDirty();
     }
 
-    private void smeltItem(@Nullable IRecipe<?> recipe) {
+    private void smeltItem(@Nullable IRecipe<BlenderRecipe> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
             ItemStack itemstack = this.ITEMS.get(0);
             ItemStack itemstack1 = recipe.getRecipeOutput();
-            ItemStack itemstack2 = this.ITEMS.get(2);
+            ItemStack itemstack2 = this.ITEMS.get(4);
             if (itemstack2.isEmpty()) {
-                this.ITEMS.set(2, itemstack1.copy());
+                this.ITEMS.set(4, itemstack1.copy());
             } else if (itemstack2.getItem() == itemstack1.getItem()) {
                 itemstack2.grow(itemstack1.getCount());
             }
 
             if (this.world != null && !this.world.isRemote) {
                 this.setRecipeUsed(recipe);
-            }
-
-            if (itemstack.getItem() == Blocks.WET_SPONGE.asItem() && !this.ITEMS.get(1).isEmpty() && this.ITEMS.get(1).getItem() == Items.BUCKET) {
-                this.ITEMS.set(1, new ItemStack(Items.WATER_BUCKET));
             }
 
             itemstack.shrink(1);
