@@ -153,6 +153,7 @@ public class BlenderTile extends TileEntity implements IItemHandler, ITickableTi
         } else if (!this.isBlending() && this.blenderData.get(COOK_TIME) > 0) {
             this.blenderData.set(COOK_TIME, MathHelper.clamp(this.blenderData.get(COOK_TIME) - 2, 0, this.blenderData.get(COOK_TIME_TOTAL)));
         }
+        this.markDirty();
     }
 
     private void smeltItem(@Nullable IRecipe<?> recipe) {
