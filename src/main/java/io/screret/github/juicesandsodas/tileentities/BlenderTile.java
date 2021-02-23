@@ -26,7 +26,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BlenderTile extends TileEntity implements IItemHandler, ITickableTileEntity {
+public class BlenderTile extends TileEntity implements TickableTileEntity {
 
     public ItemStackHandler inputSlot = new ItemStackHandler(3);
     public ItemStackHandler bottleSlot =  new ItemStackHandler(1);
@@ -200,7 +200,7 @@ public class BlenderTile extends TileEntity implements IItemHandler, ITickableTi
             return true;
         } else {
             ItemStack itemstack = this.ITEMS.get(3);
-            return isFuel(stack) || stack.getItem() == Items.BUCKET && itemstack.getItem() != Items.BUCKET;
+            return isFuel(stack) && (stack.getItem() == Registration.EMPTY_BOTTLE.get() || stack.getItem() == Registration.EMPTY_JUICE_BOTTLE.get());
         }
     }
 
@@ -225,8 +225,9 @@ public class BlenderTile extends TileEntity implements IItemHandler, ITickableTi
             public <T> T setData(ModelProperty<T> prop, T data) {
                 return null;
             }
-        };
+        }
     }
+     
 
     protected boolean canSmelt(@Nullable IRecipe<?> recipe) {
         if (!ITEMS.get(0).isEmpty() && !ITEMS.get(1).isEmpty() && !ITEMS.get(2).isEmpty() && recipe != null) {
@@ -241,35 +242,6 @@ public class BlenderTile extends TileEntity implements IItemHandler, ITickableTi
         return false;
     }
 
-    @Override
-    public int getSlots() {
-        return 6;
-    }
-
-    @NotNull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return ITEMS.get(slot);
-    }
-
-    @NotNull
-    @Override
-    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return null;
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
-        return 0;
-    }
-
-    @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         if (slot == 4 || slot == 5 || slot == 6) {
             return false;
