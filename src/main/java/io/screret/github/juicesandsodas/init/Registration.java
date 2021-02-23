@@ -70,13 +70,14 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Base.MODID)
 public class Registration {
 
-    public static void init() {
+    public Registration() {
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         Registration.BLOCKS.register(modEventBus);
         Registration.ITEMS.register(modEventBus);
         Registration.ENTITIES.register(modEventBus);
         Registration.TILES.register(modEventBus);
         Registration.CONTAINERS.register(modEventBus);
+        Registration.RECIPES.register(modEventBus);
     }
 
     //registries
@@ -186,14 +187,7 @@ public class Registration {
 
 
     //blender recipes
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_GRAPE = RECIPES.register("grape_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_LEMON = RECIPES.register("lemon_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_LIME = RECIPES.register("lime_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_CHERRY = RECIPES.register("cherry_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_ORANGE = RECIPES.register("orange_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_KOOL_AID = RECIPES.register("kool_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_MAGIC_AID = RECIPES.register("magic_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
-
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE = RECIPES.register("blendering", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
     //foods
     public static final class Foods {
         public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();

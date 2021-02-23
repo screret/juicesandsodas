@@ -3,7 +3,7 @@ package io.screret.github.juicesandsodas.util;
 import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.AbstractCookingRecipe;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -11,25 +11,21 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class BlenderRecipe extends AbstractCookingRecipe {
+public class BlenderRecipe implements IRecipe<IInventory> {
 
     protected final IRecipeType<?> type;
     protected final ResourceLocation id;
-    public final String group;
     public final Ingredient ingredient;
     public final ItemStack result;
     public final float experience;
-    public final int cookTime;
 
     public BlenderRecipe(ResourceLocation idIn, String groupIn, Ingredient ingredientIn, ItemStack resultIn, float experienceIn, int cookTimeIn) {
-        super(IRecipeType.register("blending"), idIn, groupIn, ingredientIn, resultIn, experienceIn, cookTimeIn);
-        this.type = IRecipeType.register("blending");
+        super();
+        this.type = BlenderRecipeSerializer.BLENDING;
         this.id = idIn;
-        this.group = groupIn;
         this.ingredient = ingredientIn;
         this.result = resultIn;
         this.experience = experienceIn;
-        this.cookTime = cookTimeIn;
     }
 
     @Override
@@ -62,18 +58,12 @@ public class BlenderRecipe extends AbstractCookingRecipe {
     public ItemStack getRecipeOutput() {
         return this.result;
     }
-    /**
-     * Recipes with equal group are combined into one button in the recipe book
-     */
-    public String getGroup() {
-        return this.group;
-    }
 
     /**
      * Gets the cook time in ticks
      */
     public int getCookTime() {
-        return this.cookTime;
+        return 150;
     }
 
     public ResourceLocation getId() {
@@ -81,7 +71,7 @@ public class BlenderRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public IRecipeSerializer<BlenderRecipe> getSerializer() {
         return new BlenderRecipeSerializer(BlenderRecipe::new, 150);
     }
 

@@ -1,14 +1,13 @@
 package io.screret.github.juicesandsodas.tileentities;
 
 
+import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
 import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.util.BlenderRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,16 +20,18 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BlenderTile extends TileEntity implements TickableTileEntity {
+import javax.annotation.Nonnull;
 
-    public ItemStackHandler inputSlot = new ItemStackHandler(3);
-    public ItemStackHandler bottleSlot =  new ItemStackHandler(1);
-    public ItemStackHandler outputSlot = new ItemStackHandler(3);
+public class BlenderTile extends TileEntity implements ITickableTileEntity {
+
+    public ItemStackHandler inputSlot = customHandler(3);
+    public ItemStackHandler bottleSlot =  customHandler(1);
+    public ItemStackHandler outputSlot = customHandler(3);
 
 
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
@@ -90,15 +91,13 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
 
     public static NonNullList<ItemStack> ITEMS = NonNullList.withSize(7, ItemStack.EMPTY);
 
-    protected final IRecipeType<? extends BlenderRecipe> recipeType;
 
+    protected IRecipe<IInventory> curRecipe;
 
-    protected IRecipe curRecipe;
-
-    public BlenderTile( IRecipeType<? extends BlenderRecipe> recipeTypeIn) {
+    public BlenderTile(IRecipeType<BlenderRecipe> recipeTypeIn) {
         super(Registration.BLENDER_TILE.get());
 
-        this.recipeType = recipeTypeIn;
+        BlenderRecipeSerializer.BLENDING = recipeTypeIn;
     }
 
     @Override
@@ -131,7 +130,7 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
         if (this.isBlending()) {
             this.blenderData.set(BLEND_TIME, this.blenderData.get(BLEND_TIME) - 1);
         }
-        IRecipe irecipe = getRecipe();
+        IRecipe<IInventory> irecipe = getRecipe();
         boolean valid = this.canSmelt(irecipe);
         if (this.world != null && !this.world.isRemote) {
             if (this.isBlending() && !this.ITEMS.get(INPUT).isEmpty()) {
@@ -156,13 +155,13 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
         this.markDirty();
     }
 
-    private void smeltItem(@Nullable IRecipe<BlenderRecipe> recipe) {
+    private void smeltItem(@Nullable IRecipe<IInventory> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
             ItemStack itemstack = this.ITEMS.get(0);
             ItemStack itemstack1 = recipe.getRecipeOutput();
-            ItemStack itemstack2 = this.ITEMS.get(4);
+            ItemStack itemstack2 = this.ITEMS.get(3);
             if (itemstack2.isEmpty()) {
-                this.ITEMS.set(4, itemstack1.copy());
+                this.ITEMS.set(3, itemstack1.copy());
             } else if (itemstack2.getItem() == itemstack1.getItem()) {
                 itemstack2.grow(itemstack1.getCount());
             }
@@ -189,22 +188,6 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
         return this.blenderData.get(BLEND_TIME) > 0;
     }
 
-    /**
-     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot. For
-     * guis use Slot.isItemValid
-     */
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        if (index == 4 || index == 5 || index == 6) {
-            return false;
-        } else if (index != 3) {
-            return true;
-        } else {
-            ItemStack itemstack = this.ITEMS.get(3);
-            return isFuel(stack) && (stack.getItem() == Registration.EMPTY_BOTTLE.get() || stack.getItem() == Registration.EMPTY_JUICE_BOTTLE.get());
-        }
-    }
-
-
     @NotNull
     @Override
     public IModelData getModelData() {
@@ -225,7 +208,7 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
             public <T> T setData(ModelProperty<T> prop, T data) {
                 return null;
             }
-        }
+        };
     }
      
 
@@ -248,24 +231,25 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
         } else if (slot != 3) {
             return true;
         } else {
-            ItemStack itemstack = this.ITEMS.get(3);
-            return isFuel(stack) || stack.getItem() == Items.BUCKET && itemstack.getItem() != Items.BUCKET;
+            return isFuel(stack) && (stack.copy().getItem() == Registration.EMPTY_BOTTLE.get() || stack.copy().getItem() == Registration.EMPTY_JUICE_BOTTLE.get());
         }
     }
 
-    protected IRecipe getRecipe() {
-        ItemStack input1 = this.getStackInSlot(INPUT);
-        ItemStack input2 = this.getStackInSlot(INPUT + 1);
-        ItemStack input3 = this.getStackInSlot(INPUT + 2);
-        if (input1.isEmpty() || input1 == ItemStack.EMPTY && input2.isEmpty() || input2 == ItemStack.EMPTY && input3.isEmpty() || input3 == ItemStack.EMPTY) {
+    protected IRecipe<IInventory> getRecipe() {
+        ItemStack input1 = inputSlot.getStackInSlot(INPUT);
+        ItemStack input2 = inputSlot.getStackInSlot(INPUT + 1);
+        ItemStack input3 = inputSlot.getStackInSlot(INPUT + 2);
+        RecipeWrapper recipeWrapper = new RecipeWrapper(inputSlot);
+        if ((input1.isEmpty() || input1 == ItemStack.EMPTY) && (input2.isEmpty() || input2 == ItemStack.EMPTY) && (input3.isEmpty() || input3 == ItemStack.EMPTY)) {
             return null;
         }
-        if (this.world != null && curRecipe != null && curRecipe.matches((IInventory) this.inputSlot, world)) {
+        if (this.world != null && curRecipe != null && curRecipe.matches(recipeWrapper, world)) {
             return curRecipe;
         } else {
-            IRecipe rec = null;
+            IRecipe<IInventory> rec = null;
             if (this.world != null) {
-                rec = this.world.getRecipeManager().getRecipe(IRecipeType.register("blending"), (IInventory) this.inputSlot, this.world).orElse(null);
+
+                rec = this.world.getRecipeManager().getRecipe(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.world).orElse(null);
             }
             return curRecipe = rec;
         }
@@ -279,7 +263,30 @@ public class BlenderTile extends TileEntity implements TickableTileEntity {
     }
 
     protected int getCookTime() {
-        return this.world.getRecipeManager().getRecipe((IRecipeType<BlenderRecipe>)this.recipeType, (IInventory) this.inputSlot, this.world).map(BlenderRecipe::getCookTime).orElse(200);
+        RecipeWrapper recipeWrapper = new RecipeWrapper(inputSlot);
+        return this.world.getRecipeManager().getRecipe(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.world).map(BlenderRecipe::getCookTime).orElse(200);
     }
 
+    public ItemStackHandler customHandler(int size){
+        return new ItemStackHandler(size) {
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                // To make sure the TE persists when the chunk is saved later we need to
+                // mark it dirty every time the item handler changes
+                markDirty();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                if (slot == 4 || slot == 5 || slot == 6) {
+                    return false;
+                } else if (slot != 3) {
+                    return true;
+                } else {
+                    return isFuel(stack) && (stack.copy().getItem() == Registration.EMPTY_BOTTLE.get() || stack.copy().getItem() == Registration.EMPTY_JUICE_BOTTLE.get());
+                }
+            }
+        };
+    }
 }

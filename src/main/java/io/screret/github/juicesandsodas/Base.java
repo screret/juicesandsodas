@@ -63,12 +63,12 @@ public class Base {
         MinecraftForge.EVENT_BUS.register(this);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        MinecraftForge.EVENT_BUS.addListener(Registration::insertFeatures);
         Registration.BLOCKS.register(modEventBus);
         Registration.ITEMS.register(modEventBus);
         Registration.ENTITIES.register(modEventBus);
         Registration.TILES.register(modEventBus);
         Registration.CONTAINERS.register(modEventBus);
+        Registration.RECIPES.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {

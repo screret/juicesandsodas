@@ -1,8 +1,10 @@
 {
   "type": "juicesandsodas:blending",
-  "ingredient": {
-    "item": "juicesandsodas:orange"
-  },
+  "ingredient": [
+    {
+      "item": "juicesandsodas:orange"
+    }
+  ],
   "result": "juicesandsodas:orange_juice",
   "experience": 0.35,
   "cookingtime": 150

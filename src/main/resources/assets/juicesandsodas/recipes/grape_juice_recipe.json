@@ -1,8 +1,10 @@
 {
   "type": "juicesandsodas:blending",
-  "ingredient": {
-    "item": "juicesandsodas:grapefruit"
-  },
+  "ingredient": [
+    {
+      "item": "juicesandsodas:grapefruit"
+    }
+  ],
   "result": "juicesandsodas:grape_juice",
   "experience": 0.35,
   "cookingtime": 150

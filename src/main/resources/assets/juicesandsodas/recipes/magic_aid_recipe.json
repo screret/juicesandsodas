@@ -1,8 +1,10 @@
 {
   "type": "juicesandsodas:blending",
-  "ingredient": {
-    "item": "minecraft:potion"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:potion"
+    }
+  ],
   "result": "juicesandsodas:magic_aid",
   "experience": 0.35,
   "cookingtime": 150

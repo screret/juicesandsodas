@@ -1,8 +1,10 @@
 {
   "type": "juicesandsodas:blending",
-  "ingredient": {
-    "item": "minecraft:sugar"
-  },
+  "ingredient": [
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
   "result": "juicesandsodas:kool_aid",
   "experience": 0.35,
   "cookingtime": 150
