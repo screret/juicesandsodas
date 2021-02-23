@@ -177,7 +177,7 @@ public class BlenderTile extends TileEntity implements IItemHandler, ITickableTi
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos());
+        return new AxisAlignedBB(0.1875, 0, 0.1875, 0.8125, 0.75, 0.8125);
     }
 
     @Override
