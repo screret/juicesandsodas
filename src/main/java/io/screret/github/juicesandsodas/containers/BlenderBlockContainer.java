@@ -7,6 +7,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIntArray;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -19,7 +22,9 @@ import java.util.function.Predicate;
 public class BlenderBlockContainer extends Container {
 
     private final IItemHandler playerInventory;
-  
+
+    private final IIntArray blenderData;
+
     private static final int HOTBAR_SLOT_COUNT = 9;
 	private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
 	private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
@@ -42,7 +47,7 @@ public class BlenderBlockContainer extends Container {
     public BlenderBlockContainer(int windowID, PlayerInventory playerInventory, IItemHandler inven, BlenderTile tileEntity) {
         super(Registration.BLENDER_CONT.get(), windowID);
         this.playerInventory = new InvWrapper(playerInventory);
-
+        blenderData = tileEntity.blenderData;
 
         final int SLOT_X_SPACING = 18;
         final int SLOT_Y_SPACING = 18;
@@ -100,12 +105,19 @@ public class BlenderBlockContainer extends Container {
         return itemstack;
     }
 
+    @OnlyIn(Dist.CLIENT)
+    public int getCookProgressionScaled() {
+        int i = this.blenderData.get(2);
+        int j = this.blenderData.get(3);
+        return j != 0 && i != 0 ? i * 24 / j : 0;
+    }
+
+
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         Predicate<PlayerEntity> canPlayerAccessInventoryLambda = x-> true;
         return canPlayerAccessInventoryLambda.test(playerIn);
     }
-
 
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

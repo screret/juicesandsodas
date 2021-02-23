@@ -1,0 +1,9 @@
+{
+  "type": "juicesandsodas:blending",
+  "ingredient": {
+    "item": "juicesandsodas:cherry"
+  },
+  "result": "juicesandsodas:cherry_juice",
+  "experience": 0.35,
+  "cookingtime": 150
+}

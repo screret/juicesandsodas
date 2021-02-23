@@ -13,8 +13,10 @@ import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -112,6 +114,9 @@ public class Base {
         Registration.makeFeature("1", 1, 0, 2);
         Registration.trees = null;
         Registration.cherry = null;
+
+        new FurnaceFuelBurnTimeEvent(new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get()), 150);
+        new FurnaceFuelBurnTimeEvent(new ItemStack(Registration.EMPTY_BOTTLE.get()), 150);
 
         DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }

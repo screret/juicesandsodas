@@ -1,0 +1,9 @@
+{
+  "type": "juicesandsodas:blending",
+  "ingredient": {
+    "item": "juicesandsodas:lemon"
+  },
+  "result": "juicesandsodas:lemonade",
+  "experience": 0.35,
+  "cookingtime": 150
+}

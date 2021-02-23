@@ -17,7 +17,7 @@ import io.screret.github.juicesandsodas.trees.CarpetTreeDecorator;
 import io.screret.github.juicesandsodas.trees.FruitBlobFoliagePlacer;
 import io.screret.github.juicesandsodas.trees.FruitLeavesBlock;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
-import io.screret.github.juicesandsodas.util.BlenderRecipes;
+import io.screret.github.juicesandsodas.util.BlenderRecipe;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.color.BlockColors;
@@ -28,6 +28,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntityType;
@@ -119,7 +120,7 @@ public class Registration {
 
 
     //tile entities
-    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(() -> new BlenderTile(), BLENDER.get()).build(null));
+    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(() -> new BlenderTile(IRecipeType.register("blending")), BLENDER.get()).build(null));
     public static final RegistryObject<TileEntityType<FruitTreeTile>> FRUIT_TREE = TILES.register("fruit_tree", () -> new TileEntityType<>(FruitTreeTile::new, ALL_LEAVES, null));
 
 
@@ -130,6 +131,8 @@ public class Registration {
     public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
     public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
     public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
+    public static final RegistryObject<Item> CHERRY_JUICE = ITEMS.register("cherry_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
+    public static final RegistryObject<Item> ORANGE_JUICE = ITEMS.register("orange_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
     //empty bottles
     public static final RegistryObject<Item> EMPTY_JUICE_BOTTLE = ITEMS.register("empty_juice_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> EMPTY_BOTTLE = ITEMS.register("empty_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
@@ -178,16 +181,18 @@ public class Registration {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
         BlenderTile tile = (BlenderTile) world.getTileEntity(pos);
-        return new BlenderBlockContainer(windowId, inv, new CombinedInvWrapper(tile.inputSlot, tile.outputSlotWrapper), tile);
+        return new BlenderBlockContainer(windowId, inv, new CombinedInvWrapper(tile.inputSlot, tile.outputSlot), tile);
     }));
 
 
     //blender recipes
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_GRAPE = RECIPES.register("grape_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_LEMON = RECIPES.register("lemon_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_LIME = RECIPES.register("lime_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_KOOL_AID = RECIPES.register("kool_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipes>> BLENDER_RECIPE_MAGIC_AID = RECIPES.register("magic_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipes::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_GRAPE = RECIPES.register("grape_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_LEMON = RECIPES.register("lemon_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_LIME = RECIPES.register("lime_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_CHERRY = RECIPES.register("cherry_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_ORANGE = RECIPES.register("orange_juice_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_KOOL_AID = RECIPES.register("kool_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_MAGIC_AID = RECIPES.register("magic_aid_recipe", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
 
     //foods
     public static final class Foods {

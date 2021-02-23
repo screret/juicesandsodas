@@ -36,6 +36,10 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
+    public void tick() {
+        super.tick();
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
         // draw the label for the top of the screen
@@ -50,13 +54,14 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-        /*double cookProgress = super.container.();
-        this.blit(matrixStack, guiLeft + COOK_BAR_XPOS, guiTop + COOK_BAR_YPOS, COOK_BAR_ICON_U, COOK_BAR_ICON_V,
-                (int) (cookProgress * COOK_BAR_WIDTH), COOK_BAR_HEIGHT);*/
         GL11.glColor4f(1, 1, 1, 1);
         this.minecraft.getTextureManager().bindTexture(GUI);
         int relX = (this.width - this.xSize) / 2;
         int relY = (this.height - this.ySize) / 2;
         this.blit(matrixStack, relX, relY, 0, 0, this.xSize, this.ySize);
+
+
+        int l = this.container.getCookProgressionScaled();
+        this.blit(matrixStack, this.guiLeft + 81, this.guiTop + 33, 176, 14, l + 1, 16);
     }
 }

@@ -1,0 +1,9 @@
+{
+  "type": "juicesandsodas:blending",
+  "ingredient": {
+    "item": "juicesandsodas:lime"
+  },
+  "result": "juicesandsodas:lime_soda",
+  "experience": 0.35,
+  "cookingtime": 150
+}

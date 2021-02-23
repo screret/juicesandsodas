@@ -22,8 +22,6 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-import java.util.Random;
-
 public class BlenderTileRenderer extends TileEntityRenderer<BlenderTile> {
 
 	public static final ResourceLocation TEX = new ResourceLocation(Base.MODID, "textures/entity/blender.png");
@@ -55,9 +53,6 @@ public class BlenderTileRenderer extends TileEntityRenderer<BlenderTile> {
 		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEX);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
 		long time = System.currentTimeMillis();
-
-		Random rnd = new Random(tileEntity.getPos().getX() * 337L + tileEntity.getPos().getY() * 37L + tileEntity.getPos().getZ() * 13L);
-
 
 		double speed = Config.ROTATION_SPEED.get();
 		float angle = (time / (int)speed) % 360;
