@@ -125,8 +125,6 @@ public class Base {
         DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
         LOGGER.debug("Screens Registered");
         RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
-        ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderTileRenderer::new);
-        LOGGER.debug("tileEntityRenderers registered: {}", BlenderTileRenderer.class.getName());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
