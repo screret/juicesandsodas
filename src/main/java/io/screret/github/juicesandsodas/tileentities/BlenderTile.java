@@ -179,38 +179,9 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         return new AxisAlignedBB(0.1875, 0, 0.1875, 0.8125, 0.75, 0.8125);
     }
 
-    @Override
-    public void requestModelDataUpdate() {
-
-    }
-
     private boolean isBlending() {
         return this.blenderData.get(BLEND_TIME) > 0;
     }
-
-    @NotNull
-    @Override
-    public IModelData getModelData() {
-        return new IModelData() {
-            @Override
-            public boolean hasProperty(ModelProperty<?> prop) {
-                return false;
-            }
-
-            @Nullable
-            @Override
-            public <T> T getData(ModelProperty<T> prop) {
-                return null;
-            }
-
-            @Nullable
-            @Override
-            public <T> T setData(ModelProperty<T> prop, T data) {
-                return null;
-            }
-        };
-    }
-     
 
     protected boolean canSmelt(@Nullable IRecipe<?> recipe) {
         if (!ITEMS.get(0).isEmpty() && !ITEMS.get(1).isEmpty() && !ITEMS.get(2).isEmpty() && recipe != null) {
