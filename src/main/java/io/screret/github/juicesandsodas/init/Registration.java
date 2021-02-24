@@ -187,7 +187,7 @@ public class Registration {
 
 
     //blender recipes
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE = RECIPES.register("blendering", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE = RECIPES.register("blending", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
     //foods
     public static final class Foods {
         public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();
