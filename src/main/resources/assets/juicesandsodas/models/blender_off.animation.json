@@ -1,0 +1,23 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.blender_on": {
+			"loop": true,
+			"animation_length": 0.8,
+			"bones": {
+				"rod": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.8": {
+							"vector": [0, 360, 0],
+							"easing": "step",
+							"easingArgs": [8]
+						}
+					}
+				}
+			}
+		}
+	}
+}

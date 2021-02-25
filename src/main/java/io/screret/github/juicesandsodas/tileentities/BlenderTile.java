@@ -16,10 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
@@ -143,7 +140,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
                 this.blenderData.set(COOK_TIME, this.blenderData.get(COOK_TIME) + 1);
                 if (this.blenderData.get(COOK_TIME) == this.blenderData.get(COOK_TIME_TOTAL)) {
                     this.blenderData.set(COOK_TIME, 0);
-                    this.blenderData.set(COOK_TIME_TOTAL, this.getCookTime());
+                    this.blenderData.set(COOK_TIME_TOTAL, 150);
                     this.smeltItem(irecipe);
                 }
             } else {
@@ -174,10 +171,10 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    @Override
+    /*@Override
     public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(0.1875, 0, 0.1875, 0.8125, 0.75, 0.8125);
-    }
+    }*/
 
     private boolean isBlending() {
         return this.blenderData.get(BLEND_TIME) > 0;
@@ -196,13 +193,13 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         return false;
     }
 
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public static boolean isItemValid(int slot, @NotNull ItemStack stack) {
         if (slot == 4 || slot == 5 || slot == 6) {
             return false;
         } else if (slot != 3) {
             return true;
         } else {
-            return isFuel(stack) && (stack.copy().getItem() == Registration.EMPTY_BOTTLE.get() || stack.copy().getItem() == Registration.EMPTY_JUICE_BOTTLE.get());
+            return stack.copy().getItem() == Registration.EMPTY_BOTTLE.get() || stack.copy().getItem() == Registration.EMPTY_JUICE_BOTTLE.get();
         }
     }
 
@@ -231,11 +228,6 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             ResourceLocation resourcelocation = recipe.getId();
             this.recipes.addTo(resourcelocation, 1);
         }
-    }
-
-    protected int getCookTime() {
-        RecipeWrapper recipeWrapper = new RecipeWrapper(inputSlot);
-        return this.world.getRecipeManager().getRecipe(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.world).map(BlenderRecipe::getCookTime).orElse(200);
     }
 
     public ItemStackHandler customHandler(int size){

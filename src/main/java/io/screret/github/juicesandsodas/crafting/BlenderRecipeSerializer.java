@@ -20,7 +20,6 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
 
     public static IRecipeType<BlenderRecipe> BLENDING = IRecipeType.register("blending");
 
-    private final int cookingTime;
     private final IFactory<T> factory;
 
     public static ItemStack input;
@@ -29,8 +28,7 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public BlenderRecipeSerializer(IFactory<T> factory, int cookingTime) {
-        this.cookingTime = cookingTime;
+    public BlenderRecipeSerializer(IFactory<T> factory) {
         this.factory = factory;
     }
 
@@ -48,32 +46,27 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
             itemstack = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
         }
         float f = JSONUtils.getFloat(json, "experience", 0.0F);
-        int i = JSONUtils.getInt(json, "cookingtime", this.cookingTime);
         input = ingredient.getMatchingStacks()[0];
         output = itemstack;
         id = recipeId;
         LOGGER.debug("Loaded " + this.toString());
-        return new BlenderRecipe(recipeId, s, ingredient, itemstack, f, i);
+        return this.factory.create(recipeId, ingredient, itemstack);
     }
 
     public BlenderRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-        String s = buffer.readString(32767);
         Ingredient ingredient = Ingredient.read(buffer);
         ItemStack itemstack = buffer.readItemStack();
-        float f = buffer.readFloat();
-        int i = buffer.readVarInt();
-        return new BlenderRecipe(recipeId, s, ingredient, itemstack, f, i);
+        return this.factory.create(recipeId, ingredient, itemstack);
     }
 
     @Override
     public void write(PacketBuffer buffer, BlenderRecipe recipe) {
-        recipe.ingredient.write(buffer);
-        buffer.writeItemStack(recipe.result);
-        buffer.writeFloat(recipe.experience);
+        recipe.INGREDIENT.write(buffer);
+        buffer.writeItemStack(recipe.OUTPUT);
     }
 
-    public interface IFactory<T extends BlenderRecipe> {
-        T create(ResourceLocation p_create_1_, String p_create_2_, Ingredient p_create_3_, ItemStack p_create_4_, float p_create_5_, int p_create_6_);
+    public interface IFactory<RECIPE extends BlenderRecipe> {
+        RECIPE create(ResourceLocation p_create_1_, Ingredient p_create_3_, ItemStack p_create_4_);
     }
 
     @Override

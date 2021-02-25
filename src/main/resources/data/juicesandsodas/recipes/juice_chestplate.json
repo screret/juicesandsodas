@@ -7,11 +7,11 @@
     ],
     "key": {
         "#": {
-            "item": "koolaidmod:jello"
+            "item": "juicesandsodas:jello"
         }
     },
     "result": {
-        "item": "koolaidmod:juice_chestplate",
+        "item": "juicesandsodas:juice_chestplate",
         "count": 1
     }
 }

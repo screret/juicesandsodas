@@ -1,6 +1,79 @@
 package io.screret.github.juicesandsodas.util;
 
 import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
+import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
+
+/**
+ * Inputs: ItemStack (item) Output: ItemStack (transformed)
+ */
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class BlenderRecipe extends BaseRecipe implements Predicate<@NotNull ItemStack> {
+
+    public static Ingredient INGREDIENT;
+    public static ItemStack OUTPUT;
+
+    public BlenderRecipe(ResourceLocation id, Ingredient input, ItemStack output) {
+        super(id);
+        this.INGREDIENT = input;
+        this.OUTPUT = output.copy();
+    }
+
+    @Override
+    public boolean test(ItemStack input) {
+        return this.INGREDIENT.test(input);
+    }
+
+    public ItemStack getInput() {
+        return INGREDIENT.getMatchingStacks()[0];
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    public ItemStack getOutput(ItemStack input) {
+        return OUTPUT.copy();
+    }
+
+    /**
+     * For JEI, gets a display stack
+     *
+     * @return Representation of output, MUST NOT be modified
+     */
+    public List<ItemStack> getOutputDefinition() {
+        return OUTPUT.isEmpty() ? Collections.emptyList() : Collections.singletonList(OUTPUT);
+    }
+
+    @Override
+    public void write(PacketBuffer buffer) {
+        INGREDIENT.write(buffer);
+        buffer.writeItemStack(OUTPUT);
+    }
+
+    @Override
+    public IRecipeSerializer<BlenderRecipe> getSerializer() {
+        return new BlenderRecipeSerializer(BlenderRecipe::new);
+    }
+
+    public IRecipeType<?> getType() {
+        return BlenderRecipeSerializer.BLENDING;
+    }
+
+}
+
+/*
+import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -61,7 +134,7 @@ public class BlenderRecipe implements IRecipe<IInventory> {
 
     /**
      * Gets the cook time in ticks
-     */
+
     public int getCookTime() {
         return 150;
     }
@@ -84,4 +157,4 @@ public class BlenderRecipe implements IRecipe<IInventory> {
         nonnullList.add(this.ingredient);
         return nonnullList;
     }
-}
+}*/

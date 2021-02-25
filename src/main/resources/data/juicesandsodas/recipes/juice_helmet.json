@@ -3,15 +3,15 @@
     "pattern": [
         "###",
         "# #",
-        "# #"
+        "   "
     ],
     "key": {
         "#": {
-            "item": "koolaidmod:jello"
+            "item": "juicesandsodas:jello"
         }
     },
-    "result": {
-        "item": "koolaidmod:juice_leggings",
+    "result": {        
+        "item": "juicesandsodas:juice_helmet",
         "count": 1
     }
 }

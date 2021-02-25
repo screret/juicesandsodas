@@ -1,0 +1,9 @@
+{
+  "loader": "forge:obj",
+  "model": "juicesandsodas:models/block/blender.obj",
+  "flip-v": true,
+  "detectCullableFaces": true,
+  "diffuseLighting": true,
+  "ambientToFullbright": false,
+  "materialLibraryOverride": "juicesandsodas:textures/entity/blender.mtl"
+}

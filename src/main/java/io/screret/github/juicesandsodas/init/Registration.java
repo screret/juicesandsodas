@@ -77,7 +77,7 @@ public class Registration {
         Registration.ENTITIES.register(modEventBus);
         Registration.TILES.register(modEventBus);
         Registration.CONTAINERS.register(modEventBus);
-        Registration.RECIPES.register(modEventBus);
+        Registration.RECIPE_SERIALIZERS.register(modEventBus);
     }
 
     //registries
@@ -86,8 +86,7 @@ public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Base.MODID);
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Base.MODID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Base.MODID);
-    public static final DeferredRegister<IRecipeSerializer<?>> RECIPES = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Base.MODID);
-
+    public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Base.MODID);
     //blocks
     //leaves
     public static final RegistryObject<Block> LIME_LEAVES = BLOCKS.register("lime_leaves", () -> new FruitLeavesBlock(() -> FruitType.LIME, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
@@ -187,7 +186,9 @@ public class Registration {
 
 
     //blender recipes
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE = RECIPES.register("blending", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new, 150));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("blending", () -> new BlenderRecipeSerializer(BlenderRecipe::new));
+
+
     //foods
     public static final class Foods {
         public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();

@@ -6,22 +6,18 @@ import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
 import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.Registration;
-import io.screret.github.juicesandsodas.properties.block.blender.BlenderTileRenderer;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -68,7 +64,7 @@ public class Base {
         Registration.ENTITIES.register(modEventBus);
         Registration.TILES.register(modEventBus);
         Registration.CONTAINERS.register(modEventBus);
-        Registration.RECIPES.register(modEventBus);
+        Registration.RECIPE_SERIALIZERS.register(modEventBus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -115,9 +111,6 @@ public class Base {
         Registration.trees = null;
         Registration.cherry = null;
 
-        new FurnaceFuelBurnTimeEvent(new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get()), 150);
-        new FurnaceFuelBurnTimeEvent(new ItemStack(Registration.EMPTY_BOTTLE.get()), 150);
-
         DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
@@ -127,7 +120,7 @@ public class Base {
         RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event) {
+        private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
         InterModComms.sendTo("juicesandsodas", "helloworld", () -> { LOGGER.info("Hello world from Juices & Sodas"); return "Hello world";});
     }
