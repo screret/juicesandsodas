@@ -70,6 +70,15 @@ public class BlenderRecipe extends BaseRecipe implements Predicate<@NotNull Item
         return BlenderRecipeSerializer.BLENDING;
     }
 
+    @Override
+    public boolean canFit(int width, int height) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getRecipeOutput() {
+        return OUTPUT;
+    }
 }
 
 /*

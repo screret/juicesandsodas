@@ -35,7 +35,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     public static final int NUMBER_OF_SLOTS = 6;
 
-    private static int BLEND_TIME = 60;
+    private static int BLEND_TIME = 150;
 
 
     /* FOLLOWING Code helps the copied code below. */
@@ -130,7 +130,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         IRecipe<IInventory> irecipe = getRecipe();
         boolean valid = this.canSmelt(irecipe);
         if (this.world != null && !this.world.isRemote) {
-            if (this.isBlending() && !this.ITEMS.get(INPUT).isEmpty()) {
+            if (this.isBlending() && !ITEMS.get(INPUT).isEmpty()) {
                 if (!this.isBlending() && valid) {
                     this.blenderData.set(RECIPES_USED, this.blenderData.get(BLEND_TIME));
                 }
@@ -152,13 +152,13 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         this.markDirty();
     }
 
-    private void smeltItem(@Nullable IRecipe<IInventory> recipe) {
+    private void smeltItem(@Nullable IRecipe<?> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
-            ItemStack itemstack = this.ITEMS.get(0);
+            ItemStack itemstack = ITEMS.get(0);
             ItemStack itemstack1 = recipe.getRecipeOutput();
-            ItemStack itemstack2 = this.ITEMS.get(3);
+            ItemStack itemstack2 = ITEMS.get(3);
             if (itemstack2.isEmpty()) {
-                this.ITEMS.set(3, itemstack1.copy());
+                ITEMS.set(3, itemstack1.copy());
             } else if (itemstack2.getItem() == itemstack1.getItem()) {
                 itemstack2.grow(itemstack1.getCount());
             }
@@ -171,16 +171,11 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    /*@Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(0.1875, 0, 0.1875, 0.8125, 0.75, 0.8125);
-    }*/
-
     private boolean isBlending() {
         return this.blenderData.get(BLEND_TIME) > 0;
     }
 
-    protected boolean canSmelt(@Nullable IRecipe<?> recipe) {
+    protected boolean canSmelt(IRecipe<?> recipe) {
         if (!ITEMS.get(0).isEmpty() && !ITEMS.get(1).isEmpty() && !ITEMS.get(2).isEmpty() && recipe != null) {
             ItemStack recipeOutput = recipe.getRecipeOutput();
             if (!recipeOutput.isEmpty()) {
