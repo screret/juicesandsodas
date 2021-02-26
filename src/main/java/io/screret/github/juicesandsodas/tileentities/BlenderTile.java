@@ -19,6 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +32,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     public ItemStackHandler bottleSlot =  customHandler(1);
     public ItemStackHandler outputSlot = customHandler(3);
 
+    static Logger LOGGER = LogManager.getLogger();
 
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
 
@@ -47,7 +50,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     /* FOLLOWING Code is copied from "Shadows-of-Fire/FastFurnace" mod to enhance performance */
 
     public static final int INPUT = 0;
-    public static final int OUTPUT = 5;
+    public static final int OUTPUT = 4;
 
     public final IIntArray blenderData = new IIntArray() {
         public int get(int index) {
@@ -211,14 +214,13 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         } else {
             IRecipe<IInventory> rec = null;
             if (this.world != null) {
-
                 rec = this.world.getRecipeManager().getRecipe(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.world).orElse(null);
             }
             return curRecipe = rec;
         }
     }
 
-    public void setRecipeUsed(@javax.annotation.Nullable IRecipe<?> recipe) {
+    public void setRecipeUsed(@Nullable IRecipe<?> recipe) {
         if (recipe != null) {
             ResourceLocation resourcelocation = recipe.getId();
             this.recipes.addTo(resourcelocation, 1);
