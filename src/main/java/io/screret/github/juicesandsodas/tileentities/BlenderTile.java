@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -33,11 +34,10 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     public ItemStackHandler outputSlot = customHandler(3);
 
     public NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
+    private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
     public CombinedInvWrapper combinedInvWrapper = new CombinedInvWrapper(inputSlot, bottleSlot, outputSlot);
 
     static Logger LOGGER = LogManager.getLogger();
-
-    private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
 
     public static final int NUMBER_OF_SLOTS = 6;
 
@@ -88,18 +88,18 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }
 
         public int size() {
-            return 7;
+            return 4;
         }
     };
 
-    //public static NonNullList<ItemStack> ITEMS = NonNullList.withSize(7, ItemStack.EMPTY);
-
-    protected ItemStack failedMatch;
+    protected ItemStack failedMatch = ItemStack.EMPTY;
 
     protected BlenderRecipe curRecipe;
+    protected final IRecipeType<? extends BlenderRecipe> recipeType;
 
     public BlenderTile() {
         super(Registration.BLENDER_TILE.get());
+        this.recipeType = BlenderRecipeSerializer.BLENDING;
     }
 
     @Override
@@ -227,7 +227,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         } else {
             BlenderRecipe rec;
             if (this.world != null) {
-                rec = this.world.getRecipeManager().getRecipe(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.world).orElse(null);
+                rec = this.world.getRecipeManager().getRecipe((IRecipeType<BlenderRecipe>)this.recipeType, recipeWrapper, this.world).orElse(null);
                 if (rec == null) failedMatch = input1;
                 else failedMatch = ItemStack.EMPTY;
                 return curRecipe = rec;
@@ -252,8 +252,8 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }
 
         if (index == 0 && !flag) {
-            this.COOK_TIME_TOTAL = this.COOK_TIME;
-            this.COOK_TIME = 0;
+            COOK_TIME_TOTAL = COOK_TIME;
+            COOK_TIME = 0;
             this.markDirty();
         }
 

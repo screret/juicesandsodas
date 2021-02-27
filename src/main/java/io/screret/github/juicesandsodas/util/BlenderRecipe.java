@@ -43,8 +43,8 @@ public class BlenderRecipe implements Predicate<@NotNull ItemStack>, IRecipe<IIn
         return this.INGREDIENT.test(input);
     }
 
-    public ItemStack getInput() {
-        return INGREDIENT.getMatchingStacks()[0];
+    public Ingredient getInput() {
+        return INGREDIENT;
     }
 
     @Contract(value = "_ -> new", pure = true)

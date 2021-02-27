@@ -1,5 +1,6 @@
 package io.screret.github.juicesandsodas.crafting;
 
+import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.screret.github.juicesandsodas.util.BlenderRecipe;
@@ -16,8 +17,11 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
+
 public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BlenderRecipe> {
 
+    public static Map<Ingredient, ItemStack> RECIPES = Maps.newHashMap();
     public static IRecipeType<BlenderRecipe> BLENDING = IRecipeType.register("blending");
 
     private final IFactory<T> factory;
@@ -32,8 +36,8 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
         this.factory = factory;
     }
 
+    @Override
     public BlenderRecipe read(ResourceLocation recipeId, JsonObject json) {
-        String s = JSONUtils.getString(json, "group", "");
         JsonElement jsonelement = JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "item");
         Ingredient ingredient = Ingredient.deserialize(jsonelement);
         //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
@@ -45,14 +49,16 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
             ResourceLocation resourcelocation = new ResourceLocation(s1);
             itemstack = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
         }
-        float f = JSONUtils.getFloat(json, "experience", 0.0F);
         input = ingredient.getMatchingStacks()[0];
         output = itemstack;
         id = recipeId;
+        RECIPES.put(ingredient, output);
         LOGGER.debug("Loaded " + this.toString());
+
         return this.factory.create(recipeId, ingredient, itemstack);
     }
 
+    @Override
     public BlenderRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
         Ingredient ingredient = Ingredient.read(buffer);
         ItemStack itemstack = buffer.readItemStack();
