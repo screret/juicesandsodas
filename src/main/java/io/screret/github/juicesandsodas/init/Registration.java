@@ -28,7 +28,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.tileentity.TileEntityType;
@@ -120,7 +119,7 @@ public class Registration {
 
 
     //tile entities
-    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(() -> new BlenderTile(IRecipeType.register("blending")), BLENDER.get()).build(null));
+    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(BlenderTile::new, BLENDER.get()).build(null));
     public static final RegistryObject<TileEntityType<FruitTreeTile>> FRUIT_TREE = TILES.register("fruit_tree", () -> new TileEntityType<>(FruitTreeTile::new, ALL_LEAVES, null));
 
 
