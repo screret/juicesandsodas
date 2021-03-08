@@ -10,60 +10,53 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
 
 /**
- * Inputs: ItemStack (item) Output: ItemStack (transformed)
+ * Inputs: Igredient (item) Output: ItemStack (transformed)
  */
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class BlenderRecipe implements Predicate<@NotNull ItemStack>, IRecipe<IInventory> {
+public class BlenderRecipe implements IRecipe<IInventory> {
 
-    public static Ingredient INGREDIENT;
-    public static ItemStack OUTPUT;
+    public Ingredient ingredient;
+    public ItemStack output;
 
-    public static ResourceLocation id;
+    public ResourceLocation id;
+
+
+
+    private final Logger logger = LogManager.getLogger();
 
     public BlenderRecipe(ResourceLocation id, Ingredient input, ItemStack output) {
-        super();
-        INGREDIENT = input;
-        OUTPUT = output.copy();
-        BlenderRecipe.id = id;
+        this.ingredient = input;
+        this.output = output.copy();
+        this.id = id;
+
+        logger.debug("Loaded " + this.toString());
     }
 
-    @Override
     public boolean test(ItemStack input) {
-        return this.INGREDIENT.test(input);
+        return ingredient.test(input);
     }
 
     public Ingredient getInput() {
-        return INGREDIENT;
+        return ingredient;
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public ItemStack getOutput(ItemStack input) {
-        return OUTPUT.copy();
-    }
-
-    /**
-     * For JEI, gets a display stack
-     *
-     * @return Representation of output, MUST NOT be modified
-     */
-    public List<ItemStack> getOutputDefinition() {
-        return OUTPUT.isEmpty() ? Collections.emptyList() : Collections.singletonList(OUTPUT);
+    public ItemStack getOutput(Ingredient input) {
+        return output.copy();
     }
 
     @Override
     public IRecipeSerializer<BlenderRecipe> getSerializer() {
-        return new BlenderRecipeSerializer(BlenderRecipe::new);
+        return BlenderRecipeSerializer.SERIALIZER;
     }
 
     public IRecipeType<?> getType() {
@@ -72,12 +65,12 @@ public class BlenderRecipe implements Predicate<@NotNull ItemStack>, IRecipe<IIn
 
     @Override
     public boolean matches(@Nonnull IInventory inv, @Nonnull World world) {
-        return INGREDIENT.test(inv.getStackInSlot(0));
+        return ingredient.test(inv.getStackInSlot(0));
     }
 
     @Override
     public ItemStack getCraftingResult(IInventory inv) {
-        return OUTPUT.copy();
+        return output.copy();
     }
 
     @Override
@@ -87,7 +80,7 @@ public class BlenderRecipe implements Predicate<@NotNull ItemStack>, IRecipe<IIn
 
     @Override
     public ItemStack getRecipeOutput() {
-        return OUTPUT.copy();
+        return output.copy();
     }
 
     @Override
@@ -102,7 +95,9 @@ public class BlenderRecipe implements Predicate<@NotNull ItemStack>, IRecipe<IIn
         return id;
     }
 
-    public BlenderRecipe EMPTY(){
-        return this;
+    @Override
+    public String toString() {
+        // Overriding toString is not required, it's just useful for debugging.
+        return String.format("BlenderRecipe [input=%s, output=%s, id=%s]", ingredient.getMatchingStacks()[0], output, id);
     }
 }

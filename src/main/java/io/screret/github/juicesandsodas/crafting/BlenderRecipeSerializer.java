@@ -21,16 +21,17 @@ import java.util.Map;
 
 public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BlenderRecipe> {
 
-    public static Map<Ingredient, ItemStack> RECIPES = Maps.newHashMap();
-    public static IRecipeType<BlenderRecipe> BLENDING = IRecipeType.register("blending");
+    public Map<Ingredient, ItemStack> RECIPES = Maps.newHashMap();
+    public static IRecipeType<BlenderRecipe> BLENDING = IRecipeType.register("juicesandsodas:blending");
+    public static IRecipeSerializer<BlenderRecipe> SERIALIZER;
 
     private final IFactory<T> factory;
 
-    public static ItemStack input;
-    public static ItemStack output;
-    public static ResourceLocation id;
+    public Ingredient input;
+    public ItemStack output;
+    public ResourceLocation id;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger();
 
     public BlenderRecipeSerializer(IFactory<T> factory) {
         this.factory = factory;
@@ -40,7 +41,6 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
     public BlenderRecipe read(ResourceLocation recipeId, JsonObject json) {
         JsonElement jsonelement = JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "item");
         Ingredient ingredient = Ingredient.deserialize(jsonelement);
-        //Forge: Check if primitive string to keep vanilla or a object which can contain a count field.
         if (!json.has("result")) throw new com.google.gson.JsonSyntaxException("Missing result, expected to find a string or object");
         ItemStack itemstack;
         if (json.get("result").isJsonObject()) itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
@@ -49,12 +49,10 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
             ResourceLocation resourcelocation = new ResourceLocation(s1);
             itemstack = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
         }
-        input = ingredient.getMatchingStacks()[0];
+        input = ingredient;
         output = itemstack;
         id = recipeId;
         RECIPES.put(ingredient, output);
-        LOGGER.debug("Loaded " + this.toString());
-
         return this.factory.create(recipeId, ingredient, itemstack);
     }
 
@@ -67,17 +65,11 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
 
     @Override
     public void write(PacketBuffer buffer, BlenderRecipe recipe) {
-        recipe.INGREDIENT.write(buffer);
-        buffer.writeItemStack(recipe.OUTPUT);
+        recipe.ingredient.write(buffer);
+        buffer.writeItemStack(recipe.output);
     }
 
     public interface IFactory<RECIPE extends BlenderRecipe> {
         RECIPE create(ResourceLocation p_create_1_, Ingredient p_create_3_, ItemStack p_create_4_);
-    }
-
-    @Override
-    public String toString() {
-        // Overriding toString is not required, it's just useful for debugging.
-        return String.format("BlenderRecipe [input=%s, output=%s, id=%s]", input, output, id);
     }
 }

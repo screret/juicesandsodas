@@ -86,6 +86,8 @@ public class Registration {
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Base.MODID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Base.MODID);
     public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Base.MODID);
+
+
     //blocks
     //leaves
     public static final RegistryObject<Block> LIME_LEAVES = BLOCKS.register("lime_leaves", () -> new FruitLeavesBlock(() -> FruitType.LIME, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
@@ -185,7 +187,7 @@ public class Registration {
 
 
     //blender recipes
-    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("blending", () -> new BlenderRecipeSerializer(BlenderRecipe::new));
+    public static final RegistryObject<BlenderRecipeSerializer<BlenderRecipe>> BLENDER_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("blending", () -> new BlenderRecipeSerializer<>(BlenderRecipe::new));
 
 
     //foods
