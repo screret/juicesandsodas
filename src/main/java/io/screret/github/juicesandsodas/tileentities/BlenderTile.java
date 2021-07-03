@@ -17,6 +17,7 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class BlenderTile extends TileEntity implements ITickableTileEntity {
+public class BlenderTile extends TileEntity implements ITickableTileEntity, IItemHandler {
 
     public ItemStackHandler inputSlot = customHandler(3);
     public ItemStackHandler bottleSlot =  customHandler(1);
@@ -217,7 +218,36 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         return false;
     }
 
-    public static boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    @Override
+    public int getSlots() {
+        return 0;
+    }
+
+    @NotNull
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        return null;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 0;
+    }
+
+
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         if (slot == 4 || slot == 5 || slot == 6) {
             return false;
         } else if (slot != 3) {

@@ -150,7 +150,13 @@ public class BlenderBlockContainer extends Container {
         return new SlotItemHandler(handler, index, xPosition, yPosition){
             @Override
             public boolean isItemValid(@Nullable ItemStack stack) {
-                return BlenderTile.isItemValid(index, stack);
+                if (index == 4 || index == 5 || index == 6) {
+                    return false;
+                } else if (index != 3) {
+                    return true;
+                } else {
+                    return stack.copy().getItem() == Registration.EMPTY_BOTTLE.get() || stack.copy().getItem() == Registration.EMPTY_JUICE_BOTTLE.get();
+                }
             }
         };
     }

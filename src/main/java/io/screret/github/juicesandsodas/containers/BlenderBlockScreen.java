@@ -45,10 +45,10 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
         // draw the label for the top of the screen
         final int LABEL_XPOS = 5;
         final int LABEL_YPOS = 5;
-        this.font.func_243248_b(matrixStack, this.title, LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());     ///    this.font.drawString
+        this.font.drawString(matrixStack, this.title.getString(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());     ///    this.font.drawString
 
         // draw the label for the player inventory slots
-        this.font.func_243248_b(matrixStack, this.playerInventory.getDisplayName(),                  ///    this.font.drawString
+        this.font.drawString(matrixStack, this.playerInventory.getDisplayName().getString(),                  ///    this.font.drawString
                 4, 74, Color.darkGray.getRGB());
     }
 

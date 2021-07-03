@@ -30,12 +30,12 @@ public class Config {
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
 
         CLIENT_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
-        ROTATION_SPEED = CLIENT_BUILDER.comment("Rotation speed of the magic block").defineInRange("rotationSpeed", 100.0, 0.0, 1000000.0);
+        ROTATION_SPEED = CLIENT_BUILDER.comment("Rotation speed of the blender").defineInRange("rotationSpeed", 100.0, 0.0, 1000000.0);
         CLIENT_BUILDER.pop();
 
         SERVER_BUILDER.comment("Power settings").push(CATEGORY_POWER);
 
-        setupFirstBlockConfig(SERVER_BUILDER, CLIENT_BUILDER);
+        //setupFirstBlockConfig(SERVER_BUILDER, CLIENT_BUILDER);
 
         SERVER_BUILDER.pop();
 
@@ -45,10 +45,8 @@ public class Config {
     }
 
     private static void setupFirstBlockConfig(ForgeConfigSpec.Builder SERVER_BUILDER, ForgeConfigSpec.Builder CLIENT_BUILDER) {
-        SERVER_BUILDER.comment("FirstBlock settings").push(SUBCATEGORY_FIRSTBLOCK);
+        SERVER_BUILDER.comment("Blender settings").push(SUBCATEGORY_FIRSTBLOCK);
 
-        FIRSTBLOCK_MAXPOWER = SERVER_BUILDER.comment("Maximum power for the FirstBlock generator")
-                .defineInRange("maxPower", 100000, 0, Integer.MAX_VALUE);
         FIRSTBLOCK_GENERATE = SERVER_BUILDER.comment("Power generation per diamond")
                 .defineInRange("generate", 1000, 0, Integer.MAX_VALUE);
         FIRSTBLOCK_SEND = SERVER_BUILDER.comment("Power generation to send per tick")
