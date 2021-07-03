@@ -2,7 +2,6 @@ package io.screret.github.juicesandsodas.trees;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +11,6 @@ import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.FeatureSpread;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
-import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
 
 import java.util.Random;
 import java.util.Set;
@@ -22,11 +20,6 @@ public class FruitBlobFoliagePlacer extends BlobFoliagePlacer {
 
     public FruitBlobFoliagePlacer(FeatureSpread p_i241995_1_, FeatureSpread p_i241995_2_, int p_i241995_3_) {
         super(p_i241995_1_, p_i241995_2_, p_i241995_3_);
-    }
-
-    @Override
-    protected FoliagePlacerType<?> func_230371_a_() {
-        return Registration.BLOB_PLACER;
     }
 
     @Override

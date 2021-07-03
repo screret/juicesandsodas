@@ -1,11 +1,6 @@
 package io.screret.github.juicesandsodas.trees;
 
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
 import com.mojang.serialization.Codec;
-
 import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,6 +14,10 @@ import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
 
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+
 public class CarpetTreeDecorator extends TreeDecorator {
     public static final Codec<CarpetTreeDecorator> CODEC = BlockStateProvider.CODEC.fieldOf("provider").xmap(CarpetTreeDecorator::new, decorator -> {
         return decorator.carpetProvider;
@@ -30,7 +29,7 @@ public class CarpetTreeDecorator extends TreeDecorator {
     }
 
     @Override
-    protected TreeDecoratorType<?> func_230380_a_() {
+    protected TreeDecoratorType<?> getDecoratorType() {
         return Registration.CARPET_DECORATOR;
     }
 

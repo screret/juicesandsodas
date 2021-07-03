@@ -7,7 +7,6 @@ import io.screret.github.juicesandsodas.FruitType;
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
-import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.items.ItemDrink;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
 import io.screret.github.juicesandsodas.materials.ModMaterials;
@@ -22,7 +21,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
@@ -41,6 +39,7 @@ import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.FeatureSpread;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
@@ -65,6 +64,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+
+//import io.screret.github.juicesandsodas.entities.KoolaidMan;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = Base.MODID)
 public class Registration {
@@ -174,7 +175,7 @@ public class Registration {
 
     //entities
     //bosses
-    public static final RegistryObject<EntityType<KoolaidMan>> KOOLAIDMAN = ENTITIES.register("koolaid_man", () -> EntityType.Builder.create(KoolaidMan::new, EntityClassification.MONSTER).size(1f, 1.5f).setTrackingRange(64).build("koolaid_man"));
+    //public static final RegistryObject<EntityType<KoolaidMan>> KOOLAIDMAN = ENTITIES.register("koolaid_man", () -> EntityType.Builder.create(KoolaidMan::new, EntityClassification.MONSTER).size(1f, 1.5f).setTrackingRange(64).build("koolaid_man"));
 
 
     //containers
@@ -263,7 +264,7 @@ public class Registration {
             decorators = ImmutableList.of();
             leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
         }
-        return Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().setDecorators(decorators).build()));
+        return Feature.TREE.withConfiguration(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().setDecorators(decorators).build());
     }
 
     @SubscribeEvent

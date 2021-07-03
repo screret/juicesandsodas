@@ -14,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
@@ -64,7 +63,7 @@ public class BlenderRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public boolean matches(@Nonnull IInventory inv, @Nonnull World world) {
+    public boolean matches(IInventory inv, World worldIn) {
         return ingredient.test(inv.getStackInSlot(0));
     }
 

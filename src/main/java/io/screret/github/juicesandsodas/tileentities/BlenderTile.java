@@ -6,6 +6,8 @@ import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.util.BlenderRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -17,7 +19,6 @@ import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -28,11 +29,13 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class BlenderTile extends TileEntity implements ITickableTileEntity, IItemHandler {
+public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     public ItemStackHandler inputSlot = customHandler(3);
     public ItemStackHandler bottleSlot =  customHandler(1);
     public ItemStackHandler outputSlot = customHandler(3);
+
+    RecipeWrapper recipeWrapper = new RecipeWrapper(inputSlot);
 
     public NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
@@ -45,7 +48,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, IIte
 
     /* FOLLOWING Code helps the copied code below. */
 
-    public int COOK_TIME = 0;
+    public int COOK_TIME = 1;
     public int COOK_TIME_TOTAL = 150;
     public int RECIPES_USED = 1;
 
@@ -140,42 +143,39 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, IIte
     @Override
     public void tick() {
         if (world.isRemote) return;
-        if (this.isBlending()) {
-            this.blenderData.set(COOK_TIME, this.blenderData.get(COOK_TIME) - 1);
-        }
-        IRecipe<?> irecipe = getRecipe();
+        IRecipe<IInventory> irecipe = getRecipe();
         boolean valid = this.canSmelt(irecipe);
-        if (null != this.world && !this.world.isRemote) {
-            if (this.isBlending() && !items.get(0).isEmpty()) {
+        if (this.world != null) {
+            /*if (isBlending() || !inputSlot.getStackInSlot(0).isEmpty() && !items.get(0).isEmpty()) {
                 if (!this.isBlending() && valid) {
                     this.blenderData.set(RECIPES_USED, this.blenderData.get(COOK_TIME));
                 }
-            }
+            }*/
 
-            if (this.isBlending() && valid) {
-                this.blenderData.set(COOK_TIME, this.blenderData.get(COOK_TIME) + 1);
-                if (this.blenderData.get(COOK_TIME) == this.blenderData.get(COOK_TIME_TOTAL)) {
+            if (isBlending() || !inputSlot.getStackInSlot(0).isEmpty() && valid) {
+                int cooktime = this.blenderData.get(COOK_TIME) + 1;
+                this.blenderData.set(COOK_TIME, cooktime);
+                if (this.blenderData.get(COOK_TIME) >= this.blenderData.get(COOK_TIME_TOTAL)) {
                     this.blenderData.set(COOK_TIME, 0);
                     this.blenderData.set(COOK_TIME_TOTAL, 150);
                     this.smeltItem(irecipe);
                 }
-            } else {
-                this.blenderData.set(COOK_TIME, 0);
             }
-        } else if (!this.isBlending() && this.blenderData.get(COOK_TIME) > 0) {
+        } else if (!this.isBlending()) {
             this.blenderData.set(COOK_TIME, MathHelper.clamp(this.blenderData.get(COOK_TIME) - 2, 0, this.blenderData.get(COOK_TIME_TOTAL)));
         }
         this.markDirty();
     }
 
-    private void smeltItem(@Nullable IRecipe<?> recipe) {
+    private void smeltItem(@Nullable IRecipe<IInventory> recipe) {
         if (recipe != null && this.canSmelt(recipe)) {
             ItemStack input1 = inputSlot.getStackInSlot(0);
             ItemStack input2 = inputSlot.getStackInSlot(1);
             ItemStack input3 = inputSlot.getStackInSlot(2);
             ItemStack smelt = bottleSlot.getStackInSlot(0);
-            ItemStack itemstack1 = recipe.getRecipeOutput();
             ItemStack itemstack2 = items.get(4);
+            Inventory inv = new Inventory(itemstack2);
+            ItemStack itemstack1 = recipe.getCraftingResult(inv);
             if (smelt.isEmpty()) {
                 return;
             } else if (itemstack2.getItem() == itemstack1.getItem()) {
@@ -218,35 +218,6 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, IIte
         return false;
     }
 
-    @Override
-    public int getSlots() {
-        return 0;
-    }
-
-    @NotNull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return null;
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
-        return 0;
-    }
-
-
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
         if (slot == 4 || slot == 5 || slot == 6) {
             return false;
@@ -261,7 +232,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity, IIte
         ItemStack input1 = inputSlot.getStackInSlot(INPUT);
         ItemStack input2 = inputSlot.getStackInSlot(INPUT + 1);
         ItemStack input3 = inputSlot.getStackInSlot(INPUT + 2);
-        RecipeWrapper recipeWrapper = new RecipeWrapper(inputSlot);
+
         if (input1.isEmpty() && input2.isEmpty() && input3.isEmpty()) {
             return null;
         }

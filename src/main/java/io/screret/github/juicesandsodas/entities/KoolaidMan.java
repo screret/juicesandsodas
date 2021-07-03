@@ -1,4 +1,4 @@
-package io.screret.github.juicesandsodas.entities;
+/*package io.screret.github.juicesandsodas.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -213,3 +213,4 @@ public class KoolaidMan extends CreatureEntity {
         }
     }
 }
+*/

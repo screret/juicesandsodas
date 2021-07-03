@@ -37,7 +37,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.jetbrains.annotations.Range;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -100,7 +99,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 break;
             }
         } else {
-            world.setBlockState(pos, state.func_235896_a_/*cycle*/(AGE));
+            world.setBlockState(pos, state.cycleValue(AGE));
         }
     }
 

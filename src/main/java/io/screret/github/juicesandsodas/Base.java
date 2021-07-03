@@ -4,21 +4,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
-import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -34,6 +31,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+//import io.screret.github.juicesandsodas.entities.KoolaidMan;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Base.MODID)
@@ -111,13 +110,13 @@ public class Base {
         Registration.trees = null;
         Registration.cherry = null;
 
-        DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
+        //DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
         LOGGER.debug("Screens Registered");
-        RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
+        //RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
         private void enqueueIMC(final InterModEnqueueEvent event) {

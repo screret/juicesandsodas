@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 public class BlenderBlockContainer extends Container {
 
     private final IItemHandler playerInventory;
+    private final IItemHandler inventory;
 
     private final IIntArray blenderData;
 
@@ -48,6 +49,7 @@ public class BlenderBlockContainer extends Container {
         super(Registration.BLENDER_CONT.get(), windowID);
         this.playerInventory = new InvWrapper(playerInventory);
         blenderData = tileEntity.blenderData;
+        this.inventory = inven;
 
         final int SLOT_X_SPACING = 18;
         final int SLOT_Y_SPACING = 18;
@@ -58,16 +60,16 @@ public class BlenderBlockContainer extends Container {
             final int INPUT_SLOTS_YPOS = 16;
             final int BOTTLE_SLOT_XPOS = 59;
             final int BOTTLE_SLOT_YPOS = 34;
-            this.addSlot(handler(inven, 0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));
-            this.addSlot(handler(inven, 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
-            this.addSlot(handler(inven, 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
-            this.addSlot(handler(inven, 3, BOTTLE_SLOT_XPOS, BOTTLE_SLOT_YPOS));
+            this.addSlot(slotHandler(inven, 0, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 0));
+            this.addSlot(slotHandler(inven, 1, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 1));
+            this.addSlot(slotHandler(inven, 2, INPUT_SLOTS_XPOS, INPUT_SLOTS_YPOS + SLOT_Y_SPACING * 2));
+            this.addSlot(slotHandler(inven, 3, BOTTLE_SLOT_XPOS, BOTTLE_SLOT_YPOS));
 
             final int OUTPUT_SLOTS_XPOS = 113;
             final int OUTPUT_SLOTS_YPOS = 34;
-            this.addSlot(handler(inven, 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS));
-            this.addSlot(handler(inven, 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS));
-            this.addSlot(handler(inven, 6, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS));
+            this.addSlot(slotHandler(inven, 4, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 0, OUTPUT_SLOTS_YPOS));
+            this.addSlot(slotHandler(inven, 5, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 1, OUTPUT_SLOTS_YPOS));
+            this.addSlot(slotHandler(inven, 6, OUTPUT_SLOTS_XPOS + SLOT_X_SPACING * 2, OUTPUT_SLOTS_YPOS));
 
         } else {
             throw new IllegalStateException("TileEntity is null");
@@ -146,7 +148,7 @@ public class BlenderBlockContainer extends Container {
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
     }
 
-    public SlotItemHandler handler(IItemHandler handler, int index, int xPosition, int yPosition){
+    public SlotItemHandler slotHandler(IItemHandler handler, int index, int xPosition, int yPosition){
         return new SlotItemHandler(handler, index, xPosition, yPosition){
             @Override
             public boolean isItemValid(@Nullable ItemStack stack) {
