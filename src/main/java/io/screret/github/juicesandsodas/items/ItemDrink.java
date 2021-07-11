@@ -30,32 +30,33 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.List;
 
 public class ItemDrink extends GlassBottleItem implements IItemColor {
 
-    public ItemDrink(Properties properties, int color, @Nullable EffectInstance[] effects, @Nullable ResourceLocation shader){
+    public ItemDrink(Properties properties, Color color, @Nullable EffectInstance[] effects, @Nullable ResourceLocation shader){
         super(properties);
-        EFFECTS = effects;
-        SHADER = shader;
-        COLOR = color;
+        this.effects = effects;
+        this.shader = shader;
+        this.color = color;
         if(shader != null){
             if(shader.toString().equals("minecraft:shaders/post/invert.json")){
-                SHADER_ENTITY = new EndermanEntity(EntityType.ENDERMAN, Minecraft.getInstance().world);
+                shaderEntity = new EndermanEntity(EntityType.ENDERMAN, Minecraft.getInstance().world);
             } else if(shader.toString().equals("minecraft:shaders/post/spider.json")){
-                SHADER_ENTITY = new SpiderEntity(EntityType.SPIDER, Minecraft.getInstance().world);
+                shaderEntity = new SpiderEntity(EntityType.SPIDER, Minecraft.getInstance().world);
             } else if(shader.toString().equals("minecraft:shaders/post/creeper.json")){
-                SHADER_ENTITY = new CreeperEntity(EntityType.CREEPER, Minecraft.getInstance().world);
+                shaderEntity = new CreeperEntity(EntityType.CREEPER, Minecraft.getInstance().world);
             }
         }
     }
-    static final int MAX_FOOD_LEVEL = 20;
-    static final int FOOD_LEVEL_INCREASE = 4;
-    protected static int COLOR;
+    static int maxFoodLevel = 20;
+    static int foodLevelIncrease = 4;
+    protected Color color;
 
-    protected static EffectInstance[] EFFECTS;
-    protected static Entity SHADER_ENTITY;
-    protected static ResourceLocation SHADER;
+    protected EffectInstance[] effects;
+    protected Entity shaderEntity;
+    protected ResourceLocation shader;
 
 
     @Override
@@ -65,9 +66,9 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
     }
 
     public EffectInstance effects(){
-        if (EFFECTS != null){
-            for(int i = 0; i < EFFECTS.length; i++){
-                return EFFECTS[i];
+        if (effects != null){
+            for(int i = 0; i < effects.length; i++){
+                return effects[i];
             }
         }
         return null;
@@ -135,16 +136,16 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public int getColor(ItemStack stack, int color) {
-        return COLOR;
+    public int getColor(ItemStack stack, int tintIndex) {
+        return color.getRGB();
     }
 
     public void loadCustomShader(){
         GameRenderer renderer = Minecraft.getInstance().gameRenderer;
-        if(SHADER_ENTITY != null){
-            renderer.loadEntityShader(SHADER_ENTITY);
-        }else if (SHADER != null){
-            renderer.loadShader(SHADER);
+        if(shaderEntity != null){
+            renderer.loadEntityShader(shaderEntity);
+        }else if (shader != null){
+            renderer.loadShader(shader);
         }else {
             return;
         }

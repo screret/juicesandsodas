@@ -39,7 +39,6 @@ import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.feature.FeatureSpread;
 import net.minecraft.world.gen.foliageplacer.FoliagePlacerType;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
@@ -61,6 +60,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -126,15 +126,16 @@ public class Registration {
     public static final RegistryObject<TileEntityType<FruitTreeTile>> FRUIT_TREE = TILES.register("fruit_tree", () -> new TileEntityType<>(FruitTreeTile::new, ALL_LEAVES, null));
 
 
+
     //Items
     //drinks
-    public static final RegistryObject<Item> KOOL_AID = ITEMS.register("kool_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 41391, null, null));
-    public static final RegistryObject<Item> MAGIC_AID = ITEMS.register("magic_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 3932107, new EffectInstance[]{new EffectInstance(Effect.get(9)), new EffectInstance(Effect.get(20))}, new ResourceLocation("minecraft:shaders/post/wobble.json")));
-    public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
-    public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
-    public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
-    public static final RegistryObject<Item> CHERRY_JUICE = ITEMS.register("cherry_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
-    public static final RegistryObject<Item> ORANGE_JUICE = ITEMS.register("orange_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), 14607039, null, null));
+    public static final RegistryObject<Item> KOOL_AID = ITEMS.register("kool_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(0, 161, 175), null, null));
+    public static final RegistryObject<Item> MAGIC_AID = ITEMS.register("magic_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(59, 255, 203), new EffectInstance[]{new EffectInstance(Effect.get(9)), new EffectInstance(Effect.get(20))}, new ResourceLocation("minecraft:shaders/post/wobble.json")));
+    public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> CHERRY_JUICE = ITEMS.register("cherry_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> ORANGE_JUICE = ITEMS.register("orange_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
     //empty bottles
     public static final RegistryObject<Item> EMPTY_JUICE_BOTTLE = ITEMS.register("empty_juice_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
     public static final RegistryObject<Item> EMPTY_BOTTLE = ITEMS.register("empty_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));

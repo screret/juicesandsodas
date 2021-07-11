@@ -5,17 +5,21 @@ import com.google.common.collect.Sets;
 import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
 import io.screret.github.juicesandsodas.init.Registration;
+import io.screret.github.juicesandsodas.properties.block.blender.BlenderTileRenderer;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -110,6 +114,7 @@ public class Base {
         Registration.trees = null;
         Registration.cherry = null;
 
+        ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderTileRenderer::new);
         //DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
@@ -119,7 +124,12 @@ public class Base {
         //RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
-        private void enqueueIMC(final InterModEnqueueEvent event) {
+    @SubscribeEvent
+    public static void onClientSetupEvent(FMLClientSetupEvent event) {
+        RenderTypeLookup.setRenderLayer(Registration.BLENDER.get(), RenderType.getTranslucent());
+    }
+
+    private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
         InterModComms.sendTo("juicesandsodas", "helloworld", () -> { LOGGER.info("Hello world from Juices & Sodas"); return "Hello world";});
     }

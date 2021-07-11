@@ -109,8 +109,9 @@ public class BlenderBlockContainer extends Container {
 
     @OnlyIn(Dist.CLIENT)
     public int getCookProgressionScaled() {
-        int i = this.blenderData.get(2);
-        int j = this.blenderData.get(3);
+        int i = this.blenderData.get(0);
+        int j = 150;
+        //int j = this.blenderData.get(2);
         return j != 0 && i != 0 ? i * 24 / j : 0;
     }
 

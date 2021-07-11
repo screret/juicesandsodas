@@ -7,8 +7,6 @@ import io.screret.github.juicesandsodas.util.BlenderRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -16,9 +14,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIntArray;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -37,7 +33,6 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     RecipeWrapper recipeWrapper = new RecipeWrapper(inputSlot);
 
-    public NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
     public CombinedInvWrapper combinedInvWrapper = new CombinedInvWrapper(inputSlot, bottleSlot, outputSlot);
 
@@ -45,14 +40,9 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     public static final int NUMBER_OF_SLOTS = 6;
 
-
-    /* FOLLOWING Code helps the copied code below. */
-
     public int COOK_TIME = 1;
     public int COOK_TIME_TOTAL = 150;
     public int RECIPES_USED = 1;
-
-    /* FOLLOWING Code is copied from "Shadows-of-Fire/FastFurnace" mod to enhance performance */
 
     public final int INPUT = 0;
     public final int OUTPUT = 4;
@@ -61,34 +51,33 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         public int get(int index) {
             switch(index) {
                 case 0:
-                case 2:
                     return COOK_TIME;
                 case 1:
                     return RECIPES_USED;
-                case 3:
+                case 2:
                     return COOK_TIME_TOTAL;
                 default:
-                    return 0;
+                    return 1;
             }
         }
 
         public void set(int index, int value) {
             switch(index) {
                 case 0:
-                case 2:
                     COOK_TIME = value;
                     break;
                 case 1:
                     RECIPES_USED = value;
                     break;
-                case 3:
+                case 2:
                     COOK_TIME_TOTAL= value;
+                    break;
             }
 
         }
 
         public int size() {
-            return 4;
+            return 3;
         }
     };
 
@@ -106,15 +95,11 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     public CompoundNBT write(CompoundNBT parentNBTTagCompound) {
         super.write(parentNBTTagCompound); // The super call is required to save and load the tileEntity's location
         parentNBTTagCompound.putInt("juicesandsodas:blendTime", COOK_TIME);
-        parentNBTTagCompound.putInt("juicesandsodas:cookTime", COOK_TIME);
         parentNBTTagCompound.putInt("juicesandsodas:blendTimeTotal", COOK_TIME_TOTAL);
         parentNBTTagCompound.put("juicesandsodas:inputslot", inputSlot.serializeNBT());
         parentNBTTagCompound.put("juicesandsodas:bottleslot", bottleSlot.serializeNBT());
         parentNBTTagCompound.put("juicesandsodas:outputSlot", outputSlot.serializeNBT());
-        for (int i = 0; i < items.size(); i++){
-            items.set(i, combinedInvWrapper.getStackInSlot(i));
-        }
-        ItemStackHelper.saveAllItems(parentNBTTagCompound, this.items);
+        combinedInvWrapper = new CombinedInvWrapper(inputSlot, bottleSlot, outputSlot);
         return parentNBTTagCompound;
     }
 
@@ -122,17 +107,12 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void read(BlockState blockState, CompoundNBT parentNBTTagCompound) {
         super.read(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
-        COOK_TIME =  parentNBTTagCompound.getInt("juicesandsodas:cookTime");
         COOK_TIME =  parentNBTTagCompound.getInt("juicesandsodas:blendTime");
         COOK_TIME_TOTAL = parentNBTTagCompound.getInt("juicesandsodas:blendTimeTotal");
         inputSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:inputslot"));
         bottleSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:bottleslot"));
         outputSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:outputSlot"));
-        ItemStackHelper.loadAllItems(parentNBTTagCompound, items);
-        for (int i = 0; i < items.size(); i++){
-            setInventorySlotContents(i, combinedInvWrapper.getStackInSlot(i));
-            combinedInvWrapper.setStackInSlot(i, items.get(i));
-        }
+        combinedInvWrapper = new CombinedInvWrapper(inputSlot, bottleSlot, outputSlot);
         //LOGGER.debug(world.getRecipeManager().getRecipesForType(BlenderRecipeSerializer.BLENDING));
     }
 
@@ -153,17 +133,17 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             }*/
 
             if (isBlending() || !inputSlot.getStackInSlot(0).isEmpty() && valid) {
-                int cooktime = this.blenderData.get(COOK_TIME) + 1;
-                this.blenderData.set(COOK_TIME, cooktime);
-                if (this.blenderData.get(COOK_TIME) >= this.blenderData.get(COOK_TIME_TOTAL)) {
-                    this.blenderData.set(COOK_TIME, 0);
-                    this.blenderData.set(COOK_TIME_TOTAL, 150);
+                int cooktime = this.blenderData.get(0) + 1;
+                this.blenderData.set(0, cooktime);
+                if (this.blenderData.get(0) >= this.blenderData.get(2)) {
+                    this.blenderData.set(0, 0);
+                    this.blenderData.set(2, 150);
                     this.smeltItem(irecipe);
                 }
             }
-        } else if (!this.isBlending()) {
+        }/* else if (!this.isBlending()) {
             this.blenderData.set(COOK_TIME, MathHelper.clamp(this.blenderData.get(COOK_TIME) - 2, 0, this.blenderData.get(COOK_TIME_TOTAL)));
-        }
+        }*/
         this.markDirty();
     }
 
@@ -173,19 +153,17 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             ItemStack input2 = inputSlot.getStackInSlot(1);
             ItemStack input3 = inputSlot.getStackInSlot(2);
             ItemStack smelt = bottleSlot.getStackInSlot(0);
-            ItemStack itemstack2 = items.get(4);
-            Inventory inv = new Inventory(itemstack2);
-            ItemStack itemstack1 = recipe.getCraftingResult(inv);
+            ItemStack itemStack1 = recipe.getCraftingResult(recipeWrapper);
             if (smelt.isEmpty()) {
                 return;
-            } else if (itemstack2.getItem() == itemstack1.getItem()) {
-                if(!items.get(4).isEmpty()){
-                    if(!items.get(5).isEmpty()) {
-                        if(!items.get(6).isEmpty()) {
+            } else {
+                if(!outputSlot.getStackInSlot(0).isEmpty()){
+                    if(!outputSlot.getStackInSlot(1).isEmpty()) {
+                        if(!outputSlot.getStackInSlot(2).isEmpty()) {
                             return;
-                        } else items.set(6, itemstack1.copy());
-                    } else items.set(5, itemstack1.copy());
-                } else items.set(4, itemstack1.copy());
+                        } else outputSlot.setStackInSlot(2, itemStack1.copy());
+                    } else outputSlot.setStackInSlot(1, itemStack1.copy());
+                } else outputSlot.setStackInSlot(0, itemStack1.copy());
             }
 
             if (this.world != null && !this.world.isRemote) {
@@ -199,12 +177,12 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    private boolean isBlending() {
-        return this.blenderData.get(COOK_TIME) > 0;
+    public boolean isBlending() {
+        return this.blenderData.get(0) > 0;
     }
 
     protected boolean canSmelt(IRecipe<?> recipe) {
-        if (!items.get(0).isEmpty() && !items.get(1).isEmpty() && !items.get(2).isEmpty() && !items.get(3).isEmpty()) {
+        if (!inputSlot.getStackInSlot(0).isEmpty() && !inputSlot.getStackInSlot(1).isEmpty() && !inputSlot.getStackInSlot(2).isEmpty() && !bottleSlot.getStackInSlot(0).isEmpty()) {
             if(recipe != null){
                 ItemStack recipeOutput = recipe.getRecipeOutput();
                 if (!recipeOutput.isEmpty()) {
@@ -229,9 +207,9 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     }
 
     protected BlenderRecipe getRecipe() {
-        ItemStack input1 = inputSlot.getStackInSlot(INPUT);
-        ItemStack input2 = inputSlot.getStackInSlot(INPUT + 1);
-        ItemStack input3 = inputSlot.getStackInSlot(INPUT + 2);
+        ItemStack input1 = inputSlot.getStackInSlot(0);
+        ItemStack input2 = inputSlot.getStackInSlot(1);
+        ItemStack input3 = inputSlot.getStackInSlot(2);
 
         if (input1.isEmpty() && input2.isEmpty() && input3.isEmpty()) {
             return null;
@@ -257,7 +235,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }
     }
 
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    /*public void setInventorySlotContents(int index, ItemStack stack) {
         ItemStack itemstack = this.items.get(index);
         boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
         this.items.set(index, stack);
@@ -271,7 +249,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             this.markDirty();
         }
 
-    }
+    }*/
 
     public ItemStackHandler customHandler(int size){
         return new ItemStackHandler(size) {
