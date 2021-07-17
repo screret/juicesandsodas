@@ -1,4 +1,4 @@
-/*package io.screret.github.juicesandsodas.entities;
+package io.screret.github.juicesandsodas.entities;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -8,10 +8,14 @@ import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.IPacket;
@@ -29,9 +33,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Random;
 
-public class KoolaidMan extends CreatureEntity {
+public class KoolaidMan extends MonsterEntity {
 
-    public KoolaidMan(EntityType<? extends CreatureEntity> entityTypeIn, World worldIn) {
+    public KoolaidMan(EntityType<? extends MonsterEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
         this.experienceValue = 150;
         this.setHealth(150.0f);
@@ -39,6 +43,8 @@ public class KoolaidMan extends CreatureEntity {
         this.hurtResistantTime = 2;
         this.setCustomName(new StringTextComponent("The Kool-Aid Man"));
     }
+
+    private final ServerBossInfo bossInfo = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenSky(true);
 
     @Override
     public IPacket<?> createSpawnPacket() {
@@ -84,18 +90,12 @@ public class KoolaidMan extends CreatureEntity {
         return AttributeModifierMap.createMutableAttribute()
                 .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
                 .createMutableAttribute(Attributes.MAX_HEALTH, 150.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.4D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.5D)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 15.0D)
-                .createMutableAttribute(Attributes.ARMOR, 10.0D);
+                .createMutableAttribute(Attributes.ARMOR, 5.0D);
     }
 
-    @Override
-    public boolean isNonBoss() {
-        return false;
-    }
-
-    private final ServerBossInfo bossInfo = new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
     @Override
     public void addTrackingPlayer(ServerPlayerEntity player) {
         super.addTrackingPlayer(player);
@@ -213,4 +213,3 @@ public class KoolaidMan extends CreatureEntity {
         }
     }
 }
-*/

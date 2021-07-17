@@ -4,22 +4,29 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import io.screret.github.juicesandsodas.containers.BlenderBlockScreen;
 import io.screret.github.juicesandsodas.creativeTabs.ModCreativeTabs;
+import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.properties.block.blender.BlenderTileRenderer;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
+import io.screret.github.juicesandsodas.util.ModdedSpawnEggItem;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.settings.PointOfView;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -49,6 +56,8 @@ public class Base {
 
     public static final ModCreativeTabs MOD_TAB = new ModCreativeTabs();
 
+    public static ResourceLocation SHADER;
+
     public Base() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -63,11 +72,12 @@ public class Base {
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         Registration.BLOCKS.register(modEventBus);
-        Registration.ITEMS.register(modEventBus);
         Registration.ENTITIES.register(modEventBus);
+        Registration.ITEMS.register(modEventBus);
         Registration.TILES.register(modEventBus);
         Registration.CONTAINERS.register(modEventBus);
         Registration.RECIPE_SERIALIZERS.register(modEventBus);
+        ModdedSpawnEggItem.initUnaddedEggs();
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -115,18 +125,14 @@ public class Base {
         Registration.cherry = null;
 
         ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderTileRenderer::new);
-        //DeferredWorkQueue.runLater(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
+        event.enqueueWork(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        DeferredWorkQueue.runLater(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
+        event.enqueueWork(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
         LOGGER.debug("Screens Registered");
-        //RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
-    }
-
-    @SubscribeEvent
-    public static void onClientSetupEvent(FMLClientSetupEvent event) {
         RenderTypeLookup.setRenderLayer(Registration.BLENDER.get(), RenderType.getTranslucent());
+        RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -146,5 +152,26 @@ public class Base {
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
         LOGGER.info("HELLO from server starting");
+    }
+
+    @SubscribeEvent
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+
+        if(mc.gameSettings.keyBindTogglePerspective.isPressed()){
+            PointOfView pointofview = mc.gameSettings.getPointOfView();
+            mc.gameSettings.setPointOfView(mc.gameSettings.getPointOfView().func_243194_c());
+            if (pointofview.func_243192_a() != mc.gameSettings.getPointOfView().func_243192_a()) {
+                mc.gameRenderer.loadEntityShader(mc.gameSettings.getPointOfView().func_243192_a() ? mc.getRenderViewEntity() : null);
+            }
+            if(SHADER != null){
+                mc.gameRenderer.loadShader(SHADER);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void entityAttributeCreationEvent(EntityAttributeCreationEvent event) { //EntityAttributeCreateEvent cannot be resolved to a type
+
     }
 }

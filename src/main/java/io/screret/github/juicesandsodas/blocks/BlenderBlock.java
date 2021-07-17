@@ -10,6 +10,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -30,10 +31,13 @@ import org.jetbrains.annotations.Nullable;
 public class BlenderBlock extends Block {
     public BlenderBlock(Properties properties) {
         super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.POWERED, Boolean.valueOf(false)).with(BLENDING, Boolean.valueOf(false)));
 //        Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/block/oak_planks.png"));
 //        Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/block/glass.png"));
 //        Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation("minecraft", "textures/block/iron_block.png"));
     }
+
+    public static BooleanProperty BLENDING = BooleanProperty.create("blending");
 
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 10.0D, 13.0D);
 
@@ -67,7 +71,8 @@ public class BlenderBlock extends Block {
 
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        BlenderTile tile = (BlenderTile) tileEntity;
+                        BlenderTile tile = (BlenderTile) world.getTileEntity(pos);
+                        //LOGGER.debug(tile.isBlending() + ", " + tile.COOK_TIME + ", " + tile.blenderData.get(0) + ", " + tile.toString());
                         return new BlenderBlockContainer(i, playerInventory, new CombinedInvWrapper(tile.inputSlot, tile.bottleSlot, tile.outputSlot), tile);
                     }
                 };
@@ -80,8 +85,21 @@ public class BlenderBlock extends Block {
     }
 
     @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if(worldIn.isRemote())
+        {
+            return;
+        }
+
+        if(!(newState.getBlock() instanceof BlenderBlock))
+        {
+            worldIn.removeTileEntity(pos);
+        }
+    }
+
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.POWERED);
+        builder.add(BlockStateProperties.POWERED, BLENDING);
     }
 
 

@@ -1,6 +1,7 @@
 package io.screret.github.juicesandsodas.tileentities;
 
 
+import io.screret.github.juicesandsodas.blocks.BlenderBlock;
 import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
 import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.util.BlenderRecipe;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIntArray;
@@ -133,9 +135,11 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             }*/
 
             if (isBlending() || !inputSlot.getStackInSlot(0).isEmpty() && valid) {
+                world.setBlockState(pos, getBlockState().with(BlockStateProperties.POWERED, Boolean.valueOf(false)).with(BlenderBlock.BLENDING, Boolean.valueOf(true)));
                 int cooktime = this.blenderData.get(0) + 1;
                 this.blenderData.set(0, cooktime);
                 if (this.blenderData.get(0) >= this.blenderData.get(2)) {
+                    //LOGGER.debug(this.isBlending() + ", " + this.COOK_TIME + ", " + this.blenderData.get(0) + ", " + this.toString());
                     this.blenderData.set(0, 0);
                     this.blenderData.set(2, 150);
                     this.smeltItem(irecipe);
@@ -174,6 +178,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             input2.shrink(1);
             input3.shrink(1);
             smelt.shrink(1);
+            world.setBlockState(pos, getBlockState().with(BlockStateProperties.POWERED, Boolean.valueOf(false)).with(BlenderBlock.BLENDING, Boolean.valueOf(false)));
         }
     }
 

@@ -25,6 +25,7 @@ public class BlenderBlockContainer extends Container {
     private final IItemHandler inventory;
 
     private final IIntArray blenderData;
+    private final BlenderTile tile;
 
     private static final int HOTBAR_SLOT_COUNT = 9;
 	private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
@@ -48,6 +49,7 @@ public class BlenderBlockContainer extends Container {
     public BlenderBlockContainer(int windowID, PlayerInventory playerInventory, IItemHandler inven, BlenderTile tileEntity) {
         super(Registration.BLENDER_CONT.get(), windowID);
         this.playerInventory = new InvWrapper(playerInventory);
+        this.tile = tileEntity;
         blenderData = tileEntity.blenderData;
         this.inventory = inven;
 
@@ -109,7 +111,8 @@ public class BlenderBlockContainer extends Container {
 
     @OnlyIn(Dist.CLIENT)
     public int getCookProgressionScaled() {
-        int i = this.blenderData.get(0);
+        //int i = this.blenderData.get(0);
+        int i = this.tile.COOK_TIME;
         int j = 150;
         //int j = this.blenderData.get(2);
         return j != 0 && i != 0 ? i * 24 / j : 0;

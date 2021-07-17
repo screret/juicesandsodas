@@ -7,6 +7,7 @@ import io.screret.github.juicesandsodas.FruitType;
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
 import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
+import io.screret.github.juicesandsodas.entities.KoolaidMan;
 import io.screret.github.juicesandsodas.items.ItemDrink;
 import io.screret.github.juicesandsodas.items.armor.ModArmor;
 import io.screret.github.juicesandsodas.materials.ModMaterials;
@@ -17,11 +18,14 @@ import io.screret.github.juicesandsodas.trees.FruitBlobFoliagePlacer;
 import io.screret.github.juicesandsodas.trees.FruitLeavesBlock;
 import io.screret.github.juicesandsodas.trees.FruitTypeExtension;
 import io.screret.github.juicesandsodas.util.BlenderRecipe;
+import io.screret.github.juicesandsodas.util.ModdedSpawnEggItem;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
@@ -34,6 +38,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
@@ -83,6 +88,7 @@ public class Registration {
     //registries
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Base.MODID);
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Base.MODID);
+    public static final DeferredRegister<Attribute> ENTITY_ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, Base.MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Base.MODID);
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Base.MODID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Base.MODID);
@@ -176,7 +182,10 @@ public class Registration {
 
     //entities
     //bosses
-    //public static final RegistryObject<EntityType<KoolaidMan>> KOOLAIDMAN = ENTITIES.register("koolaid_man", () -> EntityType.Builder.create(KoolaidMan::new, EntityClassification.MONSTER).size(1f, 1.5f).setTrackingRange(64).build("koolaid_man"));
+    public static final RegistryObject<EntityType<KoolaidMan>> KOOLAIDMAN = ENTITIES.register("koolaid_man", () -> EntityType.Builder.create(KoolaidMan::new, EntityClassification.MONSTER).size(1f, 1.5f).setTrackingRange(64).build("koolaid_man"));
+
+    //mob eggs
+    public static final RegistryObject<Item> KOOLAIDMAN_EGG = ITEMS.register("koolaid_man_egg", () -> new ModdedSpawnEggItem(KOOLAIDMAN, Color.red.getRGB(), Color.white.getRGB(), new Item.Properties().group(Base.MOD_TAB)));
 
 
     //containers
@@ -184,7 +193,7 @@ public class Registration {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
         BlenderTile tile = (BlenderTile) world.getTileEntity(pos);
-        return new BlenderBlockContainer(windowId, inv, new CombinedInvWrapper(tile.inputSlot, tile.outputSlot), tile);
+        return new BlenderBlockContainer(windowId, inv, new CombinedInvWrapper(tile.inputSlot, tile.bottleSlot, tile.outputSlot), tile);
     }));
 
 
@@ -248,6 +257,9 @@ public class Registration {
         event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
         if (category != Biome.Category.JUNGLE && FruitTypeExtension.CHERRY != null) {
             event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
+        }
+        if(category == Biome.Category.JUNGLE){
+            event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(KOOLAIDMAN.get(), 5, 0, 1));
         }
     }
 

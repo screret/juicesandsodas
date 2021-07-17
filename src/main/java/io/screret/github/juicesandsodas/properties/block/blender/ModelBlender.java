@@ -23,6 +23,7 @@ public class ModelBlender extends Model {
     BlenderTile tile;
     public static final ResourceLocation IRON_TEX = new ResourceLocation("minecraft", "textures/block/iron_block.png");
     public static final ResourceLocation BROWN_GLASS_TEX = new ResourceLocation("minecraft", "textures/block/brown_stained_glass.png");
+    public static final ResourceLocation WOOD_TEX = new ResourceLocation("minecraft", "textures/block/oak_planks.png");
 
     public ModelBlender() {
         super(RenderType::getEntityTranslucent);
@@ -108,7 +109,7 @@ public class ModelBlender extends Model {
                 CONNECTOR_SOUTH_SIZE.getX(), CONNECTOR_SOUTH_SIZE.getY(), CONNECTOR_SOUTH_SIZE.getZ(),
                 EXPANSION_AMOUNT);
 
-        rotatingParts.setRotationPoint(0, 0, 0);
+        rotatingParts.setRotationPoint(8.5F, 0, 8.5F);
     }
 
     public void askThings(IRenderTypeBuffer buffer, BlenderTile tile){
@@ -118,14 +119,15 @@ public class ModelBlender extends Model {
 
     @Override
     public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        IVertexBuilder glassBuffer = typeBuffer.getBuffer(getRenderType(BROWN_GLASS_TEX));
-        IVertexBuilder ironBuffer = typeBuffer.getBuffer(getRenderType(IRON_TEX));
-        if(tile.isBlending()){
+        //if(tile.isBlending()){
             rotatingParts.rotateAngleY = (float)Math.toRadians(rotationDegrees);
             rotationDegrees++;
-        }
-        clearParts.render(matrixStack, glassBuffer, packedLight, packedOverlay, red, green, blue, alpha);
-        rotatingParts.render(matrixStack, ironBuffer, packedLight, packedOverlay, red, green, blue, alpha);
+        //}
+        buffer = typeBuffer.getBuffer(getRenderType(IRON_TEX));
+        rotatingParts.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        buffer = typeBuffer.getBuffer(getRenderType(WOOD_TEX));
         staticParts.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        buffer = typeBuffer.getBuffer(getRenderType(BROWN_GLASS_TEX));
+        clearParts.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

@@ -1,5 +1,6 @@
 package io.screret.github.juicesandsodas.items;
 
+import io.screret.github.juicesandsodas.Base;
 import io.screret.github.juicesandsodas.init.Registration;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
@@ -115,6 +116,8 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
 
         loadCustomShader();
 
+        Base.SHADER = shader;
+
         return stack;
     }
 
@@ -140,14 +143,16 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
         return color.getRGB();
     }
 
-    public void loadCustomShader(){
-        GameRenderer renderer = Minecraft.getInstance().gameRenderer;
-        if(shaderEntity != null){
-            renderer.loadEntityShader(shaderEntity);
-        }else if (shader != null){
-            renderer.loadShader(shader);
-        }else {
-            return;
+    public void loadCustomShader() {
+        if (Minecraft.getInstance().world.isRemote) {
+            GameRenderer renderer = Minecraft.getInstance().gameRenderer;
+            Minecraft.getInstance().deferTask(() -> {
+                if (shaderEntity != null) {
+                    renderer.loadEntityShader(shaderEntity);
+                } else if (shader != null) {
+                    renderer.loadShader(shader);
+                }
+            });
         }
     }
 }
