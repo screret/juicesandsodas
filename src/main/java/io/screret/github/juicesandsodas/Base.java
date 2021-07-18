@@ -12,6 +12,7 @@ import io.screret.github.juicesandsodas.util.ModdedSpawnEggItem;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
@@ -39,7 +40,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -89,7 +89,6 @@ public class Base {
                 Registration.GRAPEFRUIT_LEAVES.get(),
                 Registration.APPLE_LEAVES.get()
         )));
-        List<FruitType> types = Arrays.asList(FruitType.LIME, FruitType.MANDARIN);
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
             pot.addPlant(Registration.MANDARIN_SAPLING.get().getRegistryName(), () -> Registration.POTTED_MANDARIN.get());
             pot.addPlant(Registration.LIME_SAPLING.get().getRegistryName(), () -> Registration.POTTED_LIME.get());
@@ -101,13 +100,13 @@ public class Base {
 
 
             for (FruitType type : FruitType.values()) {
-                ComposterBlock.CHANCES.put(type.fruit, 0.5f);
-                ComposterBlock.CHANCES.put(type.leaves.asItem(), 0.3f);
-                ComposterBlock.CHANCES.put(type.sapling.get().asItem(), 0.3f);
+                ComposterBlock.COMPOSTABLES.put(type.fruit, 0.5f);
+                ComposterBlock.COMPOSTABLES.put(type.leaves.asItem(), 0.3f);
+                ComposterBlock.COMPOSTABLES.put(type.sapling.get().asItem(), 0.3f);
             }
 
         ImmutableList.Builder<Supplier<ConfiguredFeature<?, ?>>> builder = ImmutableList.builder();
-        for (FruitType type : types) {
+        for (FruitType type : FruitType.values()) {
             Supplier<ConfiguredFeature<?, ?>> cf = () -> Registration.buildTreeFeature(type, true, null);
             builder.add(cf);
         }
@@ -125,13 +124,13 @@ public class Base {
         Registration.cherry = null;
 
         ClientRegistry.bindTileEntityRenderer(Registration.BLENDER_TILE.get(), BlenderTileRenderer::new);
-        event.enqueueWork(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().create()));
+        event.enqueueWork(() -> GlobalEntityTypeAttributes.put(Registration.KOOLAIDMAN.get(), KoolaidMan.registerAttributes().build()));
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> ScreenManager.registerFactory(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
+        event.enqueueWork(() -> ScreenManager.register(Registration.BLENDER_CONT.get(), BlenderBlockScreen::new));
         LOGGER.debug("Screens Registered");
-        RenderTypeLookup.setRenderLayer(Registration.BLENDER.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(Registration.BLENDER.get(), RenderType.translucent());
         RenderingRegistry.registerEntityRenderingHandler(Registration.KOOLAIDMAN.get(), KoolaidMan.Renderer::new);
     }
 
@@ -157,21 +156,17 @@ public class Base {
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
         Minecraft mc = Minecraft.getInstance();
+        GameSettings settings = Minecraft.getInstance().options;
 
-        if(mc.gameSettings.keyBindTogglePerspective.isPressed()){
-            PointOfView pointofview = mc.gameSettings.getPointOfView();
-            mc.gameSettings.setPointOfView(mc.gameSettings.getPointOfView().func_243194_c());
-            if (pointofview.func_243192_a() != mc.gameSettings.getPointOfView().func_243192_a()) {
-                mc.gameRenderer.loadEntityShader(mc.gameSettings.getPointOfView().func_243192_a() ? mc.getRenderViewEntity() : null);
+        if(settings.keyTogglePerspective.isDown()){
+            PointOfView pointofview = settings.getCameraType();
+            settings.setCameraType(settings.getCameraType().cycle());
+            if (pointofview.isFirstPerson() != settings.getCameraType().isFirstPerson()) {
+                mc.gameRenderer.checkEntityPostEffect(settings.getCameraType().isFirstPerson() ? Minecraft.getInstance().cameraEntity : null);
             }
             if(SHADER != null){
-                mc.gameRenderer.loadShader(SHADER);
+                mc.gameRenderer.loadEffect(SHADER);
             }
         }
-    }
-
-    @SubscribeEvent
-    public void entityAttributeCreationEvent(EntityAttributeCreationEvent event) { //EntityAttributeCreateEvent cannot be resolved to a type
-
     }
 }

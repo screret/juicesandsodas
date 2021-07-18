@@ -43,9 +43,9 @@ public class CarpetTreeDecorator extends TreeDecorator {
             if (pos.getY() > y) {
                 break;
             }
-            if (placeCarpet(world, pos, carpetProvider.getBlockState(rand, pos), 19)) {
+            if (placeCarpet(world, pos, carpetProvider.getState(rand, pos), 19)) {
                 allBlocks.add(pos);
-                boundingBox.expandTo(new MutableBoundingBox(pos, pos));
+                boundingBox.expand(new MutableBoundingBox(pos, pos));
             }
         }
     }
@@ -53,9 +53,9 @@ public class CarpetTreeDecorator extends TreeDecorator {
     public static boolean placeCarpet(IWorld world, BlockPos pos, BlockState carpet, int flags) {
         int i = 0;
         BlockPos ground = pos;
-        BlockState groundState = Blocks.AIR.getDefaultState();
+        BlockState groundState = Blocks.AIR.defaultBlockState();
         while (++i < 5) {
-            ground = pos.down(i);
+            ground = pos.below(i);
             groundState = world.getBlockState(ground);
             if (groundState.getBlock() != Blocks.GRASS && groundState.getBlock() != Blocks.FERN && !groundState.getBlock().isAir(groundState, world, ground)) {
                 if (i == 1) {
@@ -69,10 +69,19 @@ public class CarpetTreeDecorator extends TreeDecorator {
         if (block == Blocks.SNOW || block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BARRIER || block == Blocks.HONEY_BLOCK || block == Blocks.SOUL_SAND) {
             return false;
         }
-        if (!Block.doesSideFillSquare(groundState.getCollisionShape(world, ground), Direction.UP)) {
+        if (!Block.isShapeFullBlock().getCollisionShape(world, ground), Direction.UP)) {
             return false;
         }
-        return world.setBlockState(ground.up(), carpet, flags);
+        return world.(ground.up(), carpet, flags);
     }
 
+    @Override
+    protected TreeDecoratorType<?> type() {
+        return null;
+    }
+
+    @Override
+    public void place(ISeedReader p_225576_1_, Random p_225576_2_, List<BlockPos> p_225576_3_, List<BlockPos> p_225576_4_, Set<BlockPos> p_225576_5_, MutableBoundingBox p_225576_6_) {
+
+    }
 }

@@ -18,7 +18,6 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +27,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Random;
@@ -37,19 +35,13 @@ public class KoolaidMan extends MonsterEntity {
 
     public KoolaidMan(EntityType<? extends MonsterEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
-        this.experienceValue = 150;
+        this.xpReward = 150;
         this.setHealth(150.0f);
-        this.setAIMoveSpeed(0.4f);
-        this.hurtResistantTime = 2;
+        this.invulnerableTime = 2;
         this.setCustomName(new StringTextComponent("The Kool-Aid Man"));
     }
 
-    private final ServerBossInfo bossInfo = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenSky(true);
-
-    @Override
-    public IPacket<?> createSpawnPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+    private final ServerBossInfo bossInfo = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
 
     @Override
     protected void registerGoals() {
@@ -62,7 +54,7 @@ public class KoolaidMan extends MonsterEntity {
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.UNDEFINED;
     }
 
@@ -87,39 +79,38 @@ public class KoolaidMan extends MonsterEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return AttributeModifierMap.createMutableAttribute()
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 64.0D)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 150.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 1.5D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 15.0D)
-                .createMutableAttribute(Attributes.ARMOR, 5.0D);
+        return AttributeModifierMap.builder()
+                .add(Attributes.FOLLOW_RANGE, 64.0D)
+                .add(Attributes.MAX_HEALTH, 150.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.5D)
+                .add(Attributes.ATTACK_DAMAGE, 15.0D)
+                .add(Attributes.ARMOR, 5.0D);
     }
 
-    @Override
-    public void addTrackingPlayer(ServerPlayerEntity player) {
-        super.addTrackingPlayer(player);
+    public void startSeenByPlayer(ServerPlayerEntity player) {
+        super.startSeenByPlayer(player);
         this.bossInfo.addPlayer(player);
     }
 
-    @Override
-    public void removeTrackingPlayer(ServerPlayerEntity player) {
-        super.removeTrackingPlayer(player);
+    public void stopSeenByPlayer(ServerPlayerEntity player) {
+        super.stopSeenByPlayer(player);
         this.bossInfo.removePlayer(player);
     }
 
     @Override
-    public void updateAITasks() {
-        super.updateAITasks();
+    public void aiStep() {
+        super.aiStep();
         this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
     }
 
-    public void livingTick() {
-        super.livingTick();
-        double x = this.getPosX();
-        double y = this.getPosY();
-        double z = this.getPosZ();
-        Random random = this.rand;
+    @Override
+    public void customServerAiStep() {
+        super.customServerAiStep();
+        double x = this.getX();
+        double y = this.getY();
+        double z = this.getZ();
+        Random random = this.random;
         Entity entity = this;
         if (true)
             for (int l = 0; l < 4; ++l) {
@@ -130,7 +121,7 @@ public class KoolaidMan extends MonsterEntity {
                 double d3 = (random.nextFloat() - 0.5D) * 1D;
                 double d4 = (random.nextFloat() - 0.5D) * 1D;
                 double d5 = (random.nextFloat() - 0.5D) * 1D;
-                world.addParticle(ParticleTypes.SPLASH, d0, d1, d2, d3, d4, d5);
+                this.getCommandSenderWorld().addParticle(ParticleTypes.SPLASH, d0, d1, d2, d3, d4, d5);
             }
     }
 
@@ -147,55 +138,55 @@ public class KoolaidMan extends MonsterEntity {
         private final ModelRenderer righthand;
         private final ModelRenderer lefthand;
         public Model() {
-            textureWidth = 64;
-            textureHeight = 64;
+            texWidth = 64;
+            texHeight = 64;
             body = new ModelRenderer(this);
-            body.setRotationPoint(0.0F, 24.0F, 0.0F);
-            body.setTextureOffset(0, 0).addBox(-7.0F, -23.0F, -7.0F, 14.0F, 14.0F, 14.0F, 0.0F, false);
-            body.setTextureOffset(0, 0).addBox(-1.0F, -14.0F, 7.0F, 1.0F, 1.0F, 3.0F, 0.0F, false);
-            body.setTextureOffset(0, 0).addBox(-1.0F, -19.0F, 7.0F, 1.0F, 1.0F, 3.0F, 0.0F, false);
+            body.setPos(0.0F, 24.0F, 0.0F);
+            body.texOffs(0, 0).addBox(-7.0F, -23.0F, -7.0F, 14.0F, 14.0F, 14.0F, 0.0F, false);
+            body.texOffs(0, 0).addBox(-1.0F, -14.0F, 7.0F, 1.0F, 1.0F, 3.0F, 0.0F, false);
+            body.texOffs(0, 0).addBox(-1.0F, -19.0F, 7.0F, 1.0F, 1.0F, 3.0F, 0.0F, false);
             cube_r1 = new ModelRenderer(this);
-            cube_r1.setRotationPoint(0.0F, -17.0F, 9.0F);
+            cube_r1.setPos(0.0F, -17.0F, 9.0F);
             body.addChild(cube_r1);
             setRotationAngle(cube_r1, -1.5708F, 0.0F, 0.0F);
-            cube_r1.setTextureOffset(0, 0).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, 0.0F, false);
+            cube_r1.texOffs(0, 0).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 1.0F, 4.0F, 0.0F, false);
             rightleg = new ModelRenderer(this);
-            rightleg.setRotationPoint(0.0F, 0.0F, 0.0F);
+            rightleg.setPos(0.0F, 0.0F, 0.0F);
             body.addChild(rightleg);
-            rightleg.setTextureOffset(16, 46).addBox(-4.0F, -10.0F, -2.0F, 4.0F, 10.0F, 4.0F, 0.0F, false);
+            rightleg.texOffs(16, 46).addBox(-4.0F, -10.0F, -2.0F, 4.0F, 10.0F, 4.0F, 0.0F, false);
             leftleg = new ModelRenderer(this);
-            leftleg.setRotationPoint(4.0F, 0.0F, 0.0F);
+            leftleg.setPos(4.0F, 0.0F, 0.0F);
             body.addChild(leftleg);
-            leftleg.setTextureOffset(0, 46).addBox(-4.0F, -10.0F, -2.0F, 4.0F, 10.0F, 4.0F, 0.0F, false);
+            leftleg.texOffs(0, 46).addBox(-4.0F, -10.0F, -2.0F, 4.0F, 10.0F, 4.0F, 0.0F, false);
             righthand = new ModelRenderer(this);
-            righthand.setRotationPoint(-1.0F, 0.0F, 0.0F);
+            righthand.setPos(-1.0F, 0.0F, 0.0F);
             body.addChild(righthand);
             setRotationAngle(righthand, 0.0F, 0.0F, 0.0873F);
-            righthand.setTextureOffset(18, 28).addBox(-8.6101F, -17.9734F, -2.0F, 4.0F, 13.0F, 4.0F, 0.0F, false);
+            righthand.texOffs(18, 28).addBox(-8.6101F, -17.9734F, -2.0F, 4.0F, 13.0F, 4.0F, 0.0F, false);
             lefthand = new ModelRenderer(this);
-            lefthand.setRotationPoint(11.0F, -1.0F, 0.0F);
+            lefthand.setPos(11.0F, -1.0F, 0.0F);
             body.addChild(lefthand);
             setRotationAngle(lefthand, 0.0F, 0.0F, -0.0873F);
-            lefthand.setTextureOffset(0, 28).addBox(-5.3937F, -17.8862F, -2.0F, 4.0F, 13.0F, 5.0F, 0.0F, false);
+            lefthand.texOffs(0, 28).addBox(-5.3937F, -17.8862F, -2.0F, 4.0F, 13.0F, 5.0F, 0.0F, false);
         }
 
         @Override
-        public void setRotationAngles(KoolaidMan entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-            this.lefthand.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
-            this.rightleg.rotateAngleX = MathHelper.cos(limbSwing * 1.0F) * 1.0F * limbSwingAmount;
-            this.leftleg.rotateAngleX = MathHelper.cos(limbSwing * 1.0F) * -1.0F * limbSwingAmount;
-            this.righthand.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmount;
-        }
-
-        @Override
-        public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-            body.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        public void setupAnim(KoolaidMan entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+            this.lefthand.xRot = MathHelper.cos(limbSwing * 0.6662F) * limbSwingAmount;
+            this.rightleg.xRot = MathHelper.cos(limbSwing * 1.0F) * 1.0F * limbSwingAmount;
+            this.leftleg.xRot = MathHelper.cos(limbSwing * 1.0F) * -1.0F * limbSwingAmount;
+            this.righthand.xRot = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * limbSwingAmount;
         }
 
         public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-            modelRenderer.rotateAngleX = x;
-            modelRenderer.rotateAngleY = y;
-            modelRenderer.rotateAngleZ = z;
+            modelRenderer.xRot = x;
+            modelRenderer.yRot = y;
+            modelRenderer.zRot = z;
+        }
+
+        @Override
+        public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+            body.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
 
@@ -208,7 +199,7 @@ public class KoolaidMan extends MonsterEntity {
         }
 
         @Override
-        public ResourceLocation getEntityTexture(KoolaidMan entity) {
+        public ResourceLocation getTextureLocation(KoolaidMan entity) {
             return TEXTURE;
         }
     }

@@ -20,12 +20,12 @@ public class BlenderTileRenderer extends TileEntityRenderer<BlenderTile> {
 
 	@Override
 	public void render(BlenderTile tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		matrixStack.push(); // push the current transformation matrix + normals matrix
+		matrixStack.pushPose(); // push the current transformation matrix + normals matrix
 
 		model.askThings(buffer, tileEntity);
-		IVertexBuilder woodBuffer = buffer.getBuffer(model.getRenderType(WOOD_TEX));
-		model.render(matrixStack, woodBuffer, combinedLight, combinedOverlay, 1, 1, 1, 1);
-		matrixStack.pop();
+		IVertexBuilder woodBuffer = buffer.getBuffer(model.renderType(WOOD_TEX));
+		model.renderToBuffer(matrixStack, woodBuffer, combinedLight, combinedOverlay, 1, 1, 1, 1);
+		matrixStack.popPose();
 	}
 
 

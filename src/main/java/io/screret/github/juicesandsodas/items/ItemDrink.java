@@ -29,6 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DeferredWorkQueue;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -43,11 +44,11 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
         this.color = color;
         if(shader != null){
             if(shader.toString().equals("minecraft:shaders/post/invert.json")){
-                shaderEntity = new EndermanEntity(EntityType.ENDERMAN, Minecraft.getInstance().world);
+                shaderEntity = new EndermanEntity(EntityType.ENDERMAN, Minecraft.getInstance().level);
             } else if(shader.toString().equals("minecraft:shaders/post/spider.json")){
-                shaderEntity = new SpiderEntity(EntityType.SPIDER, Minecraft.getInstance().world);
+                shaderEntity = new SpiderEntity(EntityType.SPIDER, Minecraft.getInstance().level);
             } else if(shader.toString().equals("minecraft:shaders/post/creeper.json")){
-                shaderEntity = new CreeperEntity(EntityType.CREEPER, Minecraft.getInstance().world);
+                shaderEntity = new CreeperEntity(EntityType.CREEPER, Minecraft.getInstance().level);
             }
         }
     }
@@ -62,7 +63,7 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 
     }
 
@@ -76,41 +77,41 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        return DrinkHelper.startDrinking(worldIn, playerIn, handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        return DrinkHelper.useDrink(worldIn, playerIn, handIn);
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         PlayerEntity playerentity = entityLiving instanceof PlayerEntity ? (PlayerEntity)entityLiving : null;
         if (playerentity instanceof ServerPlayerEntity) {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerentity, stack);
         }
 
-        if (!worldIn.isRemote) {
-            for(EffectInstance effectinstance : PotionUtils.getEffectsFromStack(stack)) {
-                if (effectinstance.getPotion().isInstant()) {
-                    effectinstance.getPotion().affectEntity(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
+        if (worldIn.isClientSide) {
+            for(EffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
+                if (effectinstance.getEffect().isInstantenous()) {
+                    effectinstance.getEffect().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
                 } else {
-                    entityLiving.addPotionEffect(new EffectInstance(effectinstance));
+                    entityLiving.addEffect(new EffectInstance(effectinstance));
                 }
             }
         }
 
         if (playerentity != null) {
-            playerentity.addStat(Stats.ITEM_USED.get(this));
-            if (!playerentity.abilities.isCreativeMode) {
+            playerentity.awardStat(Stats.ITEM_USED.get(this));
+            if (!playerentity.isCreative()) {
                 stack.shrink(1);
             }
         }
 
-        if (playerentity == null || !playerentity.abilities.isCreativeMode) {
+        if (playerentity == null || !playerentity.isCreative()) {
             if (stack.isEmpty()) {
                 return new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get());
             }
 
             if (playerentity != null) {
-                playerentity.inventory.addItemStackToInventory(new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get()));
+                playerentity.inventory.add(new ItemStack(Registration.EMPTY_JUICE_BOTTLE.get()));
             }
         }
 
@@ -122,7 +123,7 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.DRINK;
     }
 
@@ -133,7 +134,7 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return false;
     }
 
@@ -144,13 +145,13 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
     }
 
     public void loadCustomShader() {
-        if (Minecraft.getInstance().world.isRemote) {
+        if (Minecraft.getInstance().level != null) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
-            Minecraft.getInstance().deferTask(() -> {
+            DeferredWorkQueue.runLater(() -> {
                 if (shaderEntity != null) {
-                    renderer.loadEntityShader(shaderEntity);
+                    renderer.checkEntityPostEffect(shaderEntity);
                 } else if (shader != null) {
-                    renderer.loadShader(shader);
+                    renderer.loadEffect(shader);
                 }
             });
         }

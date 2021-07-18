@@ -94,8 +94,8 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT parentNBTTagCompound) {
-        super.write(parentNBTTagCompound); // The super call is required to save and load the tileEntity's location
+    public CompoundNBT save(CompoundNBT parentNBTTagCompound) {
+        super.save(parentNBTTagCompound); // The super call is required to save and load the tileEntity's location
         parentNBTTagCompound.putInt("juicesandsodas:blendTime", COOK_TIME);
         parentNBTTagCompound.putInt("juicesandsodas:blendTimeTotal", COOK_TIME_TOTAL);
         parentNBTTagCompound.put("juicesandsodas:inputslot", inputSlot.serializeNBT());
@@ -107,8 +107,8 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     // This is where you load the data that you saved in write
     @Override
-    public void read(BlockState blockState, CompoundNBT parentNBTTagCompound) {
-        super.read(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
+    public void load(BlockState blockState, CompoundNBT parentNBTTagCompound) {
+        super.load(blockState, parentNBTTagCompound); // The super call is required to save and load the tiles location
         COOK_TIME =  parentNBTTagCompound.getInt("juicesandsodas:blendTime");
         COOK_TIME_TOTAL = parentNBTTagCompound.getInt("juicesandsodas:blendTimeTotal");
         inputSlot.deserializeNBT(parentNBTTagCompound.getCompound("juicesandsodas:inputslot"));
@@ -124,10 +124,10 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     @Override
     public void tick() {
-        if (world.isRemote) return;
+        if (!level.isClientSide) return;
         IRecipe<IInventory> irecipe = getRecipe();
         boolean valid = this.canSmelt(irecipe);
-        if (this.world != null) {
+        if (this.level != null) {
             /*if (isBlending() || !inputSlot.getStackInSlot(0).isEmpty() && !items.get(0).isEmpty()) {
                 if (!this.isBlending() && valid) {
                     this.blenderData.set(RECIPES_USED, this.blenderData.get(COOK_TIME));
@@ -135,7 +135,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             }*/
 
             if (isBlending() || !inputSlot.getStackInSlot(0).isEmpty() && valid) {
-                world.setBlockState(pos, getBlockState().with(BlockStateProperties.POWERED, Boolean.valueOf(false)).with(BlenderBlock.BLENDING, Boolean.valueOf(true)));
+                level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false).setValue(BlenderBlock.BLENDING, true));
                 int cooktime = this.blenderData.get(0) + 1;
                 this.blenderData.set(0, cooktime);
                 if (this.blenderData.get(0) >= this.blenderData.get(2)) {
@@ -148,7 +148,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         }/* else if (!this.isBlending()) {
             this.blenderData.set(COOK_TIME, MathHelper.clamp(this.blenderData.get(COOK_TIME) - 2, 0, this.blenderData.get(COOK_TIME_TOTAL)));
         }*/
-        this.markDirty();
+        this.setChanged();
     }
 
     private void smeltItem(@Nullable IRecipe<IInventory> recipe) {
@@ -157,7 +157,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             ItemStack input2 = inputSlot.getStackInSlot(1);
             ItemStack input3 = inputSlot.getStackInSlot(2);
             ItemStack smelt = bottleSlot.getStackInSlot(0);
-            ItemStack itemStack1 = recipe.getCraftingResult(recipeWrapper);
+            ItemStack itemStack1 = recipe.assemble(recipeWrapper);
             if (smelt.isEmpty()) {
                 return;
             } else {
@@ -170,7 +170,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
                 } else outputSlot.setStackInSlot(0, itemStack1.copy());
             }
 
-            if (this.world != null && !this.world.isRemote) {
+            if (this.level != null && this.level.isClientSide) {
                 this.setRecipeUsed(recipe);
             }
 
@@ -178,7 +178,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             input2.shrink(1);
             input3.shrink(1);
             smelt.shrink(1);
-            world.setBlockState(pos, getBlockState().with(BlockStateProperties.POWERED, Boolean.valueOf(false)).with(BlenderBlock.BLENDING, Boolean.valueOf(false)));
+            level.(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false).setValue(BlenderBlock.BLENDING, false));
         }
     }
 
@@ -189,11 +189,11 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
     protected boolean canSmelt(IRecipe<?> recipe) {
         if (!inputSlot.getStackInSlot(0).isEmpty() && !inputSlot.getStackInSlot(1).isEmpty() && !inputSlot.getStackInSlot(2).isEmpty() && !bottleSlot.getStackInSlot(0).isEmpty()) {
             if(recipe != null){
-                ItemStack recipeOutput = recipe.getRecipeOutput();
+                ItemStack recipeOutput = recipe.getResultItem();
                 if (!recipeOutput.isEmpty()) {
                     ItemStack output = outputSlot.getStackInSlot(0);
                     if (output.isEmpty()) return true;
-                    else if (!output.isItemEqual(recipeOutput)) return false;
+                    else if (!output.sameItem(recipeOutput)) return false;
                     else return output.getCount() + recipeOutput.getCount() <= output.getMaxStackSize();
                 }
             }

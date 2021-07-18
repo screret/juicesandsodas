@@ -97,102 +97,101 @@ public class Registration {
 
     //blocks
     //leaves
-    public static final RegistryObject<Block> LIME_LEAVES = BLOCKS.register("lime_leaves", () -> new FruitLeavesBlock(() -> FruitType.LIME, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
-    public static final RegistryObject<Block> ORANGE_LEAVES = BLOCKS.register("orange_leaves", () -> new FruitLeavesBlock(() -> FruitType.ORANGE, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
-    public static final RegistryObject<Block> LEMON_LEAVES = BLOCKS.register("lemon_leaves", () -> new FruitLeavesBlock(() -> FruitType.LEMON, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
-    public static final RegistryObject<Block> GRAPEFRUIT_LEAVES = BLOCKS.register("grapefruit_leaves", () -> new FruitLeavesBlock(() -> FruitType.GRAPEFRUIT, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
-    public static final RegistryObject<Block> APPLE_LEAVES = BLOCKS.register("apple_leaves", () -> new FruitLeavesBlock(() -> FruitType.APPLE, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
-    public static final RegistryObject<Block> MANDARIN_LEAVES = BLOCKS.register("mandarin_leaves", () -> new FruitLeavesBlock(() -> FruitType.MANDARIN, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
-    public static final RegistryObject<Block> CHERRY_LEAVES = BLOCKS.register("cherry_leaves", () -> new FruitLeavesBlock(() -> FruitTypeExtension.CHERRY, AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> LIME_LEAVES = BLOCKS.register("lime_leaves", () -> new FruitLeavesBlock(() -> FruitType.LIME, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> ORANGE_LEAVES = BLOCKS.register("orange_leaves", () -> new FruitLeavesBlock(() -> FruitType.ORANGE, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> LEMON_LEAVES = BLOCKS.register("lemon_leaves", () -> new FruitLeavesBlock(() -> FruitType.LEMON, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> GRAPEFRUIT_LEAVES = BLOCKS.register("grapefruit_leaves", () -> new FruitLeavesBlock(() -> FruitType.GRAPEFRUIT, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> APPLE_LEAVES = BLOCKS.register("apple_leaves", () -> new FruitLeavesBlock(() -> FruitType.APPLE, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> MANDARIN_LEAVES = BLOCKS.register("mandarin_leaves", () -> new FruitLeavesBlock(() -> FruitType.MANDARIN, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> CHERRY_LEAVES = BLOCKS.register("cherry_leaves", () -> new FruitLeavesBlock(() -> FruitTypeExtension.CHERRY, AbstractBlock.Properties.copy(Blocks.OAK_LEAVES)));
     //saplings
-    public static final RegistryObject<Block> MANDARIN_SAPLING = BLOCKS.register("mandarin_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.MANDARIN), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> LIME_SAPLING = BLOCKS.register("lime_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.LIME), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> ORANGE_SAPLING = BLOCKS.register("orange_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.ORANGE), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> LEMON_SAPLING = BLOCKS.register("lemon_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.LEMON), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> GRAPEFRUIT_SAPLING = BLOCKS.register("grapefruit_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.GRAPEFRUIT), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> APPLE_SAPLING = BLOCKS.register("apple_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.APPLE), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> CHERRY_SAPLING = BLOCKS.register("cherry_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitTypeExtension.CHERRY), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> MANDARIN_SAPLING = BLOCKS.register("mandarin_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.MANDARIN), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> LIME_SAPLING = BLOCKS.register("lime_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.LIME), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> ORANGE_SAPLING = BLOCKS.register("orange_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.ORANGE), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> LEMON_SAPLING = BLOCKS.register("lemon_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.LEMON), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> GRAPEFRUIT_SAPLING = BLOCKS.register("grapefruit_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.GRAPEFRUIT), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> APPLE_SAPLING = BLOCKS.register("apple_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitType.APPLE), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> CHERRY_SAPLING = BLOCKS.register("cherry_sapling", () -> new SaplingBlock(new FruitTree(() -> FruitTypeExtension.CHERRY), AbstractBlock.Properties.copy(Blocks.OAK_SAPLING)));
 
     //potted plants
-    public static final RegistryObject<Block> POTTED_MANDARIN = BLOCKS.register("potted_mandarin", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, MANDARIN_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_LIME = BLOCKS.register("potted_lime", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LIME_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_ORANGE = BLOCKS.register("potted_orange", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, ORANGE_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_LEMON = BLOCKS.register("potted_lemon", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LEMON_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_GRAPEFRUIT = BLOCKS.register("potted_grapefruit", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GRAPEFRUIT_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_APPLE = BLOCKS.register("potted_apple", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CHERRY_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
-    public static final RegistryObject<Block> POTTED_CHERRY = BLOCKS.register("potted_cherry", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, APPLE_SAPLING, AbstractBlock.Properties.from(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_MANDARIN = BLOCKS.register("potted_mandarin", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, MANDARIN_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_LIME = BLOCKS.register("potted_lime", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LIME_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_ORANGE = BLOCKS.register("potted_orange", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, ORANGE_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_LEMON = BLOCKS.register("potted_lemon", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, LEMON_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_GRAPEFRUIT = BLOCKS.register("potted_grapefruit", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, GRAPEFRUIT_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_APPLE = BLOCKS.register("potted_apple", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, CHERRY_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
+    public static final RegistryObject<Block> POTTED_CHERRY = BLOCKS.register("potted_cherry", () -> new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, APPLE_SAPLING, AbstractBlock.Properties.copy(Blocks.POTTED_JUNGLE_SAPLING)));
 
-    public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", () -> new BlenderBlock(AbstractBlock.Properties.create(Material.WOOD).notSolid()));
+    public static final RegistryObject<Block> BLENDER = BLOCKS.register("blender", () -> new BlenderBlock(AbstractBlock.Properties.of(Material.WOOD).air()));
 
     public static Set<Block> ALL_LEAVES;
 
 
     //tile entities
-    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.create(BlenderTile::new, BLENDER.get()).build(null));
+    public static final RegistryObject<TileEntityType<BlenderTile>> BLENDER_TILE = TILES.register("blender", () -> TileEntityType.Builder.of(BlenderTile::new, BLENDER.get()).build(null));
     public static final RegistryObject<TileEntityType<FruitTreeTile>> FRUIT_TREE = TILES.register("fruit_tree", () -> new TileEntityType<>(FruitTreeTile::new, ALL_LEAVES, null));
 
 
 
     //Items
     //drinks
-    public static final RegistryObject<Item> KOOL_AID = ITEMS.register("kool_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(0, 161, 175), null, null));
-    public static final RegistryObject<Item> MAGIC_AID = ITEMS.register("magic_aid", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(59, 255, 203), new EffectInstance[]{new EffectInstance(Effect.get(9)), new EffectInstance(Effect.get(20))}, new ResourceLocation("minecraft:shaders/post/wobble.json")));
-    public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
-    public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
-    public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
-    public static final RegistryObject<Item> CHERRY_JUICE = ITEMS.register("cherry_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
-    public static final RegistryObject<Item> ORANGE_JUICE = ITEMS.register("orange_juice", () -> new ItemDrink(new Item.Properties().group(Base.MOD_TAB).maxStackSize(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> KOOL_AID = ITEMS.register("kool_aid", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(0, 161, 175), null, null));
+    public static final RegistryObject<Item> MAGIC_AID = ITEMS.register("magic_aid", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(59, 255, 203), new EffectInstance[]{new EffectInstance(Effect.byId(9)), new EffectInstance(Effect.byId(20))}, new ResourceLocation("minecraft:shaders/post/wobble.json")));
+    public static final RegistryObject<Item> LEMONADE = ITEMS.register("lemonade", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> GRAPE_JUICE = ITEMS.register("grape_juice", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> LIME_SODA = ITEMS.register("lime_soda", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> CHERRY_JUICE = ITEMS.register("cherry_juice", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(222, 226, 191), null, null));
+    public static final RegistryObject<Item> ORANGE_JUICE = ITEMS.register("orange_juice", () -> new ItemDrink(new Item.Properties().tab(Base.MOD_TAB).stacksTo(1), new Color(222, 226, 191), null, null));
     //empty bottles
-    public static final RegistryObject<Item> EMPTY_JUICE_BOTTLE = ITEMS.register("empty_juice_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> EMPTY_BOTTLE = ITEMS.register("empty_bottle", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> EMPTY_JUICE_BOTTLE = ITEMS.register("empty_juice_bottle", () -> new Item(new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> EMPTY_BOTTLE = ITEMS.register("empty_bottle", () -> new Item(new Item.Properties().tab(Base.MOD_TAB)));
     //normies
-    public static final RegistryObject<Item> JELLO = ITEMS.register("jello", () -> new Item(new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> JELLO = ITEMS.register("jello", () -> new Item(new Item.Properties().tab(Base.MOD_TAB)));
 
     //fruits
-    public static final RegistryObject<Item> LEMON = ITEMS.register("lemon", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.LEMON)));
-    public static final RegistryObject<Item> MANDARIN = ITEMS.register("mandarin", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.MANDARIN)));
-    public static final RegistryObject<Item> LIME = ITEMS.register("lime", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.LIME)));
-    public static final RegistryObject<Item> ORANGE = ITEMS.register("orange", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.ORANGE)));
-    public static final RegistryObject<Item> GRAPEFRUIT = ITEMS.register("grapefruit", () -> new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.GRAPEFRUIT)));
-    public static final RegistryObject<Item> CHERRY = ITEMS.register("cherry", () ->  new Item(new Item.Properties().group(Base.MOD_TAB).food(Foods.CHERRY)));
+    public static final RegistryObject<Item> LEMON = ITEMS.register("lemon", () -> new Item(new Item.Properties().tab(Base.MOD_TAB).food(Foods.LEMON)));
+    public static final RegistryObject<Item> MANDARIN = ITEMS.register("mandarin", () -> new Item(new Item.Properties().tab(Base.MOD_TAB).food(Foods.MANDARIN)));
+    public static final RegistryObject<Item> LIME = ITEMS.register("lime", () -> new Item(new Item.Properties().tab(Base.MOD_TAB).food(Foods.LIME)));
+    public static final RegistryObject<Item> ORANGE = ITEMS.register("orange", () -> new Item(new Item.Properties().tab(Base.MOD_TAB).food(Foods.ORANGE)));
+    public static final RegistryObject<Item> GRAPEFRUIT = ITEMS.register("grapefruit", () -> new Item(new Item.Properties().tab(Base.MOD_TAB).food(Foods.GRAPEFRUIT)));
+    public static final RegistryObject<Item> CHERRY = ITEMS.register("cherry", () ->  new Item(new Item.Properties().tab(Base.MOD_TAB).food(Foods.CHERRY)));
 
     //armor
-    public static final RegistryObject<Item> JELLO_HELMET = ITEMS.register("jello_helmet", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.HEAD, new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> JELLO_CHESTPLATE = ITEMS.register("jello_chestplate", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.CHEST, new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> JELLO_LEGGINGS = ITEMS.register("jello_leggings", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.LEGS, new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> JELLO_BOOTS = ITEMS.register("jello_boots", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.FEET, new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> JELLO_HELMET = ITEMS.register("jello_helmet", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.HEAD, new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> JELLO_CHESTPLATE = ITEMS.register("jello_chestplate", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.CHEST, new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> JELLO_LEGGINGS = ITEMS.register("jello_leggings", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.LEGS, new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> JELLO_BOOTS = ITEMS.register("jello_boots", () -> new ModArmor(ModMaterials.JELLO_ARMOR, EquipmentSlotType.FEET, new Item.Properties().tab(Base.MOD_TAB)));
     //BlockItems
     //leaves
-    public static final RegistryObject<Item> LEMON_LEAVES_ITEM = ITEMS.register("lemon_leaves", () -> new BlockItem(Registration.LEMON_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> CHERRY_LEAVES_ITEM = ITEMS.register("cherry_leaves", () -> new BlockItem(Registration.CHERRY_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> ORANGE_LEAVES_ITEM = ITEMS.register("orange_leaves", () -> new BlockItem(Registration.ORANGE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> GRAPEFRUIT_LEAVES_ITEM = ITEMS.register("grapefruit_leaves", () -> new BlockItem(Registration.GRAPEFRUIT_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> APPLE_LEAVES_ITEM = ITEMS.register("apple_leaves", () -> new BlockItem(Registration.APPLE_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ITEMS.register("mandarin_leaves", () -> new BlockItem(Registration.MANDARIN_LEAVES.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> LEMON_LEAVES_ITEM = ITEMS.register("lemon_leaves", () -> new BlockItem(Registration.LEMON_LEAVES.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CHERRY_LEAVES_ITEM = ITEMS.register("cherry_leaves", () -> new BlockItem(Registration.CHERRY_LEAVES.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> ORANGE_LEAVES_ITEM = ITEMS.register("orange_leaves", () -> new BlockItem(Registration.ORANGE_LEAVES.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> GRAPEFRUIT_LEAVES_ITEM = ITEMS.register("grapefruit_leaves", () -> new BlockItem(Registration.GRAPEFRUIT_LEAVES.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> APPLE_LEAVES_ITEM = ITEMS.register("apple_leaves", () -> new BlockItem(Registration.APPLE_LEAVES.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ITEMS.register("mandarin_leaves", () -> new BlockItem(Registration.MANDARIN_LEAVES.get(), new Item.Properties().tab(Base.MOD_TAB)));
     //saplings
-    public static final RegistryObject<Item> LEMON_SAPLING_ITEM = ITEMS.register("lemon_sapling", () -> new BlockItem(Registration.LEMON_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> MANDARIN_SAPLING_ITEM = ITEMS.register("mandarin_sapling", () -> new BlockItem(Registration.MANDARIN_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> LIME_SAPLING_ITEM = ITEMS.register("lime_sapling", () -> new BlockItem(Registration.LIME_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> ORANGE_SAPLING_ITEM = ITEMS.register("orange_sapling", () -> new BlockItem(Registration.ORANGE_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> GRAPEFRUIT_SAPLING_ITEM = ITEMS.register("grapefruit_sapling", () -> new BlockItem(Registration.GRAPEFRUIT_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
-    public static final RegistryObject<Item> CHERRY_SAPLING_ITEM = ITEMS.register("cherry_sapling", () -> new BlockItem(Registration.CHERRY_SAPLING.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> LEMON_SAPLING_ITEM = ITEMS.register("lemon_sapling", () -> new BlockItem(Registration.LEMON_SAPLING.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> MANDARIN_SAPLING_ITEM = ITEMS.register("mandarin_sapling", () -> new BlockItem(Registration.MANDARIN_SAPLING.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> ORANGE_SAPLING_ITEM = ITEMS.register("orange_sapling", () -> new BlockItem(Registration.ORANGE_SAPLING.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> GRAPEFRUIT_SAPLING_ITEM = ITEMS.register("grapefruit_sapling", () -> new BlockItem(Registration.GRAPEFRUIT_SAPLING.get(), new Item.Properties().tab(Base.MOD_TAB)));
+    public static final RegistryObject<Item> CHERRY_SAPLING_ITEM = ITEMS.register("cherry_sapling", () -> new BlockItem(Registration.CHERRY_SAPLING.get(), new Item.Properties().tab(Base.MOD_TAB)));
     //others
-    public static final RegistryObject<Item> BLENDER_ITEM = ITEMS.register("blender", () -> new BlockItem(Registration.BLENDER.get(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> BLENDER_ITEM = ITEMS.register("blender", () -> new BlockItem(Registration.BLENDER.get(), new Item.Properties().tab(Base.MOD_TAB)));
 
 
     //entities
     //bosses
-    public static final RegistryObject<EntityType<KoolaidMan>> KOOLAIDMAN = ENTITIES.register("koolaid_man", () -> EntityType.Builder.create(KoolaidMan::new, EntityClassification.MONSTER).size(1f, 1.5f).setTrackingRange(64).build("koolaid_man"));
+    public static final RegistryObject<EntityType<KoolaidMan>> KOOLAIDMAN = ENTITIES.register("koolaid_man", () -> EntityType.Builder.of(KoolaidMan::new, EntityClassification.MONSTER).sized(1f, 1.5f).setTrackingRange(64).build("koolaid_man"));
 
     //mob eggs
-    public static final RegistryObject<Item> KOOLAIDMAN_EGG = ITEMS.register("koolaid_man_egg", () -> new ModdedSpawnEggItem(KOOLAIDMAN, Color.red.getRGB(), Color.white.getRGB(), new Item.Properties().group(Base.MOD_TAB)));
+    public static final RegistryObject<Item> KOOLAIDMAN_EGG = ITEMS.register("koolaid_man_egg", () -> new ModdedSpawnEggItem(KOOLAIDMAN, Color.red.getRGB(), Color.white.getRGB(), new Item.Properties().tab(Base.MOD_TAB)));
 
 
     //containers
     public static final RegistryObject<ContainerType<BlenderBlockContainer>> BLENDER_CONT = CONTAINERS.register("blender", () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
-        World world = inv.player.getEntityWorld();
-        BlenderTile tile = (BlenderTile) world.getTileEntity(pos);
+        World world = inv.player.getCommandSenderWorld();
+        BlenderTile tile = (BlenderTile) world.getBlockEntity(pos);
         return new BlenderBlockContainer(windowId, inv, new CombinedInvWrapper(tile.inputSlot, tile.bottleSlot, tile.outputSlot), tile);
     }));
 
@@ -203,12 +202,12 @@ public class Registration {
 
     //foods
     public static final class Foods {
-        public static final Food MANDARIN = new Food.Builder().hunger(3).saturation(0.3f).build();
-        public static final Food LIME = new Food.Builder().hunger(3).saturation(0.3f).build();
-        public static final Food ORANGE = new Food.Builder().hunger(3).saturation(0.5f).build();
-        public static final Food LEMON = new Food.Builder().hunger(2).saturation(1f).fastToEat().build();
-        public static final Food GRAPEFRUIT = new Food.Builder().hunger(6).saturation(0.4f).build();
-        public static final Food CHERRY = new Food.Builder().hunger(6).saturation(0.1f).build();
+        public static final Food MANDARIN = new Food.Builder().nutrition(3).saturationMod(0.3f).build();
+        public static final Food LIME = new Food.Builder().nutrition(3).saturationMod(0.3f).build();
+        public static final Food ORANGE = new Food.Builder().nutrition(3).saturationMod(0.5f).build();
+        public static final Food LEMON = new Food.Builder().nutrition(2).saturationMod(1f).fast().build();
+        public static final Food GRAPEFRUIT = new Food.Builder().nutrition(6).saturationMod(0.4f).build();
+        public static final Food CHERRY = new Food.Builder().nutrition(6).saturationMod(0.1f).build();
     }
 
 
@@ -221,16 +220,17 @@ public class Registration {
     public static ConfiguredFeature<?, ?>[] allFeatures;
 
     public static void makeFeature(String id, int count, float chance, int index) {
-        ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.withConfiguration(new SingleRandomFeature(trees)).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(count, chance, 1)));
+        ConfiguredFeature<?, ?> cf = Feature.SIMPLE_RANDOM_SELECTOR.configured(new SingleRandomFeature(trees)).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(count, chance, 1)));
         net.minecraft.util.registry.Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "juicesandsodas:trees_" + id, cf);
         allFeatures[index] = cf;
         if (chance > 0 && cherry != null) {
-            cf = cherry.withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
+            cf = cherry.decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(count, chance / 2, 1)));
             net.minecraft.util.registry.Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "juicesandsodas:cherry_" + id, cf);
             allFeatures[index + 3] = cf;
         }
     }
 
+    @SubscribeEvent
     public static void insertFeatures(BiomeLoadingEvent event) {
         Biome.Climate climate = event.getClimate();
         if (climate.precipitation != Biome.RainType.RAIN) {
@@ -272,18 +272,18 @@ public class Registration {
             } else {
                 decorators = ImmutableList.of(new BeehiveTreeDecorator(0.05F), new CarpetTreeDecorator(carpetProvider));
             }
-            leavesProvider = new WeightedBlockStateProvider().addWeightedBlockstate(type.leaves.getDefaultState(), 2).addWeightedBlockstate(type.leaves.getDefaultState().with(FruitLeavesBlock.AGE, 2), 1);
+            leavesProvider = new WeightedBlockStateProvider().add(type.leaves.defaultBlockState(), 2).add(type.leaves.defaultBlockState().setValue(FruitLeavesBlock.AGE, 2), 1);
         } else {
             decorators = ImmutableList.of();
-            leavesProvider = new SimpleBlockStateProvider(type.leaves.getDefaultState());
+            leavesProvider = new SimpleBlockStateProvider(type.leaves.defaultBlockState());
         }
-        return Feature.TREE.withConfiguration(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.getDefaultState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.create(2), FeatureSpread.create(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).setIgnoreVines().setDecorators(decorators).build());
+        return Feature.TREE.configured(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(type.log.defaultBlockState()), leavesProvider, new FruitBlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(4, 2, 0), new TwoLayerFeature(1, 0, 1)).ignoreVines().decorators(decorators).build());
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void handleBlockColor(ColorHandlerEvent.Block event) {
-        BlockState oakLeaves = Blocks.OAK_LEAVES.getDefaultState();
+        BlockState oakLeaves = Blocks.OAK_LEAVES.defaultBlockState();
         BlockColors blockColors = event.getBlockColors();
         blockColors.register((state, world, pos, i) -> {
             if (i == 0) {

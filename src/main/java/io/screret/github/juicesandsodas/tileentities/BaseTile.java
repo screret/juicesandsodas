@@ -1,14 +1,14 @@
 package io.screret.github.juicesandsodas.tileentities;
 
 
-import javax.annotation.Nonnull;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+
+import javax.annotation.Nonnull;
 
 /**
  * Base TileEntity skeleton used by all TileEntity. It contains several standardized
@@ -23,25 +23,25 @@ public abstract class BaseTile extends TileEntity {
 
     @Override
     public final SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, -1, this.writePacketData(new CompoundNBT()));
+        return new SUpdateTileEntityPacket(this.worldPosition, -1, this.writePacketData(new CompoundNBT()));
     }
 
     @Override
     public final void onDataPacket(NetworkManager manager, SUpdateTileEntityPacket packet) {
-        this.readPacketData(packet.getNbtCompound());
+        this.readPacketData(packet.getTag());
     }
 
     // Used for syncing data at the time when the chunk is loaded
     @Nonnull
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.writePacketData(new CompoundNBT());
     }
 
     // Used for syncing data at the time when the chunk is loaded
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        this.read(state, tag);
+        this.deserializeNBT(state, tag);
     }
 
     /**
@@ -63,9 +63,9 @@ public abstract class BaseTile extends TileEntity {
     protected abstract CompoundNBT writePacketData(CompoundNBT data);
 
     protected void refresh() {
-        if (hasWorld() && !world.isRemote) {
-            BlockState state = world.getBlockState(pos);
-            world.markAndNotifyBlock(pos, world.getChunkAt(pos), state, state, 11, 512 /* TODO whats this? */);
+        if (this.hasLevel() && level.isClientSide) {
+            BlockState state = level.getBlockState(getBlockPos());
+            level.markAndNotifyBlock(getBlockPos(), level.getChunkAt(getBlockPos()), state, state, 11, 512 /* TODO whats this? */);
         }
     }
 

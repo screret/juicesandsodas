@@ -26,10 +26,10 @@ public class ModelBlender extends Model {
     public static final ResourceLocation WOOD_TEX = new ResourceLocation("minecraft", "textures/block/oak_planks.png");
 
     public ModelBlender() {
-        super(RenderType::getEntityTranslucent);
+        super(RenderType::entityTranslucent);
 
-        textureWidth = 16;
-        textureHeight = 16;
+        texWidth = 16;
+        texHeight = 16;
 
         final float EXPANSION_AMOUNT = 0;
 
@@ -40,13 +40,13 @@ public class ModelBlender extends Model {
         final Vector3i TOP_SIZE = new Vector3i(10, 1, 10);
 
         staticParts = new ModelRenderer(this);
-        staticParts.addBox(TOP_POS.getX(), TOP_POS.getY(), TOP_POS.getZ(),
+        staticParts.addBox(TOP_POS.x(), TOP_POS.y(), TOP_POS.z(),
                 TOP_SIZE.getX(), TOP_SIZE.getY(), TOP_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        staticParts.addBox(BOTTOM_POS.getX(), BOTTOM_POS.getY(), BOTTOM_POS.getZ(),
+        staticParts.addBox(BOTTOM_POS.x(), BOTTOM_POS.y(), BOTTOM_POS.z(),
                 BOTTOM_SIZE.getX(), BOTTOM_SIZE.getY(), BOTTOM_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        staticParts.setRotationPoint(0, 0, 0);
+        staticParts.setPos(0, 0, 0);
 
 
         final Vector3f NORTH_WINDOW_POS = new Vector3f(4, 1, 3);
@@ -62,54 +62,54 @@ public class ModelBlender extends Model {
         final Vector3i EAST_WINDOW_SIZE = new Vector3i(1, 8, 10);
 
         clearParts = new ModelRenderer(this);
-        clearParts.addBox(NORTH_WINDOW_POS.getX(), NORTH_WINDOW_POS.getY(), NORTH_WINDOW_POS.getZ(),
+        clearParts.addBox(NORTH_WINDOW_POS.x(), NORTH_WINDOW_POS.y(), NORTH_WINDOW_POS.z(),
                 NORTH_WINDOW_SIZE.getX(), NORTH_WINDOW_SIZE.getY(), NORTH_WINDOW_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        clearParts.addBox(SOUTH_WINDOW_POS.getX(), SOUTH_WINDOW_POS.getY(), SOUTH_WINDOW_POS.getZ(),
+        clearParts.addBox(SOUTH_WINDOW_POS.x(), SOUTH_WINDOW_POS.y(), SOUTH_WINDOW_POS.z(),
                 SOUTH_WINDOW_SIZE.getX(), SOUTH_WINDOW_SIZE.getY(), SOUTH_WINDOW_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        clearParts.addBox(WEST_WINDOW_POS.getX(), WEST_WINDOW_POS.getY(), WEST_WINDOW_POS.getZ(),
+        clearParts.addBox(WEST_WINDOW_POS.x(), WEST_WINDOW_POS.y(), WEST_WINDOW_POS.z(),
                 WEST_WINDOW_SIZE.getX(), WEST_WINDOW_SIZE.getY(), WEST_WINDOW_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        clearParts.addBox(EAST_WINDOW_POS.getX(), EAST_WINDOW_POS.getY(), EAST_WINDOW_POS.getZ(),
+        clearParts.addBox(EAST_WINDOW_POS.x(), EAST_WINDOW_POS.y(), EAST_WINDOW_POS.z(),
                 EAST_WINDOW_SIZE.getX(), EAST_WINDOW_SIZE.getY(), EAST_WINDOW_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        clearParts.setRotationPoint(0, 0, 0);
+        clearParts.setPos(0, 0, 0);
 
 
-        final Vector3f ROD_POS = new Vector3f(7, 3, 7);
+        final Vector3f ROD_POS = new Vector3f(-1, 3, -1);
         final Vector3i ROD_SIZE = new Vector3i(2, 9, 2);
 
-        final Vector3f SPIKE_NORTH_POS = new Vector3f(8, 3, 5);
+        final Vector3f SPIKE_NORTH_POS = new Vector3f(0, 3, -3);
         final Vector3i SPIKE_NORTH_SIZE = new Vector3i(1, 1, 1);
 
-        final Vector3f SPIKE_SOUTH_POS = new Vector3f(7, 3, 10);
+        final Vector3f SPIKE_SOUTH_POS = new Vector3f(-1, 3, 2);
         final Vector3i SPIKE_SOUTH_SIZE = new Vector3i(1, 1, 1);
 
-        final Vector3f CONNECTOR_NORTH_POS = new Vector3f(7, 3, 5);
+        final Vector3f CONNECTOR_NORTH_POS = new Vector3f(0, 3, 1);
         final Vector3i CONNECTOR_NORTH_SIZE = new Vector3i(1, 1, 2);
 
-        final Vector3f CONNECTOR_SOUTH_POS = new Vector3f(8, 3, 9);
+        final Vector3f CONNECTOR_SOUTH_POS = new Vector3f(-1, 3, -3);
         final Vector3i CONNECTOR_SOUTH_SIZE = new Vector3i(1, 1, 2);
 
         rotatingParts = new ModelRenderer(this);
-        rotatingParts.addBox(ROD_POS.getX(), ROD_POS.getY(), ROD_POS.getZ(),
+        rotatingParts.addBox(ROD_POS.x(), ROD_POS.y(), ROD_POS.z(),
                 ROD_SIZE.getX(), ROD_SIZE.getY(), ROD_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        rotatingParts.addBox(SPIKE_NORTH_POS.getX(), SPIKE_NORTH_POS.getY(), SPIKE_NORTH_POS.getZ(),
+        rotatingParts.addBox(SPIKE_NORTH_POS.x(), SPIKE_NORTH_POS.y(), SPIKE_NORTH_POS.z(),
                 SPIKE_NORTH_SIZE.getX(), SPIKE_NORTH_SIZE.getY(), SPIKE_NORTH_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        rotatingParts.addBox(SPIKE_SOUTH_POS.getX(), SPIKE_SOUTH_POS.getY(), SPIKE_SOUTH_POS.getZ(),
+        rotatingParts.addBox(SPIKE_SOUTH_POS.x(), SPIKE_SOUTH_POS.y(), SPIKE_SOUTH_POS.z(),
                 SPIKE_SOUTH_SIZE.getX(), SPIKE_SOUTH_SIZE.getY(), SPIKE_SOUTH_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        rotatingParts.addBox(CONNECTOR_NORTH_POS.getX(), CONNECTOR_NORTH_POS.getY(), CONNECTOR_NORTH_POS.getZ(),
+        rotatingParts.addBox(CONNECTOR_NORTH_POS.x(), CONNECTOR_NORTH_POS.y(), CONNECTOR_NORTH_POS.z(),
                 CONNECTOR_NORTH_SIZE.getX(), CONNECTOR_NORTH_SIZE.getY(), CONNECTOR_NORTH_SIZE.getZ(),
                 EXPANSION_AMOUNT);
-        rotatingParts.addBox(CONNECTOR_SOUTH_POS.getX(), CONNECTOR_SOUTH_POS.getY(), CONNECTOR_SOUTH_POS.getZ(),
+        rotatingParts.addBox(CONNECTOR_SOUTH_POS.x(), CONNECTOR_SOUTH_POS.y(), CONNECTOR_SOUTH_POS.z(),
                 CONNECTOR_SOUTH_SIZE.getX(), CONNECTOR_SOUTH_SIZE.getY(), CONNECTOR_SOUTH_SIZE.getZ(),
                 EXPANSION_AMOUNT);
 
-        rotatingParts.setRotationPoint(8.5F, 0, 8.5F);
+        rotatingParts.setPos(8F, 0, 8F);
     }
 
     public void askThings(IRenderTypeBuffer buffer, BlenderTile tile){
@@ -117,17 +117,16 @@ public class ModelBlender extends Model {
         this.tile = tile;
     }
 
-    @Override
-    public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        //if(tile.isBlending()){
-            rotatingParts.rotateAngleY = (float)Math.toRadians(rotationDegrees);
-            rotationDegrees++;
-        //}
-        buffer = typeBuffer.getBuffer(getRenderType(IRON_TEX));
+    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if(tile.isBlending()){
+            rotatingParts.yRot = (float)Math.toRadians(rotationDegrees);
+            rotationDegrees += 2;
+        }
+        buffer = typeBuffer.getBuffer(renderType(IRON_TEX));
         rotatingParts.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        buffer = typeBuffer.getBuffer(getRenderType(WOOD_TEX));
+        buffer = typeBuffer.getBuffer(renderType(WOOD_TEX));
         staticParts.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        buffer = typeBuffer.getBuffer(getRenderType(BROWN_GLASS_TEX));
+        buffer = typeBuffer.getBuffer(renderType(BROWN_GLASS_TEX));
         clearParts.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

@@ -52,11 +52,11 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
         super(properties);
         this.type = type;
-        this.setDefaultState(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
+        this,(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
     }
 
     @Override
-    protected void fillStateContainer(Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(DISTANCE, PERSISTENT, AGE);
     }
 
@@ -190,7 +190,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(PERSISTENT, true);
+        return this.defaultBlockState().with(PERSISTENT, true);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult ray) {
-        if (state.get(AGE) == 3 && worldIn.setBlockState(pos, state.with(AGE, 1))) {
+        if (state.getValue(AGE) == 3 && worldIn.sta(pos, state.with(AGE, 1))) {
             if (!worldIn.isRemote) {
                 ItemStack fruit = new ItemStack(type.get().fruit);
                 if (playerIn instanceof FakePlayer) {
@@ -241,5 +241,20 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             return PathNodeType.OPEN;
         }
         return null;
+    }
+
+    @Override
+    public boolean isValidBonemealTarget(IBlockReader p_176473_1_, BlockPos p_176473_2_, BlockState p_176473_3_, boolean p_176473_4_) {
+        return false;
+    }
+
+    @Override
+    public boolean isBonemealSuccess(World p_180670_1_, Random p_180670_2_, BlockPos p_180670_3_, BlockState p_180670_4_) {
+        return false;
+    }
+
+    @Override
+    public void performBonemeal(ServerWorld p_225535_1_, Random p_225535_2_, BlockPos p_225535_3_, BlockState p_225535_4_) {
+
     }
 }
