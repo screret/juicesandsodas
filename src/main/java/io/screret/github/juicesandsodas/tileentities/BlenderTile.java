@@ -78,7 +78,8 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
         }
 
-        public int size() {
+        @Override
+        public int getCount() {
             return 3;
         }
     };
@@ -178,7 +179,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             input2.shrink(1);
             input3.shrink(1);
             smelt.shrink(1);
-            level.(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false).setValue(BlenderBlock.BLENDING, false));
+            level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(BlockStateProperties.POWERED, false).setValue(BlenderBlock.BLENDING, false));
         }
     }
 
@@ -219,12 +220,12 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         if (input1.isEmpty() && input2.isEmpty() && input3.isEmpty()) {
             return null;
         }
-        if (this.world != null && curRecipe != null && curRecipe.matches(recipeWrapper, world)) {
+        if (this.level != null && curRecipe != null && curRecipe.matches(recipeWrapper, level)) {
             return curRecipe;
         } else {
             BlenderRecipe rec;
-            if (this.world != null) {
-                rec = this.world.getRecipeManager().getRecipe(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.world).orElse(null);
+            if (this.level != null) {
+                rec = this.level.getRecipeManager().getRecipeFor(BlenderRecipeSerializer.BLENDING, recipeWrapper, this.level).orElse(null);
                 if (rec == null) failedMatch = input1;
                 else failedMatch = ItemStack.EMPTY;
                 return curRecipe = rec;
@@ -263,7 +264,7 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
             protected void onContentsChanged(int slot) {
                 // To make sure the TE persists when the chunk is saved later we need to
                 // mark it dirty every time the item handler changes
-                markDirty();
+                setChanged();
             }
 
             @Override

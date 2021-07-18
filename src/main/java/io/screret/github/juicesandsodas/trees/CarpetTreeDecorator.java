@@ -29,12 +29,12 @@ public class CarpetTreeDecorator extends TreeDecorator {
     }
 
     @Override
-    protected TreeDecoratorType<?> getDecoratorType() {
+    protected TreeDecoratorType<?> type() {
         return Registration.CARPET_DECORATOR;
     }
 
     @Override
-    public void func_225576_a_(ISeedReader world, Random rand, List<BlockPos> trunkList, List<BlockPos> foliageList, Set<BlockPos> allBlocks, MutableBoundingBox boundingBox) {
+    public void place(ISeedReader world, Random rand, List<BlockPos> trunkList, List<BlockPos> foliageList, Set<BlockPos> allBlocks, MutableBoundingBox boundingBox) {
         if (foliageList.isEmpty()) {
             return;
         }
@@ -69,19 +69,9 @@ public class CarpetTreeDecorator extends TreeDecorator {
         if (block == Blocks.SNOW || block == Blocks.ICE || block == Blocks.PACKED_ICE || block == Blocks.BARRIER || block == Blocks.HONEY_BLOCK || block == Blocks.SOUL_SAND) {
             return false;
         }
-        if (!Block.isShapeFullBlock().getCollisionShape(world, ground), Direction.UP)) {
+        if (!Block.isFaceFull(groundState.getCollisionShape(world, ground), Direction.UP)) {
             return false;
         }
-        return world.(ground.up(), carpet, flags);
-    }
-
-    @Override
-    protected TreeDecoratorType<?> type() {
-        return null;
-    }
-
-    @Override
-    public void place(ISeedReader p_225576_1_, Random p_225576_2_, List<BlockPos> p_225576_3_, List<BlockPos> p_225576_4_, Set<BlockPos> p_225576_5_, MutableBoundingBox p_225576_6_) {
-
+        return world.setBlock(ground.above(), carpet, flags);
     }
 }

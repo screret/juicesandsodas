@@ -1,14 +1,7 @@
 package io.screret.github.juicesandsodas.util;
 
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,6 +10,11 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
+
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -272,7 +270,7 @@ public class NBTHelper {
     }
 
     //    public NBTHelper setGlobalPos(String key, GlobalPos value) {
-    //        getTagInternal(key).put(getLastNode(key), GlobalPos.field_239645_a_.encodeStart(NBTDynamicOps.INSTANCE, value).getOrThrow(allowPartial, onError));
+    //        getTagInternal(key).put(getLastNode(key), GlobalPos.CODEC.encodeStart(NBTDynamicOps.INSTANCE, value).getOrThrow(allowPartial, onError));
     //        return this;
     //    }
     //
@@ -368,8 +366,8 @@ public class NBTHelper {
         return new byte[0];
     }
 
-    public NBTHelper setUUID(String key, UUID value) {
-        getTagInternal(key).putUniqueId(getLastNode(key), value);
+    public NBTHelper setUUID(String key, INBT value) {
+        getTagInternal(key).put(getLastNode(key), value);
         return this;
     }
 
@@ -379,7 +377,7 @@ public class NBTHelper {
         if (subTag != null) {
             String actualKey = getLastNode(key);
             if (!subTag.contains(actualKey + "Most", NBT.LONG) || !subTag.contains(actualKey + "Least", NBT.LONG)) {
-                return subTag.getUniqueId(actualKey);
+                return subTag.getUUID(actualKey);
             }
         }
         return null;
@@ -409,7 +407,7 @@ public class NBTHelper {
     }
 
     public Set<String> keySet(String key) {
-        return hasTag(key, NBT.COMPOUND) ? getTag(key).keySet() : Collections.EMPTY_SET;
+        return hasTag(key, NBT.COMPOUND) ? getTag(key).getAllKeys() : Collections.EMPTY_SET;
     }
 
     // TODO: remove parent if empty?

@@ -17,9 +17,8 @@ public class FruitTree extends Tree {
     }
 
     @Override
-    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random random, boolean largeHive) {
+    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getConfiguredFeature(Random random, boolean largeHive) {
         FruitType type = typeSupplier.get();
         return Registration.buildTreeFeature(type, true, null);
     }
-
 }

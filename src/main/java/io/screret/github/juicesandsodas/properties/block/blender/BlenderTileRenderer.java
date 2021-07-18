@@ -40,7 +40,7 @@ public class BlenderTileRenderer extends TileEntityRenderer<BlenderTile> {
 		if (block instanceof BlenderBlock) {
 			matrixStackIn.push();
 			TileEntityMerger.ICallbackWrapper<? extends BlenderTile> icallbackwrapper;
-			icallbackwrapper = TileEntityMerger.ICallback::func_225537_b_;
+			icallbackwrapper = TileEntityMerger.ICallback::acceptNone;
 
 			float f1 = icallbackwrapper.apply(BlenderBlock.getLidRotationCallback(tileEntityIn)).get(partialTicks);
 			f1 -= 1.0F;

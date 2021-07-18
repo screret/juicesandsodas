@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public enum ModArmorMaterial implements IArmorMaterial {
 
-                    JELLO(Base.MODID + ":jello", 50, new int[]{10, 20, 30, 10}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 10.0F, 10.0F, () -> { return Ingredient.fromItems(Registration.JELLO.get()); });
+                    JELLO(Base.MODID + ":jello", 50, new int[]{10, 20, 30, 10}, 10, SoundEvents.ARMOR_EQUIP_GENERIC, 10.0F, 10.0F, () -> { return Ingredient.of(Registration.JELLO.get()); });
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private final String name;
@@ -37,28 +37,28 @@ public enum ModArmorMaterial implements IArmorMaterial {
     }
 
     @Override
-    public int getDurability(EquipmentSlotType slotIn) {
+    public int getDurabilityForSlot(EquipmentSlotType slotIn) {
         return 1;
     }
 
     @Override
-    public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+    public int getDefenseForSlot(EquipmentSlotType slotIn) {
         return 20;
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return 10;
     }
 
     @Override
-    public SoundEvent getSoundEvent() {
-        return SoundEvents.ITEM_ARMOR_EQUIP_GENERIC;
+    public SoundEvent getEquipSound() {
+        return SoundEvents.ARMOR_EQUIP_GENERIC;
     }
 
     @Override
-    public Ingredient getRepairMaterial() {
-        return Ingredient.fromItems(Registration.JELLO.get());
+    public Ingredient getRepairIngredient() {
+        return Ingredient.of(Registration.JELLO.get());
     }
 
     @Override

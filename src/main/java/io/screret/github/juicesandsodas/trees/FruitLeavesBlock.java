@@ -44,7 +44,7 @@ import java.util.function.Supplier;
 
 public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
     public final Supplier<FruitType> type;
 
@@ -52,7 +52,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     public FruitLeavesBlock(Supplier<FruitType> type, Properties properties) {
         super(properties);
         this.type = type;
-        this,(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, false).with(AGE, 1));
+        this.defaultBlockState().setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(AGE, 1);
     }
 
     @Override
@@ -61,36 +61,36 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     }
 
     @Override
-    public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return canGrow(state) || state.get(AGE) == 1;
+    public boolean isBonemealSuccess(World p_180670_1_, Random p_180670_2_, BlockPos p_180670_3_, BlockState state) {
+        return canGrow(state) || state.getValue(AGE) == 1;
     }
 
     @Override
-    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
-        return state.get(AGE) != 3;
+    public boolean isValidBonemealTarget(IBlockReader p_176473_1_, BlockPos p_176473_2_, BlockState state, boolean p_176473_4_) {
+        return state.getValue(AGE) != 3;
     }
 
     @Override
-    public void grow(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
-        if (state.get(AGE) == 3) {
-            if (!world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS))
+    public void performBonemeal(ServerWorld world, Random rand, BlockPos pos, BlockState state) {
+        if (state.getValue(AGE) == 3) {
+            if (!world.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS))
                 return;
             switch (FruitsConfig.getDropMode(world)) {
             case INDEPENDENT:
-                world.setBlockState(pos, onPassiveGathered(world, pos, state));
-                spawnAsEntity(world, pos, new ItemStack(type.get().fruit));
+                world.setBlockAndUpdate(pos, onPassiveGathered(world, pos, state));
+                popResource(world, pos, new ItemStack(type.get().fruit));
                 break;
             case ONE_BY_ONE:
                 FruitTreeTile tile = findTile(world, pos, state);
                 if (tile != null && tile.canDrop()) {
                     ItemStack stack = new ItemStack(type.get().fruit);
                     if (!stack.isEmpty() && !world.restoringBlockSnapshots) { // do not drop items while restoring blockstates, prevents item dupe
-                        double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
-                        double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
-                        double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
+                        double d0 = world.random.nextFloat() * 0.5F + 0.25D;
+                        double d1 = world.random.nextFloat() * 0.5F + 0.25D;
+                        double d2 = world.random.nextFloat() * 0.5F + 0.25D;
                         ItemEntity itementity = new ItemEntity(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, stack);
-                        itementity.setDefaultPickupDelay();
-                        if (world.addEntity(itementity))
+                        itementity.setDefaultPickUpDelay();
+                        if (world.addFreshEntity(itementity))
                             tile.setOnlyItem(itementity);
                     }
                 }
@@ -99,20 +99,20 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
                 break;
             }
         } else {
-            world.setBlockState(pos, state.cycleValue(AGE));
+            world.setBlockAndUpdate(pos, state.cycle(AGE));
         }
     }
 
     @Nullable
     public FruitTreeTile findTile(ServerWorld world, BlockPos pos, BlockState state) {
         if (state.hasTileEntity()) {
-            TileEntity tile = world.getTileEntity(pos);
+            TileEntity tile = world.getBlockEntity(pos);
             if (tile instanceof FruitTreeTile) {
                 return (FruitTreeTile) tile;
             }
         } else {
-            for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY(), pos.getZ() - 2, pos.getX() + 2, pos.getY() + 3, pos.getZ() + 2)) {
-                TileEntity tile = world.getTileEntity(pos2);
+            for (BlockPos pos2 : BlockPos.betweenClosed(pos.getX() - 2, pos.getY(), pos.getZ() - 2, pos.getX() + 2, pos.getY() + 3, pos.getZ() + 2)) {
+                TileEntity tile = world.getBlockEntity(pos2);
                 if (tile instanceof FruitTreeTile) {
                     return (FruitTreeTile) tile;
                 }
@@ -126,16 +126,16 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
         FruitTreeTile tile = findTile(world, pos, state);
         if (tile != null)
             death = tile.updateDeathRate();
-        if (death >= 50 || !state.hasTileEntity() && world.rand.nextInt(50) < death) {
-            return state.with(AGE, 0);
+        if (death >= 50 || !state.hasTileEntity() && world.random.nextInt(50) < death) {
+            return state.setValue(AGE, 0);
         } else {
-            return state.with(AGE, 1);
+            return state.setValue(AGE, 1);
         }
     }
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return state.get(PERSISTENT) && state.get(DISTANCE) == 1;
+        return state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 1;
     }
 
     @Override
@@ -146,14 +146,14 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
         if (shouldDecay(state)) {
-            spawnDrops(state, world, pos);
+            dropResources(state, world, pos);
             world.removeBlock(pos, false);
-        } else if (canGrow(state) && world.isAreaLoaded(pos, 1) && world.getLight(pos.up()) >= 9) {
+            } else if (canGrow(state) && world.isAreaLoaded(pos, 1) && world.getLightEmission(pos.above()) >= 9) {
 
             boolean def = rand.nextInt(100) > (99 - FruitsConfig.growingSpeed);
 
             if (ForgeHooks.onCropsGrowPre(world, pos, state, def)) {
-                grow(world, rand, pos, state);
+                performBonemeal(world, rand, pos, state);
                 ForgeHooks.onCropsGrowPost(world, pos, state);
             }
         }
@@ -161,53 +161,53 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     public void tick(BlockState state, ServerWorld world, BlockPos pos, Random rand) {
-        if (state.get(PERSISTENT) && state.get(DISTANCE) != 1) {
-            state = state.with(PERSISTENT, false);
+        if (state.getValue(PERSISTENT) && state.getValue(DISTANCE) != 1) {
+            state = state.setValue(PERSISTENT, false);
         }
-        world.setBlockState(pos, state, 3);
+        world.setBlock(pos, state, 3);
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state) {
-        return shouldDecay(state) || canGrow(state) || state.get(AGE) == 0;
+    public boolean isRandomlyTicking(BlockState state) {
+        return shouldDecay(state) || canGrow(state) || state.getValue(AGE) == 0;
     }
 
     public boolean shouldDecay(BlockState state) {
-        return state.get(DISTANCE) == 7 && !state.get(PERSISTENT);
+        return state.getValue(DISTANCE) == 7 && !state.getValue(PERSISTENT);
     }
 
     public boolean canGrow(BlockState state) {
-        return state.get(AGE) > 0 && !state.get(PERSISTENT) || state.get(DISTANCE) == 1;
+        return state.getValue(AGE) > 0 && !state.getValue(PERSISTENT) || state.getValue(DISTANCE) == 1;
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (canGrow(state) || state.get(AGE) == 0) {
-            return super.updatePostPlacement(state, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (canGrow(state) || state.getValue(AGE) == 0) {
+            return super.updateShape(state, facing, facingState, worldIn, currentPos, facingPos);
         }
         return state;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().with(PERSISTENT, true);
+        return this.defaultBlockState().setValue(PERSISTENT, true);
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         Entity entity = context.getEntity();
-        return VoxelShapes.fullCube();
+        return VoxelShapes.block();
     }
 
     @Override
-    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-        super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
-        if (!worldIn.isRemote && fallDistance >= 1 && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
-            for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 1, Math.max(0, pos.getY() - 2), pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
+    public void fallOn(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
+        super.fallOn(worldIn, pos, entityIn, fallDistance);
+        if (worldIn.isClientSide && fallDistance >= 1 && (entityIn instanceof LivingEntity || entityIn instanceof FallingBlockEntity)) {
+            for (BlockPos pos2 : BlockPos.betweenClosed(pos.getX() - 1, Math.max(0, pos.getY() - 2), pos.getZ() - 1, pos.getX() + 1, pos.getY(), pos.getZ() + 1)) {
                 BlockState state = worldIn.getBlockState(pos2);
                 if (state.getBlock() instanceof FruitLeavesBlock) {
-                    if (state.get(AGE) == 3) {
-                        ((FruitLeavesBlock) state.getBlock()).grow((ServerWorld) worldIn, worldIn.rand, pos2, state);
+                    if (state.getValue(AGE) == 3) {
+                        ((FruitLeavesBlock) state.getBlock()).performBonemeal((ServerWorld) worldIn, worldIn.random, pos2, state);
                     }
                 }
             }
@@ -215,17 +215,17 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult ray) {
-        if (state.getValue(AGE) == 3 && worldIn.sta(pos, state.with(AGE, 1))) {
-            if (!worldIn.isRemote) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult ray) {
+        if (state.getValue(AGE) == 3 && worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 1))) {
+            if (worldIn.isClientSide) {
                 ItemStack fruit = new ItemStack(type.get().fruit);
                 if (playerIn instanceof FakePlayer) {
-                    double d0 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
-                    double d1 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
-                    double d2 = worldIn.rand.nextFloat() * 0.5F + 0.25D;
+                    double d0 = worldIn.random.nextFloat() * 0.5F + 0.25D;
+                    double d1 = worldIn.random.nextFloat() * 0.5F + 0.25D;
+                    double d2 = worldIn.random.nextFloat() * 0.5F + 0.25D;
                     ItemEntity itementity = new ItemEntity(worldIn, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, fruit);
-                    itementity.setDefaultPickupDelay();
-                    worldIn.addEntity(itementity);
+                    itementity.setDefaultPickUpDelay();
+                    worldIn.addFreshEntity(itementity);
                 } else {
                     ItemHandlerHelper.giveItemToPlayer(playerIn, fruit);
                 }
@@ -241,20 +241,5 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             return PathNodeType.OPEN;
         }
         return null;
-    }
-
-    @Override
-    public boolean isValidBonemealTarget(IBlockReader p_176473_1_, BlockPos p_176473_2_, BlockState p_176473_3_, boolean p_176473_4_) {
-        return false;
-    }
-
-    @Override
-    public boolean isBonemealSuccess(World p_180670_1_, Random p_180670_2_, BlockPos p_180670_3_, BlockState p_180670_4_) {
-        return false;
-    }
-
-    @Override
-    public void performBonemeal(ServerWorld p_225535_1_, Random p_225535_2_, BlockPos p_225535_3_, BlockState p_225535_4_) {
-
     }
 }

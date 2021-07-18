@@ -17,8 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Predicate;
-
 public class BlenderBlockContainer extends Container {
 
     private final IItemHandler playerInventory;
@@ -80,23 +78,23 @@ public class BlenderBlockContainer extends Container {
 
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-        if (slot != null && slot.getHasStack()) {
-            ItemStack stack = slot.getStack();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack stack = slot.getItem();
             itemstack = stack.copy();
             if (index == 0) {
-                if (!this.mergeItemStack(stack, 1, 37, true)) {
+                if (!this.moveItemStackTo(stack, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onSlotChange(stack, itemstack);
+                slot.onQuickCraft(stack, itemstack);
             }
 
             if (stack.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
+                slot.mayPlace(ItemStack.EMPTY);
             } else {
-                slot.onSlotChanged();
+                slot.setChanged();
             }
 
             if (stack.getCount() == itemstack.getCount()) {
@@ -117,14 +115,6 @@ public class BlenderBlockContainer extends Container {
         //int j = this.blenderData.get(2);
         return j != 0 && i != 0 ? i * 24 / j : 0;
     }
-
-
-    @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        Predicate<PlayerEntity> canPlayerAccessInventoryLambda = x-> true;
-        return canPlayerAccessInventoryLambda.test(playerIn);
-    }
-
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0 ; i < amount ; i++) {
@@ -155,7 +145,7 @@ public class BlenderBlockContainer extends Container {
     public SlotItemHandler slotHandler(IItemHandler handler, int index, int xPosition, int yPosition){
         return new SlotItemHandler(handler, index, xPosition, yPosition){
             @Override
-            public boolean isItemValid(@Nullable ItemStack stack) {
+            public boolean mayPlace(@Nullable ItemStack stack) {
                 if (index == 4 || index == 5 || index == 6) {
                     return false;
                 } else if (index != 3) {
@@ -165,5 +155,10 @@ public class BlenderBlockContainer extends Container {
                 }
             }
         };
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity p_75145_1_) {
+        return false;
     }
 }

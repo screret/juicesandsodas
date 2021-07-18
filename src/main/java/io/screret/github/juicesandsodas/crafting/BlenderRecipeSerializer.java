@@ -38,14 +38,14 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
     }
 
     @Override
-    public BlenderRecipe read(ResourceLocation recipeId, JsonObject json) {
-        JsonElement jsonelement = JSONUtils.isJsonArray(json, "ingredient") ? JSONUtils.getJsonArray(json, "ingredient") : JSONUtils.getJsonObject(json, "item");
-        Ingredient ingredient = Ingredient.deserialize(jsonelement);
+    public BlenderRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+        JsonElement jsonelement = JSONUtils.isValidNode(json, "ingredient") ? JSONUtils.getAsJsonArray(json, "ingredient") : JSONUtils.getAsJsonObject(json, "item");
+        Ingredient ingredient = Ingredient.fromJson(jsonelement);
         if (!json.has("result")) throw new com.google.gson.JsonSyntaxException("Missing result, expected to find a string or object");
         ItemStack itemstack;
-        if (json.get("result").isJsonObject()) itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+        if (json.get("result").isJsonObject()) itemstack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
         else {
-            String s1 = JSONUtils.getString(json, "result");
+            String s1 = JSONUtils.getAsString(json, "result");
             ResourceLocation resourcelocation = new ResourceLocation(s1);
             itemstack = new ItemStack(Registry.ITEM.getOptional(resourcelocation).orElseThrow(() -> new IllegalStateException("Item: " + s1 + " does not exist")));
         }
@@ -57,16 +57,16 @@ public class BlenderRecipeSerializer<T extends BlenderRecipe> extends ForgeRegis
     }
 
     @Override
-    public BlenderRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-        Ingredient ingredient = Ingredient.read(buffer);
-        ItemStack itemstack = buffer.readItemStack();
+    public BlenderRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        Ingredient ingredient = Ingredient.fromNetwork(buffer);
+        ItemStack itemstack = buffer.readItem();
         return this.factory.create(recipeId, ingredient, itemstack);
     }
 
     @Override
-    public void write(PacketBuffer buffer, BlenderRecipe recipe) {
-        recipe.ingredient.write(buffer);
-        buffer.writeItemStack(recipe.output);
+    public void toNetwork(PacketBuffer buffer, BlenderRecipe recipe) {
+        recipe.ingredient.toNetwork(buffer);
+        buffer.writeItemStack(recipe.output, false);
     }
 
     public interface IFactory<RECIPE extends BlenderRecipe> {

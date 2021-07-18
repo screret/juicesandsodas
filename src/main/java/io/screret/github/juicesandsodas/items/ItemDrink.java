@@ -35,6 +35,8 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class ItemDrink extends GlassBottleItem implements IItemColor {
 
     public ItemDrink(Properties properties, Color color, @Nullable EffectInstance[] effects, @Nullable ResourceLocation shader){

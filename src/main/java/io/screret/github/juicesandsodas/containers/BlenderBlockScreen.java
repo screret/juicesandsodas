@@ -33,7 +33,15 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
+        // draw the label for the top of the screen
+        final int LABEL_XPOS = 5;
+        final int LABEL_YPOS = 5;
+        this.font.draw(matrixStack, this.title.getString(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());     ///    this.font.drawString
+
+        // draw the label for the player inventory slots
+        this.font.draw(matrixStack, this.minecraft.player.inventory.getDisplayName().getString(),                  ///    this.font.drawString
+                4, 74, Color.darkGray.getRGB());
     }
 
     public void tick() {
@@ -41,27 +49,15 @@ public class BlenderBlockScreen extends ContainerScreen<BlenderBlockContainer> {
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
-        // draw the label for the top of the screen
-        final int LABEL_XPOS = 5;
-        final int LABEL_YPOS = 5;
-        this.font.drawString(matrixStack, this.title.getString(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());     ///    this.font.drawString
-
-        // draw the label for the player inventory slots
-        this.font.drawString(matrixStack, this.playerInventory.getDisplayName().getString(),                  ///    this.font.drawString
-                4, 74, Color.darkGray.getRGB());
-    }
-
-    @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         GL11.glColor4f(1, 1, 1, 1);
-        this.minecraft.getTextureManager().bindTexture(GUI);
-        int relX = (this.width - this.xSize) / 2;
-        int relY = (this.height - this.ySize) / 2;
-        this.blit(matrixStack, relX, relY, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(GUI);
+        int relX = (this.width - this.getXSize()) / 2;
+        int relY = (this.height - this.getYSize()) / 2;
+        this.blit(matrixStack, relX, relY, 0, 0, this.getXSize(), this.getYSize());
 
 
-        int l = this.container.getCookProgressionScaled();
-        this.blit(matrixStack, this.guiLeft + 81, this.guiTop + 33, 176, 14, l + 1, 16);
+        int l = this.menu.getCookProgressionScaled();
+        this.blit(matrixStack, this.leftPos + 81, this.topPos + 33, 176, 14, l + 1, 16);
     }
 }

@@ -36,7 +36,7 @@ public class FruitTreeTile extends BaseTile {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         NBTHelper helper = NBTHelper.of(compound);
         String id = helper.getString("type");
         if (id != null) {
@@ -49,12 +49,12 @@ public class FruitTreeTile extends BaseTile {
             type = types[MathHelper.clamp(helper.getInt("type"), 0, types.length)];
         }
         deathRate = helper.getInt("death");
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.putString("type", type.name());
         compound.putInt("death", deathRate);
         return compound;

@@ -20,9 +20,9 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void breakBlock(BlockEvent.BreakEvent event) {
-        if (!event.getWorld().isRemote() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES && event.getWorld() instanceof World) {
+        if (event.getWorld().isClientSide() && !event.getPlayer().isCreative() && event.getState().getBlock() == Blocks.OAK_LEAVES && event.getWorld() instanceof World) {
             if (event.getWorld().getRandom().nextFloat() < FruitsConfig.oakLeavesDropsAppleSapling) {
-                Block.spawnAsEntity((World) event.getWorld(), event.getPos(), new ItemStack(Registration.APPLE_SAPLING.get()));
+                Block.popResource((World) event.getWorld(), event.getPos(), new ItemStack(Registration.APPLE_SAPLING.get()));
             }
         }
     }
@@ -31,15 +31,15 @@ public final class GameEvents {
     public static void onLightningBolt(EntityJoinWorldEvent event) {
         World world = event.getWorld();
         Entity entity = event.getEntity();
-        if (world.isRemote || !(entity instanceof LightningBoltEntity)) {
+        if (!world.isClientSide || !(entity instanceof LightningBoltEntity)) {
             return;
         }
         LightningBoltEntity entityIn = (LightningBoltEntity) entity;
-        BlockPos pos = entityIn.getPosition();
-        for (BlockPos pos2 : BlockPos.getAllInBoxMutable(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
+        BlockPos pos = entityIn.blockPosition();
+        for (BlockPos pos2 : BlockPos.betweenClosed(pos.getX() - 2, pos.getY() - 2, pos.getZ() - 2, pos.getX() + 2, pos.getY() + 2, pos.getZ() + 2)) {
             BlockState state2 = world.getBlockState(pos2);
-            if (state2.getBlock() == Registration.APPLE_LEAVES.get() && state2.get(FruitLeavesBlock.AGE) == 3) {
-                world.setBlockState(pos2, state2.with(FruitLeavesBlock.AGE, 1));
+            if (state2.getBlock() == Registration.APPLE_LEAVES.get() && state2.getValue(FruitLeavesBlock.AGE) == 3) {
+                world.setBlockAndUpdate(pos2, state2.setValue(FruitLeavesBlock.AGE, 1));
             }
         }
     }

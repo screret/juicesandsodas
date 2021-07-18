@@ -64,29 +64,22 @@ public class BlenderRecipe implements IRecipe<IInventory> {
 
     @Override
     public boolean matches(IInventory inv, World worldIn) {
-        return ingredient.test(inv.getStackInSlot(0));
+        return ingredient.test(inv.getItem(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack assemble(IInventory inv) {
         return output.copy();
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return output.copy();
-    }
-
-    @Override
-    public boolean isDynamic() {
-        //Note: If we make this non dynamic, we can make it show in vanilla's crafting book and also then obey the recipe locking.
-        // For now none of that works/makes sense in our concept so don't lock it
-        return true;
     }
 
     @Override
@@ -97,6 +90,6 @@ public class BlenderRecipe implements IRecipe<IInventory> {
     @Override
     public String toString() {
         // Overriding toString is not required, it's just useful for debugging.
-        return String.format("BlenderRecipe [input=%s, output=%s, id=%s]", ingredient.getMatchingStacks()[0], output, id);
+        return String.format("BlenderRecipe [input=%s, output=%s, id=%s]", ingredient.getItems()[0], output, id);
     }
 }
