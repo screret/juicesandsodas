@@ -29,13 +29,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DeferredWorkQueue;
 
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
-
-import net.minecraft.item.Item.Properties;
 
 public class ItemDrink extends GlassBottleItem implements IItemColor {
 
@@ -149,7 +146,7 @@ public class ItemDrink extends GlassBottleItem implements IItemColor {
     public void loadCustomShader() {
         if (Minecraft.getInstance().level != null) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;
-            DeferredWorkQueue.runLater(() -> {
+            Minecraft.getInstance().submitAsync(() -> {
                 if (shaderEntity != null) {
                     renderer.checkEntityPostEffect(shaderEntity);
                 } else if (shader != null) {

@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -24,6 +25,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,8 +60,9 @@ public class BlenderBlock extends Block {
 
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace) {
-        if (world.isClientSide) {
+        if (!world.isClientSide) {
             TileEntity tileEntity = world.getBlockEntity(pos);
+            LOGGER.debug(tileEntity.getBlockPos());
             if (tileEntity instanceof BlenderTile) {
                 INamedContainerProvider containerProvider = new INamedContainerProvider() {
                     @Override
@@ -70,17 +73,20 @@ public class BlenderBlock extends Block {
                     @Override
                     public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
                         BlenderTile tile = (BlenderTile) world.getBlockEntity(pos);
+                        LOGGER.debug(tile.getBlockPos());
                         //LOGGER.debug(tile.isBlending() + ", " + tile.COOK_TIME + ", " + tile.blenderData.get(0) + ", " + tile.toString());
                         return new BlenderBlockContainer(i, playerInventory, new CombinedInvWrapper(tile.inputSlot, tile.bottleSlot, tile.outputSlot), tile);
                     }
                 };
-                player.openMenu(containerProvider);
-                //NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getBlockPos());
+                //player.openMenu(containerProvider);
+                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getBlockPos());
             } else {
                 throw new IllegalStateException("Our named container provider is missing!");
             }
+            return ActionResultType.CONSUME;
+        }else{
+            return ActionResultType.SUCCESS;
         }
-        return ActionResultType.SUCCESS;
     }
 
     @Override
