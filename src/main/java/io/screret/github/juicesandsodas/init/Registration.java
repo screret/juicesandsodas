@@ -37,9 +37,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
@@ -55,7 +52,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.extensions.IForgeContainerType;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -230,38 +226,7 @@ public class Registration {
         }
     }
 
-    @SubscribeEvent
-    public static void insertFeatures(BiomeLoadingEvent event) {
-        Biome.Climate climate = event.getClimate();
-        if (climate.precipitation != Biome.RainType.RAIN) {
-            return;
-        }
-        if (climate.temperatureModifier == Biome.TemperatureModifier.FROZEN) {
-            return;
-        }
-        Biome.Category category = event.getCategory();
-        int i;
-        switch (category) {
-        case JUNGLE:
-            i = 2;
-            break;
-        case FOREST:
-            i = 1;
-            break;
-        case PLAINS:
-            i = 0;
-            break;
-        default:
-            return;
-        }
-        event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
-        if (category != Biome.Category.JUNGLE && FruitTypeExtension.CHERRY != null) {
-            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
-        }
-        if(category == Biome.Category.JUNGLE){
-            event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(KOOLAIDMAN.get(), 5, 0, 1));
-        }
-    }
+
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> buildTreeFeature(FruitType type, boolean worldGen, BlockStateProvider carpetProvider) {
         BlockStateProvider leavesProvider;
