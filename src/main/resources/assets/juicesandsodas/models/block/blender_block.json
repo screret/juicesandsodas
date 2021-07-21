@@ -1,0 +1,75 @@
+{
+	"textures": {
+		"0": "block/oak_planks",
+		"1": "block/brown_stained_glass",
+		"particle": "block/oak_planks"
+	},
+	"elements": [
+		{
+			"name": "glass",
+			"from": [3, 1, 3],
+			"to": [13, 9, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 5, 8]},
+			"faces": {
+				"north": {"uv": [5, 1, 15, 9], "texture": "#1"},
+				"east": {"uv": [1, 1, 11, 9], "texture": "#1"},
+				"south": {"uv": [1, 7, 11, 15], "texture": "#1"},
+				"west": {"uv": [5, 7, 15, 15], "texture": "#1"}
+			}
+		},
+		{
+			"name": "bottom",
+			"from": [3, 0, 3],
+			"to": [13, 1, 13],
+			"faces": {
+				"north": {"uv": [3, 3, 13, 4], "texture": "#0"},
+				"east": {"uv": [3, 0, 13, 1], "texture": "#0"},
+				"south": {"uv": [3, 2, 13, 3], "texture": "#0"},
+				"west": {"uv": [3, 1, 13, 2], "texture": "#0"},
+				"up": {"uv": [6, 0, 16, 10], "texture": "#0"},
+				"down": {"uv": [0, 6, 10, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "top",
+			"from": [3, 9, 3],
+			"to": [13, 10, 13],
+			"faces": {
+				"north": {"uv": [3, 0, 13, 1], "texture": "#0"},
+				"east": {"uv": [3, 3, 13, 4], "texture": "#0"},
+				"south": {"uv": [3, 1, 13, 2], "texture": "#0"},
+				"west": {"uv": [3, 2, 13, 3], "texture": "#0"},
+				"up": {"uv": [0, 0, 10, 10], "texture": "#0"},
+				"down": {"uv": [6, 6, 16, 16], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "base",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				{
+					"name": "chassis",
+					"origin": [1, 5, 0],
+					"color": 0,
+					"children": [
+						{
+							"name": "clear",
+							"origin": [1, 5, 0],
+							"color": 0,
+							"children": [0]
+						},
+						{
+							"name": "solid",
+							"origin": [1, 5, 0],
+							"color": 0,
+							"children": [1, 2]
+						}
+					]
+				}
+			]
+		}
+	]
+}

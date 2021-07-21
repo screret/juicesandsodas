@@ -2,21 +2,28 @@ package io.screret.github.juicesandsodas.tileentities;
 
 
 import io.screret.github.juicesandsodas.blocks.BlenderBlock;
+import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.crafting.BlenderRecipeSerializer;
 import io.screret.github.juicesandsodas.init.Registration;
 import io.screret.github.juicesandsodas.util.BlenderRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.IIntArray;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -27,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class BlenderTile extends TileEntity implements ITickableTileEntity {
+public class BlenderTile extends LockableTileEntity implements ITickableTileEntity {
 
     public ItemStackHandler inputSlot = customHandler(3);
     public ItemStackHandler bottleSlot =  customHandler(1);
@@ -37,6 +44,8 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
 
     private final Object2IntOpenHashMap<ResourceLocation> recipes = new Object2IntOpenHashMap<>();
     public CombinedInvWrapper combinedInvWrapper = new CombinedInvWrapper(inputSlot, bottleSlot, outputSlot);
+
+    protected NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
 
     static Logger LOGGER = LogManager.getLogger();
 
@@ -104,6 +113,16 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
         parentNBTTagCompound.put("juicesandsodas:outputSlot", outputSlot.serializeNBT());
         combinedInvWrapper = new CombinedInvWrapper(inputSlot, bottleSlot, outputSlot);
         return parentNBTTagCompound;
+    }
+
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent("gui.juicesandsodas.blender");
+    }
+
+    @Override
+    protected Container createMenu(int windowID, PlayerInventory playerInventory) {
+        return new BlenderBlockContainer(windowID, playerInventory, combinedInvWrapper, this);
     }
 
     // This is where you load the data that you saved in write
@@ -278,5 +297,56 @@ public class BlenderTile extends TileEntity implements ITickableTileEntity {
                 }
             }
         };
+    }
+
+    @Override
+    public int getContainerSize() {
+        return 7;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for(int i = 0; i < combinedInvWrapper.getSlots(); i++){
+            if (!combinedInvWrapper.getStackInSlot(i).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public ItemStack getItem(int slot) {
+        return combinedInvWrapper.getStackInSlot(slot);
+    }
+
+    @Override
+    public ItemStack removeItem(int slot, int amount) {
+        return combinedInvWrapper.extractItem(slot, amount, true);
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int slot) {
+        return combinedInvWrapper.extractItem(slot, combinedInvWrapper.getStackInSlot(slot).getCount(), true);
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        combinedInvWrapper.insertItem(slot, stack, true);
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        } else {
+            return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
+        }
+    }
+
+    @Override
+    public void clearContent() {
+        for(int i = 0; i < combinedInvWrapper.getSlots(); i++){
+            combinedInvWrapper.getStackInSlot(i).setCount(0);
+        }
     }
 }

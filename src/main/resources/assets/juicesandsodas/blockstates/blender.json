@@ -1,6 +1,6 @@
 {
   "variants": {
-    "powered=true": { "model": "juicesandsodas:block/empty" },
-    "powered=false": { "model": "juicesandsodas:block/empty" }
+    "powered=true": { "model": "juicesandsodas:block/blender_block" },
+    "powered=false": { "model": "juicesandsodas:block/blender_block" }
   }
 }

@@ -96,13 +96,13 @@ public class Base {
                 Registration.APPLE_LEAVES.get()
         )));
             FlowerPotBlock pot = (FlowerPotBlock) Blocks.FLOWER_POT;
-            pot.addPlant(Registration.MANDARIN_SAPLING.get().getRegistryName(), () -> Registration.POTTED_MANDARIN.get());
-            pot.addPlant(Registration.LIME_SAPLING.get().getRegistryName(), () -> Registration.POTTED_LIME.get());
-            pot.addPlant(Registration.ORANGE_SAPLING.get().getRegistryName(), () -> Registration.POTTED_ORANGE.get());
-            pot.addPlant(Registration.LEMON_SAPLING.get().getRegistryName(), () -> Registration.POTTED_LEMON.get());
-            pot.addPlant(Registration.GRAPEFRUIT_SAPLING.get().getRegistryName(), () -> Registration.POTTED_GRAPEFRUIT.get());
-            pot.addPlant(Registration.APPLE_SAPLING.get().getRegistryName(), () -> Registration.POTTED_APPLE.get());
-            pot.addPlant(Registration.CHERRY_SAPLING.get().getRegistryName(), () -> Registration.POTTED_CHERRY.get());
+            pot.addPlant(Registration.MANDARIN_SAPLING.get().getRegistryName(), Registration.POTTED_MANDARIN);
+            pot.addPlant(Registration.LIME_SAPLING.get().getRegistryName(), Registration.POTTED_LIME);
+            pot.addPlant(Registration.ORANGE_SAPLING.get().getRegistryName(), Registration.POTTED_ORANGE);
+            pot.addPlant(Registration.LEMON_SAPLING.get().getRegistryName(), Registration.POTTED_LEMON);
+            pot.addPlant(Registration.GRAPEFRUIT_SAPLING.get().getRegistryName(), Registration.POTTED_GRAPEFRUIT);
+            pot.addPlant(Registration.APPLE_SAPLING.get().getRegistryName(), Registration.POTTED_APPLE);
+            pot.addPlant(Registration.CHERRY_SAPLING.get().getRegistryName(), Registration.POTTED_CHERRY);
 
 
             for (FruitType type : FruitType.values()) {
@@ -125,7 +125,7 @@ public class Base {
         }
         Registration.makeFeature("002", 0, .002f, 0);
         Registration.makeFeature("005", 0, .005f, 1);
-        Registration.makeFeature("1", 1, 0, 2);
+        Registration.makeFeature("1", 1, 1, 2);
         Registration.trees = null;
         Registration.cherry = null;
 
@@ -203,6 +203,9 @@ public class Base {
         event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
         if (category != Biome.Category.JUNGLE && FruitTypeExtension.CHERRY != null) {
             event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
+            for(Supplier<ConfiguredFeature<?, ?>> tree : Registration.trees) {
+                event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, tree.get());
+            }
         }
         if(category == Biome.Category.JUNGLE){
             event.getSpawns().getSpawner(EntityClassification.MONSTER).add(new MobSpawnInfo.Spawners(Registration.KOOLAIDMAN.get(), 5, 0, 1));

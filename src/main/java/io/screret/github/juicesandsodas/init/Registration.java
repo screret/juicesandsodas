@@ -209,7 +209,7 @@ public class Registration {
 
     public static final TreeDecoratorType<CarpetTreeDecorator> CARPET_DECORATOR = new TreeDecoratorType<>(CarpetTreeDecorator.CODEC);
 
-    public static final FoliagePlacerType<FruitBlobFoliagePlacer> BLOB_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
+    public static final FoliagePlacerType<FruitBlobFoliagePlacer> FRUIT_PLACER = new FoliagePlacerType<>(FruitBlobFoliagePlacer.CODEC);
 
     public static List<Supplier<ConfiguredFeature<?, ?>>> trees;
     public static ConfiguredFeature<?, ?> cherry;

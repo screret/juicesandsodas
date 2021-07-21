@@ -1,13 +1,11 @@
 package io.screret.github.juicesandsodas.blocks;
 
-import io.screret.github.juicesandsodas.containers.BlenderBlockContainer;
 import io.screret.github.juicesandsodas.tileentities.BlenderTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -21,12 +19,9 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
 public class BlenderBlock extends Block {
@@ -64,22 +59,8 @@ public class BlenderBlock extends Block {
             TileEntity tileEntity = world.getBlockEntity(pos);
             LOGGER.debug(tileEntity.getBlockPos());
             if (tileEntity instanceof BlenderTile) {
-                INamedContainerProvider containerProvider = new INamedContainerProvider() {
-                    @Override
-                    public ITextComponent getDisplayName() {
-                        return new TranslationTextComponent("gui.juicesandsodas.blender");
-                    }
-
-                    @Override
-                    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        BlenderTile tile = (BlenderTile) world.getBlockEntity(pos);
-                        LOGGER.debug(tile.getBlockPos());
-                        //LOGGER.debug(tile.isBlending() + ", " + tile.COOK_TIME + ", " + tile.blenderData.get(0) + ", " + tile.toString());
-                        return new BlenderBlockContainer(i, playerInventory, new CombinedInvWrapper(tile.inputSlot, tile.bottleSlot, tile.outputSlot), tile);
-                    }
-                };
                 //player.openMenu(containerProvider);
-                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getBlockPos());
+                NetworkHooks.openGui((ServerPlayerEntity) player, (BlenderTile)tileEntity, tileEntity.getBlockPos());
             } else {
                 throw new IllegalStateException("Our named container provider is missing!");
             }
@@ -91,14 +72,11 @@ public class BlenderBlock extends Block {
 
     @Override
     public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if(!worldIn.isClientSide)
-        {
-            return;
-        }
-
-        if(!(newState.getBlock() instanceof BlenderBlock))
-        {
+        if(!state.is(newState.getBlock())) {
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            InventoryHelper.dropContents(worldIn, pos, (BlenderTile)tileentity);
             worldIn.removeBlockEntity(pos);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
@@ -107,11 +85,16 @@ public class BlenderBlock extends Block {
         builder.add(BlockStateProperties.POWERED, BLENDING);
     }
 
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader worldIn) {
         return new BlenderTile();
     }
 
+    @Nullable
+    @Override
+    public INamedContainerProvider getMenuProvider(BlockState state, World world, BlockPos pos) {
+        TileEntity tileentity = world.getBlockEntity(pos);
+        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider)tileentity : null;
+    }
 }

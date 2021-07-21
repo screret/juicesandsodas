@@ -1,0 +1,175 @@
+{
+	"meta": {
+		"format_version": "3.6",
+		"creation_time": 1626889198,
+		"model_format": "java_block",
+		"box_uv": false
+	},
+	"name": "blender_block",
+	"parent": "",
+	"ambientocclusion": true,
+	"front_gui_light": false,
+	"visible_box": [1, 1, 0],
+	"resolution": {
+		"width": 16,
+		"height": 16
+	},
+	"elements": [
+		{
+			"name": "glass",
+			"rescale": false,
+			"from": [3, 1, 3],
+			"to": [13, 9, 13],
+			"autouv": 0,
+			"color": 4,
+			"locked": false,
+			"origin": [8, 5, 8],
+			"faces": {
+				"north": {"uv": [5, 1, 15, 9], "texture": 1},
+				"east": {"uv": [1, 1, 11, 9], "texture": 1},
+				"south": {"uv": [1, 7, 11, 15], "texture": 1},
+				"west": {"uv": [5, 7, 15, 15], "texture": 1},
+				"up": {"uv": [0, 0, 0, 0], "texture": null},
+				"down": {"uv": [0, 0, 0, 0], "texture": null}
+			},
+			"uuid": "6ffd0380-70f1-1c70-6594-fc408cc03ddc"
+		},
+		{
+			"name": "bottom",
+			"rescale": false,
+			"from": [3, 0, 3],
+			"to": [13, 1, 13],
+			"autouv": 0,
+			"color": 3,
+			"locked": false,
+			"origin": [0, 0, 0],
+			"faces": {
+				"north": {"uv": [3, 3, 13, 4], "texture": 0},
+				"east": {"uv": [3, 0, 13, 1], "texture": 0},
+				"south": {"uv": [3, 2, 13, 3], "texture": 0},
+				"west": {"uv": [3, 1, 13, 2], "texture": 0},
+				"up": {"uv": [6, 0, 16, 10], "texture": 0},
+				"down": {"uv": [0, 6, 10, 16], "texture": 0}
+			},
+			"uuid": "b6d19223-c342-af15-d100-85274ec4d815"
+		},
+		{
+			"name": "top",
+			"rescale": false,
+			"from": [3, 9, 3],
+			"to": [13, 10, 13],
+			"autouv": 0,
+			"color": 3,
+			"locked": false,
+			"origin": [0, 0, 0],
+			"faces": {
+				"north": {"uv": [3, 0, 13, 1], "texture": 0},
+				"east": {"uv": [3, 3, 13, 4], "texture": 0},
+				"south": {"uv": [3, 1, 13, 2], "texture": 0},
+				"west": {"uv": [3, 2, 13, 3], "texture": 0},
+				"up": {"uv": [0, 0, 10, 10], "texture": 0},
+				"down": {"uv": [6, 6, 16, 16], "texture": 0}
+			},
+			"uuid": "bbebfb17-d124-5e76-be4d-81e00cd0d014"
+		}
+	],
+	"outliner": [
+		{
+			"name": "base",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"uuid": "977546c2-d380-0ad3-e679-d65d73f79b61",
+			"export": true,
+			"isOpen": true,
+			"locked": false,
+			"visibility": true,
+			"autouv": 0,
+			"children": [
+				{
+					"name": "chassis",
+					"origin": [1, 5, 0],
+					"color": 0,
+					"uuid": "7c3508a3-6371-1a67-fa31-0e78455fecb9",
+					"export": true,
+					"isOpen": true,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": [
+						{
+							"name": "clear",
+							"origin": [1, 5, 0],
+							"color": 0,
+							"uuid": "4eb1da4c-377e-0d96-4691-8d37ba734e80",
+							"export": true,
+							"isOpen": true,
+							"locked": false,
+							"visibility": true,
+							"autouv": 0,
+							"children": ["6ffd0380-70f1-1c70-6594-fc408cc03ddc"]
+						},
+						{
+							"name": "solid",
+							"origin": [1, 5, 0],
+							"color": 0,
+							"uuid": "c4ae04f8-ca90-71f5-56b1-a1f339027c17",
+							"export": true,
+							"isOpen": true,
+							"locked": false,
+							"visibility": true,
+							"autouv": 0,
+							"children": ["b6d19223-c342-af15-d100-85274ec4d815", "bbebfb17-d124-5e76-be4d-81e00cd0d014"]
+						}
+					]
+				}
+			]
+		}
+	],
+	"textures": [
+		{
+			"path": "C:\\Users\\OMISTAJA\\Desktop\\mc modit\\juiceMod\\src\\main\\resources\\assets\\juicesandsodas\\textures\\block\\oak_planks.png",
+			"name": "oak_planks",
+			"folder": "block",
+			"namespace": "minecraft",
+			"id": "0",
+			"particle": false,
+			"render_mode": "normal",
+			"visible": true,
+			"mode": "bitmap",
+			"saved": true,
+			"uuid": "c657c366-fcd1-baff-4e21-a277af774c14",
+			"relative_path": "../../textures/block/oak_planks.png",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAUUlEQVQ4T2O8cOHCfwYKACPIABEREbKMePPmDQP9DJCWlga78unTp3DXkuSCkWQANr+CQo3oMKCqAciGkeWCgTGAlExBUkrEZjDcAFJsRVcLAOcPlwHIkDJ3AAAAAElFTkSuQmCC"
+		},
+		{
+			"path": "C:\\Users\\OMISTAJA\\Desktop\\mc modit\\juiceMod\\src\\main\\resources\\assets\\juicesandsodas\\textures\\block\\brown_stained_glass.png",
+			"name": "brown_stained_glass",
+			"folder": "block",
+			"namespace": "minecraft",
+			"id": "1",
+			"particle": false,
+			"render_mode": "normal",
+			"visible": true,
+			"mode": "bitmap",
+			"saved": true,
+			"uuid": "ea3f0485-0dbd-0fe9-2db0-2124e196e5c9",
+			"relative_path": "../../textures/block/brown_stained_glass.png",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAUUlEQVQ4T2O8cOHCfwYKACPIABEREbKMePPmDQP9DJCWlga78unTp3DXkuSCkWQANr+CQo3oMKCqAciGkeWCgTGAlExBUkrEZjDcAFJsRVcLAOcPlwHIkDJ3AAAAAElFTkSuQmCC"
+		},
+		{
+			"path": "C:\\Users\\OMISTAJA\\Desktop\\mc modit\\juiceMod\\src\\main\\resources\\assets\\juicesandsodas\\textures\\blocks\\oak_planks.png",
+			"name": "oak_planks",
+			"folder": "block",
+			"namespace": "minecraft",
+			"id": "particle",
+			"particle": true,
+			"render_mode": "normal",
+			"visible": true,
+			"mode": "bitmap",
+			"saved": true,
+			"uuid": "3c29bb0c-5e01-8f18-6a01-63e996b4d168",
+			"relative_path": "../../textures/blocks/oak_planks.png",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAUUlEQVQ4T2O8cOHCfwYKACPIABEREbKMePPmDQP9DJCWlga78unTp3DXkuSCkWQANr+CQo3oMKCqAciGkeWCgTGAlExBUkrEZjDcAFJsRVcLAOcPlwHIkDJ3AAAAAElFTkSuQmCC"
+		}
+	]
+}

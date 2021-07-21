@@ -11,8 +11,9 @@ import net.minecraft.util.ResourceLocation;
 public class BlenderTileRenderer extends TileEntityRenderer<BlenderTile> {
 
 	final static ModelBlender model = new ModelBlender();
-	public static final ResourceLocation WOOD_TEX = new ResourceLocation("minecraft", "textures/block/oak_planks.png");
+	public static final ResourceLocation IRON_TEX = new ResourceLocation("minecraft", "textures/block/iron_block.png");
 
+	public float rotationDegrees = 0.0F;
 
 	public BlenderTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
@@ -22,8 +23,12 @@ public class BlenderTileRenderer extends TileEntityRenderer<BlenderTile> {
 	public void render(BlenderTile tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.pushPose(); // push the current transformation matrix + normals matrix
 
-		model.askThings(buffer, tileEntity);
-		IVertexBuilder woodBuffer = buffer.getBuffer(model.renderType(WOOD_TEX));
+		if(tileEntity.isBlending()){
+			model.rotatingParts.yRot = (float)Math.toRadians(rotationDegrees);
+			rotationDegrees -= 2;
+		}
+		//model.askThings(buffer, tileEntity);
+		IVertexBuilder woodBuffer = buffer.getBuffer(model.renderType(IRON_TEX));
 		model.renderToBuffer(matrixStack, woodBuffer, combinedLight, combinedOverlay, 1, 1, 1, 1);
 		matrixStack.popPose();
 	}
